@@ -1,18 +1,13 @@
 package utp.agile.kerplank.domain.drive
 
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import utp.agile.kerplank.configuration.DriveConfiguration
-import utp.agile.kerplank.domain.utils.randomString
-import utp.agile.kerplank.domain.utils.writeToTextFile
-import utp.agile.kerplank.domain.utils.structures.request.NoteSaveRequest
-import utp.agile.kerplank.domain.utils.structures.response.NoteSaveResponse
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Mono
+import utp.agile.kerplank.configuration.DriveConfiguration
 import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
