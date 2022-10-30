@@ -2,9 +2,6 @@ package utp.agile.kerplank.domain.drive
 
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
 import utp.agile.kerplank.configuration.DriveConfiguration
 import utp.agile.kerplank.domain.utils.randomString
 import utp.agile.kerplank.domain.utils.writeToTextFile
@@ -12,9 +9,10 @@ import utp.agile.kerplank.domain.utils.structures.request.NoteSaveRequest
 import utp.agile.kerplank.domain.utils.structures.response.NoteSaveResponse
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.http.codec.multipart.FilePart
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
+import reactor.core.publisher.Mono
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -79,27 +77,34 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
             }
     }
 
-    @PostMapping
-    fun saveNote(@RequestBody noteRequest: NoteSaveRequest): ResponseEntity<NoteSaveResponse> {
-        return kotlin.runCatching {
-            driveService.driveDirectory.writeToTextFile(
-                noteRequest.fileNameWithExt,
-                noteRequest.message + randomString(100_000_0)
-            )
-        }.let {
-            when (it.isSuccess) {
-                true -> ResponseEntity<NoteSaveResponse>(
-                    NoteSaveResponse(
-                        it.getOrThrow().absolutePath.replace(
-                            driveService.driveDirectory.absolutePath,
-                            ""
-                        )
-                    ),
-                    HttpStatus.OK
-                )
-                else -> ResponseEntity<NoteSaveResponse>(NoteSaveResponse(null), HttpStatus.BAD_REQUEST)
-            }
-        }
+
+
+    @PostMapping("upload")
+    fun saveFile(@RequestPart("book") book:String, @RequestPart("file") file:Mono<FilePart> ) {
+        println(book)
     }
+
+//    @PostMapping
+//    fun saveNote(@RequestBody noteRequest: NoteSaveRequest): ResponseEntity<NoteSaveResponse> {
+//        return kotlin.runCatching {
+//            driveService.driveDirectory.writeToTextFile(
+//                noteRequest.fileNameWithExt,
+//                noteRequest.message
+//            )
+//        }.let {
+//            when (it.isSuccess) {
+//                true -> ResponseEntity<NoteSaveResponse>(
+//                    NoteSaveResponse(
+//                        it.getOrThrow().absolutePath.replace(
+//                            driveService.driveDirectory.absolutePath,
+//                            ""
+//                        )
+//                    ),
+//                    HttpStatus.OK
+//                )
+//                else -> ResponseEntity<NoteSaveResponse>(NoteSaveResponse(null), HttpStatus.BAD_REQUEST)
+//            }
+//        }
+//    }
 
 }
