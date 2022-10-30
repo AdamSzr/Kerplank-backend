@@ -21,7 +21,10 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
     @GetMapping("/path")
     fun getMyDirectory(): ResponseEntity<String> {
-        return ResponseEntity<String>(Path(driveConfiguration.directory).absolutePathString(), HttpStatus.OK)
+        return ResponseEntity<String>(
+            Path(driveConfiguration.directory).absolutePathString(),
+            HttpStatus.OK
+        )
     }
 
 
@@ -32,11 +35,11 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
         driveService.listDirectoryItems(path).let {
             if (it.isNullOrEmpty())
                 return ResponseEntity<String>(
-                    "Wrong path to directory", null, HttpStatus.BAD_REQUEST
+                    "Wrong path to directory", HttpStatus.BAD_REQUEST
                 )
             else
                 return ResponseEntity<List<DriveService.DirectoryItem>>(
-                    it, null, HttpStatus.OK
+                    it, HttpStatus.OK
                 )
         }
     }
@@ -74,10 +77,9 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
     }
 
 
-
-    @PostMapping("upload")
-    fun saveFile(@RequestPart("book") book:String, @RequestPart("file") file:Mono<FilePart> ): Mono<Void> {
-       return file.flatMap { it.transferTo(File(driveConfiguration.directory+"/"+it.filename())) }
+    @PostMapping("upload") // https://hantsy.github.io/spring-reactive-sample/web/multipart.html
+    fun saveFile(@RequestPart("book") book: String, @RequestPart("file") file: Mono<FilePart>): Mono<Void> {
+        return file.flatMap { it.transferTo(File(driveConfiguration.directory + "/" + it.filename())) }
     }
 
 }
