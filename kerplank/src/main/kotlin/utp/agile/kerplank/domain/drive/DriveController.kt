@@ -13,6 +13,7 @@ import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import reactor.core.publisher.Mono
+import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -80,31 +81,8 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
 
     @PostMapping("upload")
-    fun saveFile(@RequestPart("book") book:String, @RequestPart("file") file:Mono<FilePart> ) {
-        println(book)
+    fun saveFile(@RequestPart("book") book:String, @RequestPart("file") file:Mono<FilePart> ): Mono<Void> {
+       return file.flatMap { it.transferTo(File(driveConfiguration.directory+"/"+it.filename())) }
     }
-
-//    @PostMapping
-//    fun saveNote(@RequestBody noteRequest: NoteSaveRequest): ResponseEntity<NoteSaveResponse> {
-//        return kotlin.runCatching {
-//            driveService.driveDirectory.writeToTextFile(
-//                noteRequest.fileNameWithExt,
-//                noteRequest.message
-//            )
-//        }.let {
-//            when (it.isSuccess) {
-//                true -> ResponseEntity<NoteSaveResponse>(
-//                    NoteSaveResponse(
-//                        it.getOrThrow().absolutePath.replace(
-//                            driveService.driveDirectory.absolutePath,
-//                            ""
-//                        )
-//                    ),
-//                    HttpStatus.OK
-//                )
-//                else -> ResponseEntity<NoteSaveResponse>(NoteSaveResponse(null), HttpStatus.BAD_REQUEST)
-//            }
-//        }
-//    }
 
 }
