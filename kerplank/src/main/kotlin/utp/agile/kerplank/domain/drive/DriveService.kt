@@ -1,10 +1,9 @@
 package utp.agile.kerplank.domain.drive
 
+import org.springframework.stereotype.Service
 import utp.agile.kerplank.configuration.DriveConfiguration
 import utp.agile.kerplank.domain.utils.structures.SubDirectoriesCreationResult
-import org.springframework.stereotype.Service
 import java.io.File
-import java.lang.Exception
 import javax.annotation.PostConstruct
 
 @Service
@@ -31,6 +30,32 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
                 }
         } else
             throw Exception("directory to path should start with '/'")
+    }
+
+    fun createFile(fileNameWitExt: String): File {
+        val f = File("${driveConfiguration.directory}${fileNameWitExt}")
+
+        if (f.exists() && f.isFile)
+            return f
+
+        if (!f.exists() && f.parentFile.exists() && f.parentFile.isDirectory) {
+            if (f.createNewFile())
+                return f
+            else
+                throw Exception("!f.exists() && f.parentFile.exists() && f.parentFile.isDirectory -> and still cant create file")
+        }
+
+        if (!f.exists() && !f.parentFile.exists()) {
+            if (File(f.parentFile.path).mkdirs())
+                if (f.createNewFile())
+                    return f
+                else
+                    throw Exception("!f.exists() && !f.parentFile.exists() && File(f.parentFile.path).mkdirs() -> but still cant create files")
+            else
+                throw Exception("!f.exists() && !f.parentFile.exists() -> but still cant create files")
+        }
+
+        return f
     }
 
     fun createSubDirectories(directoryList: List<String>): List<SubDirectoriesCreationResult> {

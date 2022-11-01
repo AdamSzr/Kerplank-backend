@@ -80,12 +80,11 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
 
     @PostMapping("upload") // https://hantsy.github.io/spring-reactive-sample/web/multipart.html
-    fun saveFile(@RequestPart("book") book: String, @RequestPart("file") file: Mono<FilePart>): Disposable {
-        return file.flatMap {
-            val x = File(driveConfiguration.directory + "/" + it.filename())
-            it.transferTo(x)
-        }.subscribe()
-//        return file.flatMap { it.transferTo() }
+    fun saveFile(@RequestPart("file") file: Mono<FilePart>): Mono<String> {
+        return file.flatMap { filePart ->
+            val x = File(driveConfiguration.directory + "/" + filePart.filename())
+            filePart.transferTo(x).flatMap { x.path.toMono() }
+        }
     }
 
 }
