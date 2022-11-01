@@ -6,7 +6,9 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.web.bind.annotation.*
+import reactor.core.Disposable
 import reactor.core.publisher.Mono
+import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
 import java.io.File
 import java.nio.file.Files
@@ -78,8 +80,12 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
 
     @PostMapping("upload") // https://hantsy.github.io/spring-reactive-sample/web/multipart.html
-    fun saveFile(@RequestPart("book") book: String, @RequestPart("file") file: Mono<FilePart>): Mono<Void> {
-        return file.flatMap { it.transferTo(File(driveConfiguration.directory + "/" + it.filename())) }
+    fun saveFile(@RequestPart("book") book: String, @RequestPart("file") file: Mono<FilePart>): Disposable {
+        return file.flatMap {
+            val x = File(driveConfiguration.directory + "/" + it.filename())
+            it.transferTo(x)
+        }.subscribe()
+//        return file.flatMap { it.transferTo() }
     }
 
 }
