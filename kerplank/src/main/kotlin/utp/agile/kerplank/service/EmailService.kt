@@ -1,4 +1,4 @@
-package utp.agile.kerplank.domain.email
+package utp.agile.kerplank.service
 
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
