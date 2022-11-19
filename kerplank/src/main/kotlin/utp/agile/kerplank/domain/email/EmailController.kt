@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 class EmailController(val emailService: EmailService) {
 
     @GetMapping("/send")
-    fun sendEmail(): ResponseEntity<String> {
-        return ResponseEntity<String>(
+    fun sendEmail(): ResponseEntity<Boolean> {
+        return ResponseEntity<Boolean>(
             emailService.sendEmail(
                 "kerplank.project@gmail.com",
                 "kerplank.project@gmail.com",

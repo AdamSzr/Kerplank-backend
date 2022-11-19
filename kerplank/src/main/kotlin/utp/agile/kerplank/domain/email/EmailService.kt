@@ -10,7 +10,7 @@ import javax.mail.Message
 @Service
 class EmailService() {
 
-    fun sendEmail(from: String, to: String, subject: String, content: String): String {
+    fun sendEmail(from: String, to: String, subject: String, content: String): Boolean {
         val sender = this.getJavaMailSender()
         val message = sender?.createMimeMessage()
         message?.setText(content)
@@ -20,9 +20,10 @@ class EmailService() {
 
         return try {
             sender?.send(message)
-            "Email was sent"
+            true
         } catch (e: Exception) {
-            e.toString()
+            println(e.toString())
+            false
         }
     }
 
