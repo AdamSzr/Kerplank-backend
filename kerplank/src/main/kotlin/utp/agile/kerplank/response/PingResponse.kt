@@ -1,3 +1,4 @@
 package utp.agile.kerplank.response
 
-class PingResponse : BaseResponse()
+
+class PingResponse : SuccessResponse()

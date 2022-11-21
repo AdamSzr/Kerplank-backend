@@ -1,66 +1,76 @@
 package utp.agile.kerplank.configuration
 
 import org.springframework.context.annotation.Bean
-import org.springframework.http.HttpHeaders
+import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.server.SecurityWebFilterChain
-import org.springframework.security.web.server.authentication.AuthenticationWebFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.reactive.CorsConfigurationSource
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource
 import reactor.core.publisher.Mono
+import utp.agile.kerplank.auth.UserAuthManager
+import utp.agile.kerplank.repository.SecurityContextRepository
 
-
+@Configuration
 @EnableWebFluxSecurity
-class SecurityConfig {
+class SecurityConfiguration(
+    private val authenticationManager: UserAuthManager,
+    private val securityContextRepository: SecurityContextRepository
+) {
 
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+    private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
+    private val backOfficeCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
 
-    @Bean
-    fun userDetailsService(encoder: PasswordEncoder): MapReactiveUserDetailsService {
-        val user = User.builder()
-            .username("adam")
-            .password(encoder.encode("adam"))
-            .roles("USER")
-            .build()
+    private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
+        "/api-admin/**" to backOfficeCorsConfiguration,
+        "/api/**" to frontendCorsConfiguration
+    )
 
-        return MapReactiveUserDetailsService(user)
+    init {
+        frontendCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
+        backOfficeCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
     }
 
     @Bean
-    fun springSecurityFilterChain(
-        converter: JwtServerAuthenticationConverter,
-        http: ServerHttpSecurity,
-        authManager: JwtAuthenticationManager): SecurityWebFilterChain {
-
-        val filter = AuthenticationWebFilter(authManager)
-        filter.setServerAuthenticationConverter(converter)
-
-        http
+    fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
+        http.cors().and()
             .exceptionHandling()
-            .authenticationEntryPoint { exchange, _ ->
+            .authenticationEntryPoint { serverWebExchange, _ ->
                 Mono.fromRunnable {
-                    exchange.response.statusCode = HttpStatus.UNAUTHORIZED
-                    exchange.response.headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer")
+                    serverWebExchange.response.statusCode = HttpStatus.UNAUTHORIZED
+                }
+            }
+            .accessDeniedHandler { serverWebExchange, _ ->
+                Mono.fromRunnable {
+                    serverWebExchange.response.statusCode = HttpStatus.FORBIDDEN
                 }
             }
             .and()
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.POST, "/login").permitAll()
-            .anyExchange().authenticated()
-            .and()
-            .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
-            .httpBasic().disable()
-            .formLogin().disable()
             .csrf().disable()
+            .authenticationManager(authenticationManager)
+            .securityContextRepository(securityContextRepository)
+            .authorizeExchange()
+            .pathMatchers(HttpMethod.OPTIONS).permitAll()
+            .anyExchange().permitAll().and()
+            .build()
 
-        return http.build()
+    @Bean
+    fun passwordEncoder(): BCryptPasswordEncoder =
+        BCryptPasswordEncoder()
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val source = UrlBasedCorsConfigurationSource()
+
+        corsConfiguration.entries.forEach { entry ->
+            source.registerCorsConfiguration(entry.key, entry.value)
+        }
+
+        return source
     }
 
 }
