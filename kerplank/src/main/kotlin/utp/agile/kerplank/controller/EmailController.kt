@@ -16,7 +16,7 @@ class EmailController(val emailService: EmailService) {
         return ResponseEntity<Boolean>(
             emailService.sendEmail(
                 "kerplank.project@gmail.com",
-                "kerplank.project@gmail.com",
+                "adam.szr98@gmail.com",
                 "testowy email",
                 "treść"
             ),
