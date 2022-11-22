@@ -1,10 +1,13 @@
 package utp.agile.kerplank.controller
 
 import org.springframework.context.ApplicationContext
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
+import utp.agile.kerplank.TOKEN_PREFIX
 import utp.agile.kerplank.auth.TokenProvider
 import utp.agile.kerplank.configuration.LoginConfiguration
 import utp.agile.kerplank.model.*
@@ -23,6 +26,13 @@ class LoginController(
     private val passwordEncoder: BCryptPasswordEncoder,
     private  val userService: UserService,
 ) {
+
+    @GetMapping("/me")
+    fun getMyUserInformation(
+        authentication: Authentication,
+    ) =
+       ResponseEntity<BaseResponse>(HttpStatus.OK)
+
 
     @GetMapping("/api-admin/all")
     fun getAllUsers(
@@ -66,7 +76,7 @@ class LoginController(
             val token = LoginConfiguration.getAuthToken(user, request, applicationContext)
                 ?: return@map InvalidCredentials()
 
-            UserLoginResponse(token)
+            UserLoginResponse(TOKEN_PREFIX + token)
         }
         .onErrorReturn(InvalidCredentials())
         .switchIfEmpty(Mono.just(InvalidCredentials()))

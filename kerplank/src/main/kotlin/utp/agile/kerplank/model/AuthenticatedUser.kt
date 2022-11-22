@@ -8,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 data class AuthenticatedUser(
     val username: String,
     val roles: List<SimpleGrantedAuthority>,
-    var auth: Boolean = true
+    var auth: Boolean = true,
 ): Authentication {
 
     override fun getAuthorities(): Collection<GrantedAuthority?> = roles

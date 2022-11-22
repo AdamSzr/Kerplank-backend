@@ -8,12 +8,12 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.stereotype.Component
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
+import utp.agile.kerplank.TOKEN_PREFIX
 import utp.agile.kerplank.auth.UserAuthManager
 
 @Component
 class SecurityContextRepository(private val authManager: UserAuthManager): ServerSecurityContextRepository {
 
-    private val TOKEN_PREFIX = "Bon2 "
 
     override fun save(swe: ServerWebExchange?, sc: SecurityContext?): Mono<Void> {
         TODO("not implemented")
