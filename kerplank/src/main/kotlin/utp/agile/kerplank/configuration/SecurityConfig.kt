@@ -22,22 +22,14 @@ class SecurityConfiguration(
     private val securityContextRepository: SecurityContextRepository
 ) {
 
-    private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
-    private val backOfficeCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
-
-    private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
-        "/api-admin/**" to backOfficeCorsConfiguration,
-        "/api/**" to frontendCorsConfiguration
-    )
-
-    init {
-        frontendCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
-        backOfficeCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
-    }
-
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
-        http.cors().and()
+        http
+            .authorizeExchange()
+            .pathMatchers("/api/ping", "/api/user/login", "/api/user/signup")
+            .permitAll()
+            .anyExchange().authenticated().and()
+            .cors().and()
             .exceptionHandling()
             .authenticationEntryPoint { serverWebExchange, _ ->
                 Mono.fromRunnable {
@@ -53,24 +45,10 @@ class SecurityConfiguration(
             .csrf().disable()
             .authenticationManager(authenticationManager)
             .securityContextRepository(securityContextRepository)
-            .authorizeExchange()
-            .pathMatchers(HttpMethod.OPTIONS).permitAll()
-            .anyExchange().permitAll().and()
             .build()
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder =
         BCryptPasswordEncoder()
-
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val source = UrlBasedCorsConfigurationSource()
-
-        corsConfiguration.entries.forEach { entry ->
-            source.registerCorsConfiguration(entry.key, entry.value)
-        }
-
-        return source
-    }
 
 }

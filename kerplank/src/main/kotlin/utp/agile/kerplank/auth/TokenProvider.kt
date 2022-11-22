@@ -32,9 +32,6 @@ object TokenProvider {
         .signWith(key)
         .compact()
 
-//    init {
-//        println(generateToken(User("jarek", "jarek"), null))
-//    }
 
     fun getUsernameFromToken(token: String): String =
         getClaimFromToken(token) { claims: Claims -> claims.subject }
