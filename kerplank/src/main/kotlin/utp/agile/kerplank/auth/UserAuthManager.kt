@@ -10,17 +10,22 @@ import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 
 @Component
-class UserAuthManager: ReactiveAuthenticationManager {
+class UserAuthManager : ReactiveAuthenticationManager {
 
     override fun authenticate(authentication: Authentication): Mono<Authentication> {
         val authToken = authentication.credentials.toString()
-        val username: String? = try { TokenProvider.getUsernameFromToken(authToken) } catch (e: Exception) { null }
+        val username: String? = try {
+            TokenProvider.getUsernameFromToken(authToken)
+        } catch (e: Exception) {
+            null
+        }
 
         return if (username != null && !TokenProvider.isTokenExpired(authToken)) {
             val authorities = TokenProvider.getRolesKeyFromToken(authToken)
                 .map { SimpleGrantedAuthority(it) }
-
-            Mono.just(AuthenticatedUser(username, authorities))
+            val email = TokenProvider.getEmailFromToken(authToken)
+            val details = TokenProvider.getDetailsFromToken(authToken)
+            Mono.just(AuthenticatedUser(username, authorities, email = email, details = details))
         } else {
             Mono.empty()
         }

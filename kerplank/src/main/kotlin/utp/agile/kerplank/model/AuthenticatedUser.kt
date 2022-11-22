@@ -9,6 +9,8 @@ data class AuthenticatedUser(
     val username: String,
     val roles: List<SimpleGrantedAuthority>,
     var auth: Boolean = true,
+    val email:String,
+    val details:Map<String,String>,
 ): Authentication {
 
     override fun getAuthorities(): Collection<GrantedAuthority?> = roles

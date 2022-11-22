@@ -15,6 +15,7 @@ import utp.agile.kerplank.repository.UserRepository
 import utp.agile.kerplank.response.FailResponse
 import utp.agile.kerplank.response.InvalidCredentials
 import utp.agile.kerplank.response.SuccessResponse
+import utp.agile.kerplank.response.WhoAmIResponse
 import utp.agile.kerplank.service.UserService
 import utp.agile.kerplank.standardizedEmail
 
@@ -24,17 +25,23 @@ class LoginController(
     private val userRepository: UserRepository,
     private val applicationContext: ApplicationContext,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private  val userService: UserService,
+    private val userService: UserService,
 ) {
 
     @GetMapping("/me")
     fun getMyUserInformation(
-        authentication: Authentication,
+        authentication: AuthenticatedUser,
     ) =
-       ResponseEntity<BaseResponse>(HttpStatus.OK)
+        ResponseEntity<BaseResponse>(
+            WhoAmIResponse(
+                authentication.username,
+                authentication.email,
+                authentication.details
+            ), null, HttpStatus.OK
+        )
 
 
-    @GetMapping("/api-admin/all")
+    @GetMapping("/all")
     fun getAllUsers(
         authentication: Authentication,
     ) =
@@ -43,28 +50,21 @@ class LoginController(
             .map { UsersListResponse(it) }
             .defaultIfEmpty(UsersListResponse(emptyList()))
 
-    @PutMapping("/api/activate/{nickname}")
-    fun changeActivate(
-        authentication: Authentication,
-        @PathVariable nickname: String
-    ) =
-        findByNickname(nickname)
-            .flatMap { userRepository.save(it.changeActivated()) }
-            .map { UserChangeActivated(it) }
-
 
     @PutMapping("/signup")
     fun signUp(@RequestBody request: UserSignUpRequest): Mono<out BaseResponse> =
         userService.createUser(request)
-            .map { UserSignupResponse(it)  as BaseResponse }
+            .map { UserSignupResponse(it) as BaseResponse }
 
 
     @PostMapping("/login")
     fun login(@RequestBody request: UserLoginRequest): Mono<out BaseResponse> = when {
         (request.type == LoginType.EMAIL && request.email?.isNotBlank() == true) ->
             findActivatedUserByEmail(request.email)
+
         (request.type == LoginType.NICKNAME && request.nickname?.isNotBlank() == true) ->
             findByNickname(request.nickname)
+
         else ->
             Mono.empty()
     }
@@ -85,10 +85,10 @@ class LoginController(
     fun delete(
         authentication: Authentication,
         @PathVariable nickname: String
-    ):Mono<BaseResponse> =
+    ): Mono<BaseResponse> =
         userRepository.deleteById(nickname)
-            .map { SuccessResponse() as BaseResponse}
-            .onErrorReturn(FailResponse("Nie udało się usunąć użytkownika",1002) as BaseResponse)
+            .map { SuccessResponse() as BaseResponse }
+            .onErrorReturn(FailResponse("Nie udało się usunąć użytkownika", 1002) as BaseResponse)
 
 
     private fun findActivatedUserByEmail(email: String): Mono<User> =

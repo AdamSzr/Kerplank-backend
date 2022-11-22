@@ -12,7 +12,8 @@ data class User(
     @JsonIgnore
     var password: String,
     var role: UserRole = UserRole.USER,
-    val details: Map<String, String> = mapOf(),
+    val email: String,
+    val details: Map<String, String>,
     @DBRef val permissions: List<Permission> = listOf(),
     val created: Instant = Instant.now(),
     var activated: Boolean = true,
@@ -41,7 +42,8 @@ object UserUtils {
             nickname = signup.nickname,
             password = encryptedPassword,
             role = UserRole.MODERATOR,
-            details = mapOf("email" to signup.email)
+            email = signup.email,
+            details = hashMapOf(),
         )
 
     fun singUpAdmin(signup: UserSignUpRequest, encryptedPassword: String) =
@@ -49,7 +51,8 @@ object UserUtils {
             nickname = signup.nickname,
             password = encryptedPassword,
             role = UserRole.ADMIN,
-            details = mapOf("email" to signup.email)
+            email = signup.email,
+            details = hashMapOf(),
         )
 
     fun changeRole(user: User, newRole: UserRole) =
