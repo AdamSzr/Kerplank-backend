@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import utp.agile.kerplank.model.BaseResponse
+import utp.agile.kerplank.response.BaseResponse
 import utp.agile.kerplank.response.SuccessResponse
 
 

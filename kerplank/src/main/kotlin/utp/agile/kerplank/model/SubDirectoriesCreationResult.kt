@@ -1,4 +1,4 @@
-package utp.agile.kerplank.domain.utils.structures
+package utp.agile.kerplank.model
 
 import java.io.File
 

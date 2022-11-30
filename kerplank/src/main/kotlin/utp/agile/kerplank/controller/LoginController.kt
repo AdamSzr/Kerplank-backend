@@ -2,6 +2,7 @@ package utp.agile.kerplank.controller
 
 import org.springframework.context.ApplicationContext
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -12,10 +13,7 @@ import utp.agile.kerplank.auth.TokenProvider
 import utp.agile.kerplank.configuration.LoginConfiguration
 import utp.agile.kerplank.model.*
 import utp.agile.kerplank.repository.UserRepository
-import utp.agile.kerplank.response.FailResponse
-import utp.agile.kerplank.response.InvalidCredentials
-import utp.agile.kerplank.response.SuccessResponse
-import utp.agile.kerplank.response.WhoAmIResponse
+import utp.agile.kerplank.response.*
 import utp.agile.kerplank.service.UserService
 import utp.agile.kerplank.standardizedEmail
 
@@ -57,7 +55,7 @@ class LoginController(
             .map { UserSignupResponse(it) as BaseResponse }
 
 
-    @PostMapping("/login")
+    @PostMapping("/login", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun login(@RequestBody request: UserLoginRequest): Mono<out BaseResponse> = when {
         (request.type == LoginType.EMAIL && request.email?.isNotBlank() == true) ->
             findActivatedUserByEmail(request.email)

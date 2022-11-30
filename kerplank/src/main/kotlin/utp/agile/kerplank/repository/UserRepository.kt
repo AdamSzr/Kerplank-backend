@@ -13,6 +13,5 @@ interface UserRepository: ReactiveMongoRepository<User, String> {
     @Query("{ '_id' : {\$regex : /^?0$/ , \$options : 'i' } }")
     fun findByNickname(nickname: String): Mono<User>
 
-    @Query("{ 'details.email': ?0 }")
     fun findByEmail(email: String): Mono<User>
 }

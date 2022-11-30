@@ -1,4 +1,4 @@
-package utp.agile.kerplank.model
+package utp.agile.kerplank.response
 
 import org.intellij.lang.annotations.Pattern
 

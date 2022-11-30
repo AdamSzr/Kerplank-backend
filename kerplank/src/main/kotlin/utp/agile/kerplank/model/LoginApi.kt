@@ -1,5 +1,7 @@
 package utp.agile.kerplank.model
 
+import utp.agile.kerplank.response.BaseResponse
+
 data class UserLoginRequest(
     val type: LoginType,
     val email: String? = null,

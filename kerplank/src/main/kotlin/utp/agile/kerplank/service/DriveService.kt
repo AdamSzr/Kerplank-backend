@@ -1,8 +1,8 @@
-package utp.agile.kerplank.domain.drive
+package utp.agile.kerplank.service
 
 import org.springframework.stereotype.Service
 import utp.agile.kerplank.configuration.DriveConfiguration
-import utp.agile.kerplank.domain.utils.structures.SubDirectoriesCreationResult
+import utp.agile.kerplank.model.SubDirectoriesCreationResult
 import java.io.File
 import javax.annotation.PostConstruct
 
