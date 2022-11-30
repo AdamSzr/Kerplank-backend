@@ -1,5 +1,6 @@
 package utp.agile.kerplank.model
 
+import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import utp.agile.kerplank.model.enumerate.ProjectStatus
@@ -9,6 +10,7 @@ import javax.validation.constraints.Size
 
 
 data class Task(
+    val id: String = ObjectId().toHexString(),
     @Size(max = 100) val title: String,
     @Size(max = 2000) val description: String,
     val assignedTo: User? = null,

@@ -44,8 +44,8 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
             }
 
             request.users != null -> {
-                return  request.users.toFlux()
-                    .flatMap() { userRepository.findByEmail(it) }
+                return request.users.toFlux()
+                    .flatMap { userRepository.findByEmail(it) }
                     .collectList()
                     .flatMap { userList ->
                         projectRepository.findById(projectId).map { project ->
@@ -54,10 +54,52 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                             .flatMap { project -> projectRepository.save(project) }
                             .switchIfEmpty { Mono.empty() }
                     }
+                    .switchIfEmpty { Mono.empty() }
             }
 
             else -> Mono.empty()
         }
+    }
+
+    fun deleteProject(projectId: String): Mono<String> {
+        return projectRepository.findById(projectId)
+            .flatMap {
+                projectRepository.deleteById(projectId)
+                    .flatMap { Mono.just("deleted") } // Mono<Void> is recognized as Mono.empty()
+                    .switchIfEmpty { Mono.just("deleted") }
+            }
+            .switchIfEmpty { Mono.empty() }
+    }
+
+    fun deleteUserFromProject(projectId: String, userEmail: String): Mono<Project> {
+        return projectRepository.findById(projectId)
+            .flatMap {
+                val usersActive = it.users.filter { user -> user.email != userEmail }
+                it.apply { users = usersActive.toMutableList() }
+                projectRepository.save(it)
+            }
+            .switchIfEmpty { Mono.empty() }
+    }
+
+
+    fun deletePathFromProject(projectId: String, filePath: String): Mono<Project> {
+        return projectRepository.findById(projectId)
+            .flatMap {
+                val filesActive = it.files.filter { filepath -> filepath != filePath }
+                it.apply { files = filesActive.toMutableList() }
+                projectRepository.save(it)
+            }
+            .switchIfEmpty { Mono.empty() }
+    }
+
+    fun deleteTaskFromProject(projectId: String, taskId: String): Mono<Project> {
+        return projectRepository.findById(projectId)
+            .flatMap {
+                val taskActive = it.tasks.filter { task -> task.id != taskId }
+                it.apply { tasks = taskActive.toMutableList() }
+                projectRepository.save(it)
+            }
+            .switchIfEmpty { Mono.empty() }
     }
 
 }

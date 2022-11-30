@@ -1,6 +1,5 @@
 package utp.agile.kerplank.controller
 
-import com.fasterxml.jackson.databind.ser.Serializers.Base
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -29,14 +28,14 @@ class ProjectController(private val projectService: ProjectService) {
         @RequestBody projectCreateRequest: ProjectCreateRequest,
         authenticatedUser: AuthenticatedUser
     ): Mono<ResponseEntity<ProjectResponse>> {
-        return projectService.createProject(authenticatedUser.email,projectCreateRequest)
+        return projectService.createProject(authenticatedUser.email, projectCreateRequest)
             .flatMap {
-            ResponseEntity<ProjectResponse>(
-                ProjectResponse(it),
-                null,
-                HttpStatus.CREATED
-            ).toMono()
-        }
+                ResponseEntity<ProjectResponse>(
+                    ProjectResponse(it),
+                    null,
+                    HttpStatus.CREATED
+                ).toMono()
+            }
     }
 
     @PostMapping("/task")
@@ -57,6 +56,39 @@ class ProjectController(private val projectService: ProjectService) {
         return projectService.updateProject(projectId, update)
             .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.OK) }
             .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
+    }
+
+
+    @DeleteMapping("/{projectId}")
+    fun deleteProject(
+        @PathVariable projectId: String,
+        @RequestParam userEmail: String?,
+        @RequestParam filePath: String?,
+        @RequestParam taskId: String?,
+    ): Mono<out Any> {
+        return when {
+            !userEmail.isNullOrBlank() -> {
+                projectService.deleteUserFromProject(projectId,userEmail)
+//                Mono.just("Delete - user from project")
+            }
+
+            !filePath.isNullOrBlank() -> {
+                projectService.deletePathFromProject(projectId,filePath)
+//                Mono.just("Delete - file from project")
+            }
+
+            !taskId.isNullOrBlank() -> {
+                projectService.deleteTaskFromProject(projectId,taskId)
+//                Mono.just("Delete - task from project")
+            }
+
+            else -> {
+                projectService.deleteProject(projectId)
+                    .flatMap { Mono.just(it) }
+                    .switchIfEmpty { Mono.just("not found") }
+            }
+        }
+        // todo create acctualy normal responses.
     }
 
 

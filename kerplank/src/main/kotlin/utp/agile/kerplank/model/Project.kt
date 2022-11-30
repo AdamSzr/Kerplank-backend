@@ -15,9 +15,9 @@ data class Project(
     val dateTimeCreation: Instant = Instant.now(),
     val dateTimeDelivery: Instant,
     val status: ProjectStatus = ProjectStatus.ACTIVE,
-    val users: MutableCollection<User> = mutableListOf(),
-    val files: MutableCollection<String> = mutableListOf(), //paths = /notes/test.txt
-    val tasks: MutableCollection<Task> = mutableListOf(), // tasks ids
+    var users: MutableCollection<User> = mutableListOf(),
+    var files: MutableCollection<String> = mutableListOf(), //paths = /notes/test.txt
+    var tasks: MutableCollection<Task> = mutableListOf(), // tasks ids
 ) {
     fun appendTask(task: Task) = this.apply { tasks.add(task) }
     fun appendUser(user: User) = this.apply { users.add(user) }
