@@ -15,13 +15,13 @@ data class Project(
     val dateTimeCreation: Instant = Instant.now(),
     val dateTimeDelivery: Instant,
     val status: ProjectStatus = ProjectStatus.ACTIVE,
-    val users: MutableCollection<String> = mutableListOf(),
+    val users: MutableCollection<User> = mutableListOf(),
     val files: MutableCollection<String> = mutableListOf(), //paths = /notes/test.txt
     val tasks: MutableCollection<Task> = mutableListOf(), // tasks ids
 ) {
     fun appendTask(task: Task) = this.apply { tasks.add(task) }
-    fun appendUser(userId: String) = this.apply { users.add(userId) }
-    fun appendUsers(userList: List<String>) = this.apply { users.addAll(userList) }
+    fun appendUser(user: User) = this.apply { users.add(user) }
+    fun appendUsers(userList: List<User>) = this.apply { users.addAll(userList) }
     fun appendFile(filePath: String) = this.apply { files.add(filePath) }
     fun appendFiles(filePathList: List<String>) = this.apply { files.addAll(filePathList) }
 }
@@ -31,14 +31,12 @@ data class ProjectCreateRequest(
     val title: String,
     val description: String,
     val dateTimeDelivery: Instant,
-    var users: MutableCollection<String> = mutableListOf()
 ) {
     fun createProject(): Project {
         return Project(
             title = this.title,
             description = this.description,
             dateTimeDelivery = this.dateTimeDelivery,
-            users = users
         )
     }
 }

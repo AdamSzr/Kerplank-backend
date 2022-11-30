@@ -18,10 +18,11 @@ import utp.agile.kerplank.model.UserUtils
 import utp.agile.kerplank.repository.UserRepository
 
 @Service
-class UserService(val userRepository: UserRepository, val ctx: ApplicationContext) {
+class UserService(private val userRepository: UserRepository, private val ctx: ApplicationContext) {
 
     fun createUser(model: UserSignUpRequest): Mono<User> {
         val passwordEncoder = ctx.getBean("passwordEncoder", BCryptPasswordEncoder::class.java)
         return userRepository.save(UserUtils.singUp(model, passwordEncoder.encode(model.password)))
     }
+
 }

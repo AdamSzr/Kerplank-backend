@@ -29,9 +29,8 @@ class ProjectController(private val projectService: ProjectService) {
         @RequestBody projectCreateRequest: ProjectCreateRequest,
         authenticatedUser: AuthenticatedUser
     ): Mono<ResponseEntity<ProjectResponse>> {
-        return projectService.createProject(
-            projectCreateRequest.apply { users.add(authenticatedUser.username) }
-        ).flatMap {
+        return projectService.createProject(authenticatedUser.email,projectCreateRequest)
+            .flatMap {
             ResponseEntity<ProjectResponse>(
                 ProjectResponse(it),
                 null,
