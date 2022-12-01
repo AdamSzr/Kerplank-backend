@@ -1,5 +1,5 @@
 import { Endpoints } from "../config"
-import { BaseResponse } from "./base-response"
+import { BaseResponse } from "../models/base-response"
 import { customFetch } from "./custom-fetch"
 
 
