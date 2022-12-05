@@ -30,7 +30,8 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
       setTimeout(() => {
         router.push('/home')
       }, 2000);
-    }
+    } else setState('UNLOGGED')
+
   }, [])
 
 

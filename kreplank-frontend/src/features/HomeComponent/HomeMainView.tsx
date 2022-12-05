@@ -6,11 +6,8 @@ import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
 import { PageContext } from '../HomeComponent/HomeViewComponent'
-import { menuTabs } from './menu-config'
 
-
-
-const MenuComponent = () => {
+const HomeMainView = () => {
 
     const ctx = useContext(PageContext)
 
@@ -18,7 +15,8 @@ const MenuComponent = () => {
 
     return (
         <Box >
-            {menuTabs.map(it => <Button onClick={() => console.log(`przeniesienie do widoku [${it.title}]`)}> {it.title}</Button>)}
+            {ctx.acctualPage}
+            <Button onClick={()=> ctx.setAcctualPage("ADAM")} >change</Button>
         </Box>
     )
 }
@@ -27,4 +25,4 @@ const MenuComponent = () => {
 
 
 
-export default MenuComponent
+export default HomeMainView
