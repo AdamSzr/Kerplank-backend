@@ -1,7 +1,7 @@
 import { backendUrlStorage } from "../config"
+import axios, { isCancel, AxiosError } from 'axios';
 
-
-export function customFetch<T>(relaticeUrl: string, options?: { method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any }): Promise<T> {
+export function customFetch<T>(relaticeUrl: string, options?: { method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any }): Promise<any> {
     const url = backendUrlStorage.getOrThrow() + relaticeUrl
     const myHeaders = new Headers();
 
@@ -13,19 +13,25 @@ export function customFetch<T>(relaticeUrl: string, options?: { method?: 'GET' |
     });
 
 
-    var requestOptions = {
-        method: 'POST',
-        headers: [["content-type", "application/json"]],
-        body: raw,
-        redirect: 'follow',
-        mode: "no-cors"
-    } as RequestInit
-    console.log(requestOptions)
+    // var requestOptions = {
+    //     method: 'POST',
+    //     headers: { 'content-type': "application/json"  },
+    //     body: raw,
+    //     redirect: 'follow',
+    //     mode: "no-cors"
+    // } as RequestInit
+    // console.log(requestOptions)
 
-    fetch("http://192.168.1.22:8080/api/user/login", requestOptions)
-        .then(response => response.json())
+
+    return axios.post("http://192.168.1.22:8080/api/user/login", raw, { headers: { 'content-type': "application/json"  } })
+        .then(response => console.log(response.data))
         .then(result => console.log(result))
         .catch(error => console.log('error', error));
+
+    // fetch("http://192.168.1.22:8080/api/user/login", requestOptions)
+    //     .then(response => response.json())
+    //     .then(result => console.log(result))
+    //     .catch(error => console.log('error', error));
 
 
     // const myHeaders = new Headers();
