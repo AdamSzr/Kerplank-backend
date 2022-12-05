@@ -22,6 +22,21 @@ class SecurityConfiguration(
     private val securityContextRepository: SecurityContextRepository
 ) {
 
+
+    private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
+    private val backOfficeCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
+
+    private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
+        "/api-admin/**" to backOfficeCorsConfiguration,
+        "/api/**" to frontendCorsConfiguration
+    )
+
+    init {
+        frontendCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
+        backOfficeCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
+    }
+
+
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
         http
@@ -50,5 +65,17 @@ class SecurityConfiguration(
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder =
         BCryptPasswordEncoder()
+
+
+    @Bean
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val source = UrlBasedCorsConfigurationSource()
+
+        corsConfiguration.entries.forEach { entry ->
+            source.registerCorsConfiguration(entry.key, entry.value)
+        }
+
+        return source
+    }
 
 }
