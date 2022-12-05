@@ -7,15 +7,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
 import { PageContext } from '../HomeComponent/HomeViewComponent'
 
-const HomeMainView = () => {
+const AboutApp = () => {
 
     const ctx = useContext(PageContext)
 
     const router = useRouter()
 
     return <Box >
-    {ctx.acctualPage.name}
-    <Button onClick={() => ctx.setAcctualPage('')} >change</Button>
+    {ctx.acctualPage}
+    <Button onClick={() => ctx.setAcctualPage("ADAM")} >change</Button>
 </Box>
 }
 
@@ -23,4 +23,4 @@ const HomeMainView = () => {
 
 
 
-export default HomeMainView
+export default AboutApp

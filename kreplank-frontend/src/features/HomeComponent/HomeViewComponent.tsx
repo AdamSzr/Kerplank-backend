@@ -4,23 +4,24 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
-import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { jwtTokenStorage } from '../config'
+import { MenuTab, menuTabs } from '../Menu/menu-config'
 import MenuComponent from '../Menu/MenuComponent'
 import HomeMainView from './HomeMainView'
 
 
 export type PageContextType = {
-    acctualPage: string, setAcctualPage: Dispatch<SetStateAction<string>>
+    acctualPage: MenuTab, setAcctualPage: Dispatch<SetStateAction<MenuTab>>
 }
 
-export const PageContext = createContext<PageContextType>({ acctualPage: "", setAcctualPage: (x) => { console.log(x) } })
+export const PageContext = createContext<PageContextType>({ acctualPage: "about", setAcctualPage: (x) => { console.log(x) } })
 
 const HomeViewComponent = () => {
 
-    const [acctualPage, setAcctualPage] = useState<string>('Home')
+    const [acctualPage, setAcctualPage] = useState<string>(menuTabs.find(it => it.name == 'about')!.view)
 
-    
+
 
     const contextValue = { acctualPage, setAcctualPage } as PageContextType
 
@@ -28,7 +29,7 @@ const HomeViewComponent = () => {
         <PageContext.Provider value={contextValue}>
             <Box >
                 <MenuComponent />
-                <Divider/>
+                <Divider />
                 <HomeMainView />
             </Box>
         </PageContext.Provider>
