@@ -1,59 +1,28 @@
 import { backendUrlStorage } from "../config"
 import axios, { isCancel, AxiosError } from 'axios';
 
-export function customFetch<T>(relaticeUrl: string, options?: { method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any }): Promise<any> {
-    const url = backendUrlStorage.getOrThrow() + relaticeUrl
-    const myHeaders = new Headers();
 
 
-    var raw = JSON.stringify({
-        "email": "random@email.com",
-        "password": "adam123",
-        "type": "EMAIL"
-    });
+export function customFetch<T>(relativeUrl: string, method?: 'GET' | 'POST' | 'PUT' | 'DELETE', body?: any): Promise<T> {
+    const url = backendUrlStorage.getOrThrow() + relativeUrl
+    console.log({ url, method, body })
 
+    if (!method || method == 'GET')
+        return axios.get(url)
 
-    // var requestOptions = {
-    //     method: 'POST',
-    //     headers: { 'content-type': "application/json"  },
-    //     body: raw,
-    //     redirect: 'follow',
-    //     mode: "no-cors"
-    // } as RequestInit
-    // console.log(requestOptions)
+    const headers = { headers: { 'content-type': "application/json" } }
+    if (method == 'POST' && body) {
+        return axios.post(url, JSON.stringify(body), headers)
+    }
 
+    if (method == 'PUT' && body) {
+        return axios.put(url, JSON.stringify(body), headers)
+    }
 
-    return axios.post("http://192.168.1.22:8080/api/user/login", raw, { headers: { 'content-type': "application/json"  } })
-        .then(response => console.log(response.data))
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+    if (method == 'DELETE') {
+        return axios.delete(url)
+    }
 
-    // fetch("http://192.168.1.22:8080/api/user/login", requestOptions)
-    //     .then(response => response.json())
-    //     .then(result => console.log(result))
-    //     .catch(error => console.log('error', error));
+    throw Error('Somethink goes wrong with fetch')
 
-
-    // const myHeaders = new Headers();
-
-    // if (options?.body) {
-    //     // check body type is string or object.
-    //     const bodyJson = JSON.stringify(options.body)
-    //     // myHeaders.set()
-    //     options.body = bodyJson
-    // }
-
-
-    // let reqOptions = {
-    //     method: options?.method ?? "GET",
-    //     headers: { "Content-Type": "application/json" },
-    //     mode: 'no-cors',
-    //     body: options?.body ?? ""
-    // } as RequestInit
-
-    // console.log(url, reqOptions)
-    // return fetch(url, reqOptions).then(it => it.json() as Promise<T>).then(jsonObject => {
-    //     console.log("Response ->", { json: jsonObject })
-    //     return jsonObject
-    // })
 }

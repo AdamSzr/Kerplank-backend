@@ -24,16 +24,13 @@ class SecurityConfiguration(
 
 
     private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
-    private val backOfficeCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
 
     private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
-        "/api-admin/**" to backOfficeCorsConfiguration,
         "/api/**" to frontendCorsConfiguration
     )
 
     init {
         frontendCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
-        backOfficeCorsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "HEAD", "DELETE")
     }
 
 

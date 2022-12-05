@@ -1,23 +1,41 @@
-import { Button, Input, InputAdornment, TextField } from "@mui/material"
+import { Alert, Button, Divider, Input, InputAdornment, TextField } from "@mui/material"
+import { useRouter } from "next/router"
 import { NextRequest, NextResponse } from "next/server"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
 import { login } from "../src/features/api/login-fetch"
+import { jwtTokenStorage } from "../src/features/config"
 
 
 
 
 const LoginPage = () => {
-    const [email, setEmail] = useState<string | undefined>()
-    const [password, setPassw] = useState<string | undefined>()
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassw] = useState<string>("")
+
+    const [alert, setAlert] = useState<undefined | ReactNode>()
 
 
+    const router = useRouter()
+
+    const createFailLoginAlert = (message?: string) => {
+        setAlert(<Alert severity="error" onClick={() => setAlert(undefined)}>  {message ?? `Logowanie nie powiodło się`} </Alert>)
+    }
 
     const onLoginClick = async () => {
-        if (!email || !password)
-            throw Error("Email and password should not be blank")
+        try {
+            const loginResponse = await login({ email, password, type: "EMAIL" })
+            if (loginResponse.data)
+                console.log(loginResponse)
+            if (loginResponse.data.result == 'ok') {
+                jwtTokenStorage.set(loginResponse.data.token)
+                router.push("/home")
+            } else {
+                createFailLoginAlert()
+            }
+        } catch (exception:any) {
+            createFailLoginAlert(exception.message)
+        }
 
-        const loginResponse = await login({ email, password, type: "EMAIL" })
-        console.log(loginResponse)
     }
 
     return (
@@ -39,6 +57,9 @@ const LoginPage = () => {
                 }}
             />
             <Button onClick={onLoginClick}>zaloguj</Button>
+            <Divider />
+
+            {alert}
         </div>
     )
 }

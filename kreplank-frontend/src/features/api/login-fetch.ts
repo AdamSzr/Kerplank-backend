@@ -1,4 +1,5 @@
-import { Endpoints } from "../config"
+import { AxiosResponse } from "axios"
+import { DEV_MODE, Endpoints } from "../config"
 import { BaseResponse } from "../models/base-response"
 import { customFetch } from "./custom-fetch"
 
@@ -17,11 +18,22 @@ export type LoginResponse = {
 
 
 export function login(loginData: LoginCredentials) {
-    if (!loginData.email && loginData.type == 'EMAIL')
-        throw Error("cant login via email cause email is not provided")
-    if (!loginData.nickname && loginData.type == 'NICKNAME')
-        throw Error("cant login via nickname cause nickname is not provided")
 
-    return customFetch<LoginResponse>(Endpoints.login, { method: "POST", body: loginData })
+    if (!DEV_MODE) {
+        if (!loginData.email && loginData.type == 'EMAIL')
+            throw Error("cant login via email cause email is not provided")
+        if (!loginData.nickname && loginData.type == 'NICKNAME')
+            throw Error("cant login via nickname cause nickname is not provided")
+    }
+
+
+    var raw = {
+        "email": "random@email.com",
+        "password": "adam123",
+        "type": "EMAIL"
+    };
+
+
+    return customFetch<AxiosResponse<LoginResponse>>(Endpoints.login, 'POST', raw)
 }
 
