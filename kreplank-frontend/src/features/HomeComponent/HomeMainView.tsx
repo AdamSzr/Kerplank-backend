@@ -5,18 +5,15 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
-import { PageContext } from '../HomeComponent/HomeViewComponent'
+import { PageContext } from '../AppRootComponent/AppRootViewComponent'
+import { Pages } from '../Menu/menu-config'
 
 const HomeMainView = () => {
 
-    const ctx = useContext(PageContext)
-
-    const router = useRouter()
-
     return <Box >
-    {ctx.acctualPage.name}
-    <Button onClick={() => ctx.setAcctualPage('')} >change</Button>
-</Box>
+        home main view
+        there will be small description of the app .. how app works, what can do
+    </Box>
 }
 
 

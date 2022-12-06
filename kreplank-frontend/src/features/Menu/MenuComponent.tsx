@@ -5,8 +5,8 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
-import { PageContext } from '../HomeComponent/HomeViewComponent'
-import { menuTabs } from './menu-config'
+import { PageContext } from '../AppRootComponent/AppRootViewComponent'
+import { MenuTab, Pages } from './menu-config'
 
 
 
@@ -15,10 +15,20 @@ const MenuComponent = () => {
     const ctx = useContext(PageContext)
 
     const router = useRouter()
+    console.log()
+
+    const createMenuBtn = (menuTab: MenuTab) => {
+        return <Button key={`menu-tab-${menuTab.title}`}  onClick={() => {
+            console.log(`przeniesienie do widoku [${menuTab.title}]`);
+            ctx.setAcctualPage(menuTab);
+
+        }}> {menuTab.title}</Button>
+    }
+
 
     return (
         <Box >
-            {menuTabs.map(it => <Button onClick={() => console.log(`przeniesienie do widoku [${it.title}]`)}> {it.title}</Button>)}
+            {Object.values(Pages).map((it: MenuTab) => createMenuBtn(it))}
         </Box>
     )
 }

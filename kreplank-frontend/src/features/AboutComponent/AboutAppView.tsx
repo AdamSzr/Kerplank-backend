@@ -5,22 +5,22 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
-import { PageContext } from '../HomeComponent/HomeViewComponent'
+import { PageContext } from '../AppRootComponent/AppRootViewComponent'
+import { Pages } from '../Menu/menu-config'
 
-const AboutApp = () => {
+const AboutAppView = () => {
 
     const ctx = useContext(PageContext)
 
     const router = useRouter()
 
     return <Box >
-    {ctx.acctualPage}
-    <Button onClick={() => ctx.setAcctualPage("ADAM")} >change</Button>
-</Box>
+        about page
+    </Box>
 }
 
 
 
 
 
-export default AboutApp
+export default AboutAppView

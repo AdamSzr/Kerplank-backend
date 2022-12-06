@@ -6,20 +6,20 @@ import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { jwtTokenStorage } from '../config'
-import { MenuTab, menuTabs } from '../Menu/menu-config'
+import { HomePage, MenuTab, Pages } from '../Menu/menu-config'
 import MenuComponent from '../Menu/MenuComponent'
-import HomeMainView from './HomeMainView'
+import HomeMainView from '../HomeComponent/HomeMainView'
 
 
 export type PageContextType = {
     acctualPage: MenuTab, setAcctualPage: Dispatch<SetStateAction<MenuTab>>
 }
 
-export const PageContext = createContext<PageContextType>({ acctualPage: "about", setAcctualPage: (x) => { console.log(x) } })
+export const PageContext = createContext<PageContextType>({ acctualPage: HomePage , setAcctualPage: (x) => { console.log(x) } })
 
-const HomeViewComponent = () => {
+const AppRootViewComponent = () => {
 
-    const [acctualPage, setAcctualPage] = useState<string>(menuTabs.find(it => it.name == 'about')!.view)
+    const [acctualPage, setAcctualPage] = useState<MenuTab>(HomePage)
 
 
 
@@ -30,7 +30,7 @@ const HomeViewComponent = () => {
             <Box >
                 <MenuComponent />
                 <Divider />
-                <HomeMainView />
+                {acctualPage.view}
             </Box>
         </PageContext.Provider>
 
@@ -41,4 +41,4 @@ const HomeViewComponent = () => {
 
 
 
-export default HomeViewComponent
+export default AppRootViewComponent
