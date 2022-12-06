@@ -3,7 +3,7 @@ export interface useStorageInterface<T> {
     clear: () => void,
     getOrThrow: () => T,
     getOrDefault: () => T,
-    tryGet: () => T | null,
+    tryGet: () => T | undefined,
     set: (value: T) => void
   }
   
