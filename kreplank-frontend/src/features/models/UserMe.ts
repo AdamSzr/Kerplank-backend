@@ -1,4 +1,4 @@
-export type User = {
+export type UserMe = {
     nickname: string
     password: string,
     role: "ADMIN" | "USER",

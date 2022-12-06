@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios"
 import { DEV_MODE, Endpoints } from "../config"
-import { BaseResponse } from "../models/base-response"
+import { BaseResponse } from "../models/BaseResponse"
 import { customFetch } from "./custom-fetch"
 
 
