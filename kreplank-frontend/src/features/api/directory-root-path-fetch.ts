@@ -2,12 +2,13 @@
 
 import { Endpoints } from "../config"
 import { CreateUserRequest } from "../models/request/CreateUserRequest"
+import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
 
 const directoryRootPath = () => {
 
-   return customFetch(Endpoints["drive.directory"])
+   return ax(Endpoints["drive.directory"])
 }
 
 export default directoryRootPath

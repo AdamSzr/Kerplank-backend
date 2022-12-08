@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios"
 import { DEV_MODE, Endpoints } from "../config"
 import { BaseResponse } from "../models/BaseResponse"
+import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
 
@@ -34,6 +35,6 @@ export function login(loginData: LoginCredentials) {
     };
 
 
-    return customFetch<AxiosResponse<LoginResponse>>(Endpoints.login, 'POST', raw)
+    return ax<LoginResponse>(Endpoints.login, 'POST', raw)
 }
 

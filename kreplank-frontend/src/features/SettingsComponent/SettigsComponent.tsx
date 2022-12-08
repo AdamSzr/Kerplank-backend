@@ -8,6 +8,7 @@ const SettingsComponent = () => {
     useEffect(() => {
         whoAmI().then(response => {
             console.log(response)
+            setMe(response.data)
         })
 
 
@@ -17,7 +18,7 @@ const SettingsComponent = () => {
 
     return <>
         settings component
-        {me ?? ""}
+        {me ? JSON.stringify(me) : ""}
     </>
 }
 

@@ -1,18 +1,20 @@
 
 
 import axios, { AxiosResponse } from "axios"
-import { Endpoints, jwtTokenStorage } from "../config"
+import { backendUrlStorage, Endpoints, jwtTokenStorage } from "../config"
 import { BaseResponse } from "../models/BaseResponse"
 import { CreateUserRequest } from "../models/request/CreateUserRequest"
 import { UserMe } from "../models/UserMe"
+import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
 
+
+export type WhoAmIResponse  = UserMe & BaseResponse
+
 const whoAmI = () => {
-
-    return axios.get<AxiosResponse<UserMe & BaseResponse>>("http://localhost:8080" + Endpoints.userMe, { headers: { "Authorization": jwtTokenStorage.getOrThrow() } })
-
-    return customFetch<UserMe & BaseResponse>(Endpoints.userMe)
+    return ax<WhoAmIResponse>(Endpoints.userMe)
+   
 }
 
 export default whoAmI
