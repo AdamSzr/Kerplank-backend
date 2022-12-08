@@ -43,7 +43,7 @@ data class ProjectCreateRequest(
 
 data class ProjectResponse(val project: Project) : BaseResponse()
 
-data class ProjectListResponse(val projects: List<Project>) : BaseResponse()
+data class ProjectListResponse(val list: List<Project>) : BaseResponse()
 
 
 data class ProjectUpdateRequest(

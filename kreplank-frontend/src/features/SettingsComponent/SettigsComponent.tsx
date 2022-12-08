@@ -1,3 +1,4 @@
+import { Divider } from "@mui/material"
 import { useEffect, useState } from "react"
 import whoAmI from "../api/user-me-fetch"
 import { UserMe } from "../models/UserMe"
@@ -18,6 +19,7 @@ const SettingsComponent = () => {
 
     return <>
         settings component
+        <Divider />
         {me ? JSON.stringify(me) : ""}
     </>
 }

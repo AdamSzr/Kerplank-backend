@@ -1,3 +1,4 @@
+import { Divider } from "@mui/material"
 import { useEffect, useState } from "react"
 import getProjectsList, { ProjectListResponse } from "../api/download-project-list"
 
@@ -17,6 +18,8 @@ const ProjectsComponent = () => {
 
     return <>
         ProjectsComponent
+
+        <Divider />
         {
             projectsList ? JSON.stringify(projectsList) : ""
         }
