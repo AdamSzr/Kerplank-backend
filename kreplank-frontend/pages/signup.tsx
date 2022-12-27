@@ -3,8 +3,6 @@ import { useRouter } from "next/router"
 import { NextRequest, NextResponse } from "next/server"
 import { ReactNode, useState } from "react"
 import createUser from "../src/features/api/create-user-fetch"
-import { login } from "../src/features/api/login-fetch"
-import { jwtTokenStorage } from "../src/features/config"
 
 
 

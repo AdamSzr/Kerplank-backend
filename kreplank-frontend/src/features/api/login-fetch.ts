@@ -18,7 +18,7 @@ export type LoginResponse = {
 } & BaseResponse
 
 
-export function login(loginData: LoginCredentials) {
+export function login(loginData: LoginCredentials):Promise<LoginResponse> {
 
     if (!DEV_MODE) {
         if (!loginData.email && loginData.type == 'EMAIL')
@@ -28,13 +28,25 @@ export function login(loginData: LoginCredentials) {
     }
 
 
-    var raw = {
-        "email": "random@email.com",
-        "password": "adam123",
-        "type": "EMAIL"
+    var myHeaders = new Headers();
+    // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgxMDgxMjgsImlhdCI6MTY2ODEwNDUyOCwiaXNzIjoid3d3LmFjbWUuY29tIiwic3ViIjoiZjFlMzNhYjMtMDI3Zi00N2M1LWJiMDctOGRkOGFiMzdhMmQzIn0.5BOe2XBZA0K7P9bNh_ZhKFHvk1intmMP_KEvTbyEUwc");
+    myHeaders.append("Content-Type", "application/json");
+    
+    var raw = JSON.stringify({
+      "nickname": "adam123",
+      "password": "adam123",
+      "type": "NICKNAME"
+    });
+    
+    var requestOptions :RequestInit = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
     };
+    
+   return fetch("http://192.168.1.22:8080/api/user/login", requestOptions)
+      .then(response => response.json())
 
-
-    return ax<LoginResponse>(Endpoints.login, 'POST', raw)
 }
 

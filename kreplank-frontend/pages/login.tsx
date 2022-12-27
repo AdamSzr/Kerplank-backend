@@ -24,11 +24,11 @@ const LoginPage = () => {
     const onLoginClick = async () => {
         try {
             const loginResponse = await login({ email, password, type: "EMAIL" })
-            if (loginResponse.data)
+            if (loginResponse)
                 console.log(loginResponse)
-            if (loginResponse.data.result == 'ok') {
-                jwtTokenStorage.set(loginResponse.data.token)
-                router.push("/home")
+            if (loginResponse.result == 'ok') {
+                jwtTokenStorage.set(loginResponse.token)
+                router.push("/")
             } else {
                 createFailLoginAlert()
             }
