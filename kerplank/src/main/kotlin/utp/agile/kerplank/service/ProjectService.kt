@@ -14,7 +14,7 @@ import utp.agile.kerplank.repository.UserRepository
 class ProjectService(val projectRepository: ProjectRepository, val userRepository: UserRepository) {
 
     fun createProject(creatorEmail: String, request: ProjectCreateRequest): Mono<Project> {
-        val project = request.createProject()
+        val project = request.createProject(creatorEmail)
 
         return userRepository.findByEmail(creatorEmail)
             .map { project.appendUser(it) }
@@ -25,6 +25,15 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
         return projectRepository.findAll()
     }
 
+    fun findMyProjects(email:String):Flux<Project>{
+        return  projectRepository.findAllByUsersEquals(email)
+    }
+
+    fun findProjectById(id:String, email:String):Mono<Project>{
+        return projectRepository.findByIdAndUserEmail(id = id, email = email)
+    }
+
+
     fun createTask(request: TaskCreateRequest): Mono<Project> {
         val task = request.createTask()
 
@@ -34,7 +43,40 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
             .switchIfEmpty { Mono.empty() }
     }
 
+    fun updateProject( userEmail: String, projectId: String, request: ProjectUpdateRequest): Mono<Project> {
+        // check if user is in project
+
+        return when {
+            request.files != null -> {
+                projectRepository.findByIdAndUserEmail(email = userEmail, id =  projectId)
+                    .doOnNext { it.appendFiles(request.files) }
+                    .flatMap { projectRepository.save(it) }
+                    .switchIfEmpty { Mono.empty() }
+            }
+
+            request.users != null -> {
+                return request.users.toFlux()
+                    .flatMap { userRepository.findByEmail(it) }
+                    .collectList()
+                    .flatMap { userList ->
+                        projectRepository.findByIdAndUserEmail(email = userEmail, id =  projectId)
+                            .filter{it.creator == userEmail}
+                            .map { project ->
+                            project.appendUsers(userList)
+                        }
+                            .flatMap { project -> projectRepository.save(project) }
+                            .switchIfEmpty { Mono.empty() }
+                    }
+                    .switchIfEmpty { Mono.empty() }
+            }
+
+            else -> Mono.empty()
+        }
+    }
+
     fun updateProject(projectId: String, request: ProjectUpdateRequest): Mono<Project> {
+        // check if user is in project
+
         return when {
             request.files != null -> {
                 projectRepository.findById(projectId)
@@ -71,8 +113,9 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
             .switchIfEmpty { Mono.empty() }
     }
 
-    fun deleteUserFromProject(projectId: String, userEmail: String): Mono<Project> {
+    fun deleteUserFromProject(creatorEmail: String,projectId: String, userEmail: String): Mono<Project> {
         return projectRepository.findById(projectId)
+            .filter{ it.creator == creatorEmail }
             .flatMap {
                 val usersActive = it.users.filter { user -> user.email != userEmail }
                 it.apply { users = usersActive.toMutableList() }

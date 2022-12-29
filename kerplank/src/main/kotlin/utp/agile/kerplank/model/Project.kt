@@ -15,6 +15,7 @@ data class Project(
     val dateTimeCreation: Instant = Instant.now(),
     val dateTimeDelivery: Instant,
     val status: ProjectStatus = ProjectStatus.ACTIVE,
+    val creator: String,
     var users: MutableCollection<User> = mutableListOf(),
     var files: MutableCollection<String> = mutableListOf(), //paths = /notes/test.txt
     var tasks: MutableCollection<Task> = mutableListOf(), // tasks ids
@@ -32,11 +33,12 @@ data class ProjectCreateRequest(
     val description: String,
     val dateTimeDelivery: Instant,
 ) {
-    fun createProject(): Project {
+    fun createProject(creatorEmail:String): Project {
         return Project(
             title = this.title,
             description = this.description,
             dateTimeDelivery = this.dateTimeDelivery,
+            creator = creatorEmail,
         )
     }
 }

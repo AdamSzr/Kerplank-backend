@@ -23,6 +23,15 @@ class ProjectController(private val projectService: ProjectService) {
             .flatMap { ProjectListResponse(it).toMono() }
     }
 
+    @GetMapping("/my")
+    fun getMyProj(authenticatedUser: AuthenticatedUser): Mono<ProjectListResponse> {
+        return projectService
+            .findMyProjects(authenticatedUser.email)
+            .collectList()
+            .flatMap { ProjectListResponse(it).toMono() }
+    }
+
+
     @PostMapping
     fun createProject(
         @RequestBody projectCreateRequest: ProjectCreateRequest,
@@ -45,17 +54,24 @@ class ProjectController(private val projectService: ProjectService) {
         return projectService.createTask(taskRequest)
             .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.CREATED) }
             .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
-
     }
 
     @PutMapping("/{projectId}")
     fun updateProject(
         @PathVariable projectId: String,
-        @RequestBody update: ProjectUpdateRequest
+        @RequestBody update: ProjectUpdateRequest,
+        authenticatedUser: AuthenticatedUser
     ): Mono<ResponseEntity<BaseResponse>> {
-        return projectService.updateProject(projectId, update)
+        return projectService.updateProject(authenticatedUser.email, projectId, update)
             .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.OK) }
-            .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
+            .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.FORBIDDEN).toMono() }
+    }
+
+    @GetMapping("/{projectId}")
+    fun getProj(@PathVariable projectId: String, authenticatedUser: AuthenticatedUser): Mono<ProjectResponse> {
+        return projectService
+            .findProjectById(projectId, authenticatedUser.email)
+            .flatMap { ProjectResponse(it).toMono() }
     }
 
 
@@ -65,20 +81,23 @@ class ProjectController(private val projectService: ProjectService) {
         @RequestParam userEmail: String?,
         @RequestParam filePath: String?,
         @RequestParam taskId: String?,
+        authenticatedUser: AuthenticatedUser
     ): Mono<out Any> {
+
+
         return when {
             !userEmail.isNullOrBlank() -> {
-                projectService.deleteUserFromProject(projectId,userEmail)
+                projectService.deleteUserFromProject(authenticatedUser.email,projectId, userEmail)
 //                Mono.just("Delete - user from project")
             }
 
             !filePath.isNullOrBlank() -> {
-                projectService.deletePathFromProject(projectId,filePath)
+                projectService.deletePathFromProject(projectId, filePath)
 //                Mono.just("Delete - file from project")
             }
 
             !taskId.isNullOrBlank() -> {
-                projectService.deleteTaskFromProject(projectId,taskId)
+                projectService.deleteTaskFromProject(projectId, taskId)
 //                Mono.just("Delete - task from project")
             }
 
