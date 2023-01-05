@@ -84,7 +84,6 @@ class ProjectController(private val projectService: ProjectService) {
         authenticatedUser: AuthenticatedUser
     ): Mono<out Any> {
 
-
         return when {
             !userEmail.isNullOrBlank() -> {
                 projectService.deleteUserFromProject(authenticatedUser.email,projectId, userEmail)

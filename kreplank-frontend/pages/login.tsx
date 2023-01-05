@@ -9,7 +9,7 @@ import { jwtTokenStorage } from "../src/features/config"
 
 
 const LoginPage = () => {
-    const [email, setEmail] = useState<string>("")
+    const [nickname, setNickname] = useState<string>("")
     const [password, setPassw] = useState<string>("")
 
     const [alert, setAlert] = useState<undefined | ReactNode>()
@@ -23,7 +23,7 @@ const LoginPage = () => {
 
     const onLoginClick = async () => {
         try {
-            const loginResponse = await login({ email, password, type: "EMAIL" })
+            const loginResponse = await login({  nickname, password, type: "NICKNAME" })
             if (loginResponse)
                 console.log(loginResponse)
             if (loginResponse.result == 'ok') {
@@ -41,7 +41,7 @@ const LoginPage = () => {
     return (
         <div >
             <TextField
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => setNickname(event.target.value)}
                 id="outlined-start-adornment"
                 sx={{ m: 1, width: '25ch' }}
                 InputProps={{

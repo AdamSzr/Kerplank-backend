@@ -19,7 +19,7 @@ export type LoginResponse = {
 
 
 export function login(loginData: LoginCredentials):Promise<LoginResponse> {
-
+    console.log({loginData})
     if (!DEV_MODE) {
         if (!loginData.email && loginData.type == 'EMAIL')
             throw Error("cant login via email cause email is not provided")
@@ -29,12 +29,11 @@ export function login(loginData: LoginCredentials):Promise<LoginResponse> {
 
 
     var myHeaders = new Headers();
-    // myHeaders.append("Authorization", "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgxMDgxMjgsImlhdCI6MTY2ODEwNDUyOCwiaXNzIjoid3d3LmFjbWUuY29tIiwic3ViIjoiZjFlMzNhYjMtMDI3Zi00N2M1LWJiMDctOGRkOGFiMzdhMmQzIn0.5BOe2XBZA0K7P9bNh_ZhKFHvk1intmMP_KEvTbyEUwc");
     myHeaders.append("Content-Type", "application/json");
     
     var raw = JSON.stringify({
-      "nickname": "adam123",
-      "password": "adam123",
+      "nickname": loginData.nickname,
+      "password": loginData.password,
       "type": "NICKNAME"
     });
     
