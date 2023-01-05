@@ -10,7 +10,7 @@ export class Endpoints {
    static login = '/api/user/login'
    static userMe = '/api/user/me'
    static sign = '/api/user/signup'
-   static project = '/api/project'
+   static project = '/api/project/my'
    static "edit.project" = '/api/project/:projectId:'
    static "edit.task" = '/api/project/task'
    static ping = '/api/ping'

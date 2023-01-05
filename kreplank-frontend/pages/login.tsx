@@ -45,7 +45,7 @@ const LoginPage = () => {
                 id="outlined-start-adornment"
                 sx={{ m: 1, width: '25ch' }}
                 InputProps={{
-                    startAdornment: <InputAdornment position="start">email</InputAdornment>,
+                    startAdornment: <InputAdornment position="start">nick</InputAdornment>,
                 }}
             />
             <TextField

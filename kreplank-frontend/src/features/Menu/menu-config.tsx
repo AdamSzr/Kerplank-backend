@@ -4,6 +4,7 @@ import HomeMainView from "../HomeComponent/HomeMainView"
 import SettingsComponent from "../SettingsComponent/SettigsComponent"
 import ProjectsComponent from "../Projects/ProjectsComponent"
 import UsersComponent from "../Users/UsersComponent"
+import ChatComponent from "../ChatComponent/ChatComponent"
 
 
 export type MenuTab = {
@@ -19,4 +20,5 @@ export class Pages {
     static Projects = { title: "Projekty", name: "projects", view: <ProjectsComponent /> } as MenuTab
     static Users = { title: "Użytkownicy", name: "users", view: <UsersComponent /> } as MenuTab
     static Settings = { title: "Ustawienia", name: 'settigs', view: <SettingsComponent /> } as MenuTab
+    static Chat = { title: "Czat", name: 'chat', view: <ChatComponent /> } as MenuTab
 }
