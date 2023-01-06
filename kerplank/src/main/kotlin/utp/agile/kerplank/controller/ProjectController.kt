@@ -49,12 +49,25 @@ class ProjectController(private val projectService: ProjectService) {
 
     @PostMapping("/task")
     fun createTask(
-        @RequestBody taskRequest: TaskCreateRequest
+        @RequestBody taskRequest: TaskCreateRequest,
+        authenticatedUser: AuthenticatedUser,
     ): Mono<ResponseEntity<BaseResponse>> {
-        return projectService.createTask(taskRequest)
+        return projectService.createTask(authenticatedUser.email, taskRequest)
             .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.CREATED) }
             .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
     }
+
+    @PutMapping("/task/{taskId}")
+    fun updateTask(
+        @RequestBody taskUpdateRequest: TaskUpdateRequest,
+        @PathVariable taskId: String,
+        authenticatedUser: AuthenticatedUser,
+    ): Mono<ResponseEntity<BaseResponse>> {
+        return projectService.updateTask(authenticatedUser.email,taskId, taskUpdateRequest)
+            .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.CREATED) }
+            .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
+    }
+
 
     @PutMapping("/{projectId}")
     fun updateProject(

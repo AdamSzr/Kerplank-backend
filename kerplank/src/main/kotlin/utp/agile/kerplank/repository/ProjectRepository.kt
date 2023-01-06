@@ -15,6 +15,9 @@ interface ProjectRepository : ReactiveMongoRepository<Project,String>{
     @org.springframework.data.mongodb.repository.Query("{ 'users.email': ?0  }")
     fun  findAllByUsersEquals(email:String): Flux<Project>
 
+    @org.springframework.data.mongodb.repository.Query("{ '\$and': [{ 'users.email': ?0  }, {'tasks._id': ?1}] }")
+    fun  findProjectWithTaskId(email: String, taskId:String): Mono<Project>
+
     @org.springframework.data.mongodb.repository.Query("{ '\$and': [{ 'users.email': ?0  }, {'_id': ?1}] }")
     fun  findByIdAndUserEmail( email:String, id:String): Mono<Project>
 }

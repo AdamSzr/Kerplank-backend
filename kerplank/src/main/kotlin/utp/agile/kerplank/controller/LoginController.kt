@@ -55,6 +55,8 @@ class LoginController(
             .map { UserSignupResponse(it) as BaseResponse }
 
 
+    // TODO: Utworzony task nie jest do nikogo przypisany
+
     @PostMapping("/login", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun login(@RequestBody request: UserLoginRequest): Mono<out BaseResponse> = when {
         (request.type == LoginType.EMAIL && request.email?.isNotBlank() == true) ->
