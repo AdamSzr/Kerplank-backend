@@ -11,20 +11,22 @@ import java.time.Instant
 data class Project(
     @Id val id: String? = null,
     val title: String,
-    val description: String,
+    var description: String,
     val dateTimeCreation: Instant = Instant.now(),
     val dateTimeDelivery: Instant,
-    val status: ProjectStatus = ProjectStatus.ACTIVE,
+    var status: ProjectStatus = ProjectStatus.ACTIVE,
     val creator: String,
-    var users: MutableCollection<User> = mutableListOf(),
-    var files: MutableCollection<String> = mutableListOf(), //paths = /notes/test.txt
+    var users: MutableSet<String> = mutableSetOf(),
+    var files: MutableSet<String> = mutableSetOf(), //paths = /notes/test.txt
     var tasks: MutableCollection<Task> = mutableListOf(), // tasks ids
 ) {
     fun appendTask(task: Task) = this.apply { tasks.add(task) }
-    fun appendUser(user: User) = this.apply { users.add(user) }
-    fun appendUsers(userList: List<User>) = this.apply { users.addAll(userList) }
+    fun appendUser(userEmail: String) = this.apply { users.add(userEmail) }
+    fun appendUsers(userEmailList: List<String>) = this.apply { users.addAll(userEmailList) }
     fun appendFile(filePath: String) = this.apply { files.add(filePath) }
     fun appendFiles(filePathList: List<String>) = this.apply { files.addAll(filePathList) }
+    fun updateStatus(newStatus: ProjectStatus) = this.apply { status = newStatus }
+    fun updateDescription(newDescription:String) = this.apply { description = newDescription }
 }
 
 
@@ -51,5 +53,7 @@ data class ProjectListResponse(val list: List<Project>) : BaseResponse()
 data class ProjectUpdateRequest(
     val files: List<String>?,
     val users: List<String>?,
+    val status: ProjectStatus?,
+    val description: String?,
 )
 

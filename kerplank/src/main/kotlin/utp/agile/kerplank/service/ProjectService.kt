@@ -17,7 +17,7 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
         val project = request.createProject(creatorEmail)
 
         return userRepository.findByEmail(creatorEmail)
-            .map { project.appendUser(it) }
+            .map { project.appendUser(it.email) }
             .flatMap { projectRepository.save(it) }
     }
 
@@ -34,15 +34,6 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
     }
 
 
-    fun createTask(request: TaskCreateRequest): Mono<Project> {
-        val task = request.createTask()
-
-        return projectRepository.findById(request.projectId)
-            .doOnNext { it.appendTask(task) }
-            .flatMap { projectRepository.save(it) }
-            .switchIfEmpty { Mono.empty() }
-    }
-
     fun createTask(userEmail: String, request: TaskCreateRequest): Mono<Project> {
         val task = request.createTask()
 
@@ -53,11 +44,13 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
     }
 
     fun updateTask(userEmail: String, taskId: String, request: TaskUpdateRequest): Mono<Project> {
-       return projectRepository.findProjectWithTaskId(userEmail, taskId)
+        return projectRepository.findProjectWithTaskId(userEmail, taskId)
             .flatMap {
-                val targetTask =  it.tasks.find { task -> task.id == taskId }
-                 targetTask?.update(request)
-                 projectRepository.save(it)
+                val targetTask = it.tasks.find { task -> task.id == taskId }
+                return@flatMap if (targetTask != null) {
+                    targetTask.update(request)
+                    projectRepository.save(it)
+                } else Mono.empty()
             }
 
     }
@@ -72,7 +65,7 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                     .switchIfEmpty { Mono.empty() }
             }
 
-            request.users != null -> { // TODO: NOT WORKING
+            request.users != null -> {
                 return request.users.toFlux()
                     .flatMap { userRepository.findByEmail(it) }
                     .collectList()
@@ -80,7 +73,7 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                         projectRepository.findByIdAndUserEmail(email = userEmail, id = projectId)
                             .filter { it.creator == userEmail }
                             .map { project ->
-                                project.appendUsers(userList)
+                                project.appendUsers(userList.map { it.email })
                             }
                             .flatMap { project -> projectRepository.save(project) }
                             .switchIfEmpty { Mono.empty() }
@@ -88,38 +81,22 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                     .switchIfEmpty { Mono.empty() }
             }
 
-            else -> Mono.empty()
-        }
-    }
-
-    fun updateProject(projectId: String, request: ProjectUpdateRequest): Mono<Project> {
-        // check if user is in project
-
-        return when {
-            request.files != null -> {
-                projectRepository.findById(projectId)
-                    .doOnNext { it.appendFiles(request.files) }
+            request.description != null -> {
+                projectRepository.findByIdAndUserEmail(userEmail, projectId)
+                    .doOnNext { project -> project.updateDescription(request.description) }
                     .flatMap { projectRepository.save(it) }
-                    .switchIfEmpty { Mono.empty() }
             }
 
-            request.users != null -> {
-                return request.users.toFlux()
-                    .flatMap { userRepository.findByEmail(it) }
-                    .collectList()
-                    .flatMap { userList ->
-                        projectRepository.findById(projectId).map { project ->
-                            project.appendUsers(userList)
-                        }
-                            .flatMap { project -> projectRepository.save(project) }
-                            .switchIfEmpty { Mono.empty() }
-                    }
-                    .switchIfEmpty { Mono.empty() }
+            request.status != null -> {
+                projectRepository.findByIdAndUserEmail(userEmail, projectId)
+                    .doOnNext { project -> project.updateStatus(request.status) }
+                    .flatMap { projectRepository.save(it) }
             }
 
             else -> Mono.empty()
         }
     }
+
 
     fun deleteProject(projectId: String): Mono<String> {
         return projectRepository.findById(projectId)
@@ -135,8 +112,8 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
         return projectRepository.findById(projectId)
             .filter { it.creator == creatorEmail }
             .flatMap {
-                val usersActive = it.users.filter { user -> user.email != userEmail }
-                it.apply { users = usersActive.toMutableList() }
+                val usersActive = it.users.filter { usrEmail -> usrEmail != userEmail }
+                it.apply { users = usersActive.toMutableSet() }
                 projectRepository.save(it)
             }
             .switchIfEmpty { Mono.empty() }
@@ -147,7 +124,7 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
         return projectRepository.findById(projectId)
             .flatMap {
                 val filesActive = it.files.filter { filepath -> filepath != filePath }
-                it.apply { files = filesActive.toMutableList() }
+                it.apply { files = filesActive.toMutableSet() }
                 projectRepository.save(it)
             }
             .switchIfEmpty { Mono.empty() }
