@@ -63,7 +63,7 @@ class ProjectController(private val projectService: ProjectService) {
         @PathVariable taskId: String,
         authenticatedUser: AuthenticatedUser,
     ): Mono<ResponseEntity<BaseResponse>> {
-        return projectService.updateTask(authenticatedUser.email,taskId, taskUpdateRequest)
+        return projectService.updateTask(authenticatedUser.email, taskId, taskUpdateRequest)
             .mapNotNull { ResponseEntity(ProjectResponse(it) as BaseResponse, null, HttpStatus.CREATED) }
             .switchIfEmpty { ResponseEntity(BaseResponse("fail"), null, HttpStatus.NO_CONTENT).toMono() }
     }
@@ -95,28 +95,34 @@ class ProjectController(private val projectService: ProjectService) {
         @RequestParam filePath: String?,
         @RequestParam taskId: String?,
         authenticatedUser: AuthenticatedUser
-    ): Mono<out Any> {
+    ): Mono<ResponseEntity<Project>> {
 
         return when {
             !userEmail.isNullOrBlank() -> {
-                projectService.deleteUserFromProject(authenticatedUser.email,projectId, userEmail)
+                projectService.deleteUserFromProject(authenticatedUser.email, projectId, userEmail)
+                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
+                    .switchIfEmpty { ResponseEntity<Project>(HttpStatus.FORBIDDEN).toMono() }
 //                Mono.just("Delete - user from project")
             }
 
             !filePath.isNullOrBlank() -> {
-                projectService.deletePathFromProject(projectId, filePath)
+                projectService.deletePathFromProject(authenticatedUser.email, projectId, filePath)
+                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
+                    .switchIfEmpty { Mono.just(ResponseEntity(HttpStatus.FORBIDDEN)) }
 //                Mono.just("Delete - file from project")
             }
 
             !taskId.isNullOrBlank() -> {
-                projectService.deleteTaskFromProject(projectId, taskId)
+                projectService.deleteTaskFromProject(authenticatedUser.email, projectId, taskId)
+                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
+                    .switchIfEmpty { Mono.just(ResponseEntity(HttpStatus.FORBIDDEN)) }
 //                Mono.just("Delete - task from project")
             }
 
             else -> {
-                projectService.deleteProject(projectId)
-                    .flatMap { Mono.just(it) }
-                    .switchIfEmpty { Mono.just("not found") }
+                projectService.deleteProject(authenticatedUser.email, projectId)
+                    .flatMap { ResponseEntity.ok().build<Project>().toMono() }
+                    .switchIfEmpty { ResponseEntity.noContent().build<Project>().toMono() }
             }
         }
         // todo create acctualy normal responses.

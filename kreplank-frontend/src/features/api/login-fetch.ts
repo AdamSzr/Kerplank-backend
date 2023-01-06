@@ -44,7 +44,7 @@ export function login(loginData: LoginCredentials):Promise<LoginResponse> {
       redirect: 'follow'
     };
     
-   return fetch("http://192.168.1.22:8080/api/user/login", requestOptions)
+   return fetch("http://localhost:8080/api/user/login", requestOptions)
       .then(response => response.json())
 
 }
