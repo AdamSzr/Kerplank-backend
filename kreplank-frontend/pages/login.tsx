@@ -39,7 +39,7 @@ const LoginPage = () => {
     }
 
     return (
-        <div >
+        <div  >
             <TextField
                 onChange={(event) => setNickname(event.target.value)}
                 id="outlined-start-adornment"
