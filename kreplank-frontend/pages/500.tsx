@@ -1,18 +1,47 @@
-import { Box, Button, Link, Paper } from "@mui/material";
-import { useRouter } from "next/router";
+import { Typography, CardMedia, Box, Button, Link, Image, Paper, createTheme, ThemeProvider, CssBaseline, Container } from "@mui/material";
+        import { useRouter } from "next/router";
 
+        const theme = createTheme();
 
+        export default function Custom500() {
+        const router = useRouter()
+        return (
+        <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+        <CssBaseline />
+            <Box
+                sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}>
+            <Typography component="h1" variant="h5">
+                500 - Błąd po stronie serwera
+            </Typography>
 
-// pages/500.js
-export default function Custom500() {
-    const router = useRouter()
-    return <>
-        <Box>500 - Server-side error occurred</Box>
-        <Box>500 - Wystąpił błąd po stronie serwera. </Box>
-        <Box display={'flex'} justifyContent={'center'} >
-            <Button variant='outlined' onClick={() => { router.push('/') }}>
-                Powrót
+            <Button
+                sx={{
+                marginTop: 4
+                }}
+                variant='contained' onClick={() => { router.push('/') }}>
+                Powrót do strony głównej
             </Button>
+            <Box
+                sx={{
+                marginTop: 4,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                }}
+            >
+                <img src="https://planetagracza.pl/wp-content/uploads/2021/03/pozar-ovh-pg.jpg"
+                     alt="sadCatImage"
+                />
+            </Box>
         </Box>
-    </>
+
+        </Container>
+        </ThemeProvider>
+    )
 }
