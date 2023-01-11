@@ -8,6 +8,7 @@
 		<version>2.7.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>utp.agile</groupId>
 	<artifactId>kerplank</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -107,6 +108,7 @@
     </dependencies>
 
 	<build>
+		<finalName>adam-kerplank</finalName>
 		<sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
 		<plugins>
