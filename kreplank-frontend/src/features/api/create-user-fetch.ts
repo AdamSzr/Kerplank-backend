@@ -4,7 +4,7 @@ import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
 
-const createUser = (request: CreateUserRequest): Promise<CreateUserResponse> => {
+const createUser = (request: CreateUserRequest) => {
    var myHeaders = new Headers();
    myHeaders.append("Content-Type", "application/json");
 
@@ -24,10 +24,8 @@ const createUser = (request: CreateUserRequest): Promise<CreateUserResponse> => 
       redirect: 'follow'
    };
 
-   return fetch("http://dev.kanga.team:8907/api/user/signup", requestOptions)
-      .then(response => response.json())
 
-   // return ax<CreateUserResponse>(Endpoints.sign, 'PUT', request)
+   return ax<CreateUserResponse>(Endpoints.sign, 'PUT', request)
 }
 
 export default createUser

@@ -7,7 +7,7 @@ import { customFetch } from "./custom-fetch"
 const createProject = (createProjectRequest: CreateProjectRequestBody) => {
     
 
-    return ax(Endpoints["edit.project"], 'POST', createProjectRequest)
+    return ax(Endpoints['create.project'], 'POST', createProjectRequest)
 }
 
 export default createProject

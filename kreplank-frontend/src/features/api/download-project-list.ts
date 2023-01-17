@@ -12,7 +12,7 @@ export type ProjectListResponse = ListResponse<Project> & BaseResponse
 const getProjectsList = () => {
 
 
-    return ax<ProjectListResponse>(Endpoints["project"], 'GET')
+    return ax<ProjectListResponse>(Endpoints['my.project'], 'GET')
 }
 
 export default getProjectsList

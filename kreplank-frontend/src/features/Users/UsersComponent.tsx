@@ -26,7 +26,7 @@ const UsersComponent = () => {
     }, [])
 
     const createRow = (user:User) => {
-        return <StyledTableRow>
+        return <StyledTableRow key={`table-user-row-${user.email}`}>
             <StyledTableCell>{user.nickname}</StyledTableCell>
             <TableCell>{user.role}</TableCell>
             <TableCell>{user.email}</TableCell>
