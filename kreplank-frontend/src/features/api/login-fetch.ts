@@ -44,7 +44,7 @@ export function login(loginData: LoginCredentials):Promise<LoginResponse> {
       redirect: 'follow'
     };
     
-   return fetch("http://localhost:8080/api/user/login", requestOptions)
+   return fetch("http://dev.kanga.team:8907/api/user/login", requestOptions)
       .then(response => response.json())
 
 }

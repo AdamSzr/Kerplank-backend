@@ -24,7 +24,7 @@ const createUser = (request: CreateUserRequest): Promise<CreateUserResponse> => 
       redirect: 'follow'
    };
 
-   return fetch("http://192.168.1.22:8080/api/user/signup", requestOptions)
+   return fetch("http://dev.kanga.team:8907/api/user/signup", requestOptions)
       .then(response => response.json())
 
    // return ax<CreateUserResponse>(Endpoints.sign, 'PUT', request)

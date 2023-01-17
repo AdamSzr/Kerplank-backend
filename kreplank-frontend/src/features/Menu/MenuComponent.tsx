@@ -26,22 +26,22 @@ const MenuComponent = () => {
         }}> {menuTab.title}</Button>
     }
     const createLogout = () => {
-        return <Button key={`menu-tab-lotout`} onClick={() => {
+        return <Button variant="contained" key={`menu-tab-lotout`} onClick={() => {
             console.log(`logout bye`);
             jwtTokenStorage.clear()
             router.push('/login')
-
 
         }}> Wyloguj</Button>
     }
 
 
     return (
-        <Box >
+        <Box>
             {Object.values(Pages).map((it: MenuTab) => createMenuBtn(it))
                 .concat([createLogout()])}
         </Box>
-    )
+
+    );
 }
 
 

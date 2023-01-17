@@ -13,6 +13,7 @@ const HomeMainView = () => {
     return <Box >
         home main view
         there will be small description of the app .. how app works, what can do
+    {/* For variant="text", adjust the height via font-size */}
     </Box>
 }
 

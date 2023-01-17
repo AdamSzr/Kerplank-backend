@@ -21,8 +21,6 @@ const AppRootViewComponent = () => {
 
     const [acctualPage, setAcctualPage] = useState<MenuTab>(HomePage)
 
-
-
     const contextValue = { acctualPage, setAcctualPage } as PageContextType
 
     return (
@@ -36,9 +34,5 @@ const AppRootViewComponent = () => {
 
     )
 }
-
-
-
-
 
 export default AppRootViewComponent

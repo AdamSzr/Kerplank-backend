@@ -1,4 +1,9 @@
 import { Button } from '@mui/material'
+import { Container } from '@mui/material'
+import { Typography } from '@mui/material'
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import LinearProgress from '@mui/material/LinearProgress';
 import { Box } from '@mui/system'
 import { NextPage } from 'next'
 import Head from 'next/head'
@@ -36,16 +41,45 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
 
 
   if (state == 'UNKNOWN') {
-    return <Box>
-      Proszę czekać - trwa ładowanie strony
-    </Box>
+    return(
+    <Container component="main"
+      sx={{
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
+        <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
+        Proszę czekać - trwa ładowanie strony
+        </Box>
+    </Container>
+    )
   }
 
   if (state == 'LOGGED') {
-    return <Box>
-      Proszę czekać. Za chwilę
-      Zostaniesz przekierowany do strony domowej.
-    </Box>
+    return(
+  <Container component="main"
+      sx={{
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+  >
+    <Typography>
+        <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
+        Proszę czekać.
+        Za chwilę ostaniesz przekierowany do strony domowej.
+        </Box>
+    </Typography>
+        <Stack spacing={1}>
+          <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+          <Skeleton variant="circular" width={40} height={40} sx={{alignItems: 'left'}}/>
+          <Skeleton variant="rectangular" width={210} height={60} />
+          <Skeleton variant="rounded" width={210} height={60} />
+        </Stack>
+  </Container>)
   }
 
 
