@@ -3,7 +3,7 @@ import { Container } from '@mui/material'
 import { Typography } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from '@mui/system'
 import { NextPage } from 'next'
 import Head from 'next/head'
@@ -41,20 +41,24 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
 
 
   if (state == 'UNKNOWN') {
-    return(
-    <Container component="main"
-      sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}
-    >
-        <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
-        Proszę czekać - trwa ładowanie strony
-        </Box>
-    </Container>
-    )
+      return(
+          <Container component="main"
+                     sx={{
+                         marginTop: 8,
+                         display: 'flex',
+                         flexDirection: 'column',
+                         alignItems: 'center'
+                     }}
+          >
+              <Typography>
+                  <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                      Proszę czekać - trwa ładowanie strony
+                  </Box>
+              </Typography>
+              <Stack spacing={1}>
+                  <CircularProgress />
+              </Stack>
+          </Container>)
   }
 
   if (state == 'LOGGED') {

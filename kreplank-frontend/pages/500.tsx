@@ -36,7 +36,7 @@ import { Typography, CardMedia, Box, Button, Link, Image, Paper, createTheme, Th
                 }}
             >
                 <img src="https://planetagracza.pl/wp-content/uploads/2021/03/pozar-ovh-pg.jpg"
-                     alt="sadCatImage"
+                     alt="ovh_burn"
                 />
             </Box>
         </Box>
