@@ -11,11 +11,6 @@ function ProjectCreateComponent() {
 
 
     const onSubmitClick = async () => {
-        const request: CreateProjectRequestBody = {
-            title: '',
-            description: '',
-            dateTimeDelivery: ''
-        }
 
         console.log(data)
 

@@ -20,7 +20,9 @@ export type ProjectViewStages = "project-create" | "project-list"
 export type ProjectViewContextType = {
     viewStage: ProjectViewStages,
     setViewStage: Dispatch<SetStateAction<ProjectViewStages>>
-
+    // TODO: project list 
+    // TODO: set project list 
+    
 }
 
 export const ProjectViewContext = createContext<ProjectViewContextType>({} as ProjectViewContextType)

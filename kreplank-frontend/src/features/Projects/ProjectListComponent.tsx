@@ -1,4 +1,4 @@
-import { Button, Divider } from "@mui/material"
+import { Button, Divider, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import getProjectsList, { ProjectListResponse } from "../api/download-project-list"
 import { styled } from "@mui/material/styles";
@@ -39,9 +39,11 @@ const ProjectListComponent = () => {
             <StyledTableCell>{JSON.stringify(project.tasks.map((task) => {
                 return task.title
             }))}</StyledTableCell>
-            <StyledTableCell>{JSON.stringify(project.users.map((user) => {
-                return user.nickname
-            }))}</StyledTableCell>
+            <StyledTableCell>
+                {project.users.map((nickname) => {
+                    return <Typography>{nickname}</Typography>
+                })}
+            </StyledTableCell>
             <StyledTableCell>{project.files}</StyledTableCell>
         </StyledTableRow>
     }
@@ -54,7 +56,7 @@ const ProjectListComponent = () => {
 
     return (
         <Paper>
-            <Button onClick={()=>{ctx.setViewStage('project-create') }}> utworz projekt</Button>
+            <Button onClick={() => { ctx.setViewStage('project-create') }}> utworz projekt</Button>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
                     <TableHead>

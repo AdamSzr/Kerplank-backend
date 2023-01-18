@@ -1,10 +1,10 @@
 import { ReactNode } from "react"
-import AboutAppView from "../AboutComponent/AboutAppView"
-import HomeMainView from "../HomeComponent/HomeMainView"
+import AboutAppView from "../About/AboutAppView"
+import HomeMainView from "../Home/HomeMainView"
 import SettingsComponent from "../SettingsComponent/SettigsComponent"
 import ProjectsComponent from "../Projects/ProjectsComponent"
 import UsersComponent from "../Users/UsersComponent"
-import ChatComponent from "../ChatComponent/ChatComponent"
+import ChatComponent from "../Chat/ChatComponent"
 
 
 export type MenuTab = {
