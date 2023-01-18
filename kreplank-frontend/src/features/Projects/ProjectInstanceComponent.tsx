@@ -31,12 +31,12 @@ const ProjectInstanceComponent = () => {
     const deleteTask = async (projectId: string, taskId: string) => {
         if (!project) return
 
-        
+
         const response = await projectDelete(projectId, { taskId })
         console.log(response)
         if (response.status == 200) {
             console.log("delete task success", taskId)
-            
+
         } else {
             console.log("FAILED")
         }
@@ -65,11 +65,15 @@ const ProjectInstanceComponent = () => {
             deleteTask(project.id, task.id)
     }
 
-    const createTaskView = (task: Task) => {
+    const taskItemComponent = (task: Task) => {
         return <Box key={task.id} >
             {task.title}
             <Button onClick={() => onDeleteTaskClick(task)}>delete - task</Button>
         </Box>
+    }
+
+    const createTask = () =>{
+        ctx.setViewStage('task-create')
     }
 
     return (
@@ -77,10 +81,13 @@ const ProjectInstanceComponent = () => {
             ProjectInstanceComponent
             <Button onClick={onBackClick}>wróć</Button>
             <Button onClick={deleteProject}> usun projekt </Button>
+            <Button onClick={createTask}>
+                utworz zadanie
+            </Button>
             <Box>
                 Lista tasków
                 <Divider />
-                {project?.tasks.map(task => createTaskView(task))}
+                {project?.tasks.map(task => taskItemComponent(task))}
             </Box>
         </Box>
     )

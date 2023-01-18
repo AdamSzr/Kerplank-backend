@@ -27,7 +27,6 @@ const ProjectListComponent = () => {
     )
 
     const onProjectIdClick = (projectId: string) => {
-        console.log(projectId)
         ctx.setSelectedProjectId(projectId)
         ctx.setViewStage("project-instance")
     }
