@@ -13,16 +13,21 @@ import TableContainer from "@mui/material/TableContainer";
 import { Project } from "../models/Project";
 import ProjectListComponent from "./ProjectListComponent";
 import ProjectCreateComponent from "./ProjectCreateComponent";
+import ProjectInstanceComponent from "./ProjectInstanceComponent";
+import TaskInstanceView from "./Tasks/TaskInstanceView";
 
 
-export type ProjectViewStages = "project-create" | "project-list"
+export type ProjectViewStages = "project-create" | "project-list" | "project-instance" | "task-create" | "task-instance" | "task-list"
 
 export type ProjectViewContextType = {
     viewStage: ProjectViewStages,
     setViewStage: Dispatch<SetStateAction<ProjectViewStages>>
-    // TODO: project list 
-    // TODO: set project list 
-    
+    projectList: Project[] | undefined,
+    setProjectList: (list: Project[]) => void,
+    selectedProjectId: string | undefined,
+    setSelectedProjectId: Dispatch<SetStateAction<string | undefined>>
+    selectedTaskId: string | undefined,
+    setSelectedTaskId: Dispatch<SetStateAction<string | undefined>>
 }
 
 export const ProjectViewContext = createContext<ProjectViewContextType>({} as ProjectViewContextType)
@@ -30,17 +35,39 @@ export const ProjectViewContext = createContext<ProjectViewContextType>({} as Pr
 const ProjectsComponent = () => {
 
     const [viewStage, setViewStage] = useState<ProjectViewStages>('project-list')
+    const [projectList, setProjectList] = useState<Project[] | undefined>()
+    const [selectedProjectId, setSelectedProjectId] = useState<string | undefined>()
+    const [selectedTaskId, setSelectedTaskId] = useState<string | undefined>()
 
+    useEffect(() => {
+        getProjectsList().then(response => {
+            setProjectList(response.data.list)
+            console.log(response.data)
+        })
+
+    }, [])
 
     const contextValue: ProjectViewContextType = {
         viewStage,
-        setViewStage
+        setViewStage,
+        projectList,
+        setProjectList: (projectList: Project[]) => { setProjectList(projectList ?? []) },
+        selectedProjectId,
+        setSelectedProjectId,
+        selectedTaskId,
+        setSelectedTaskId,
     }
+
+
+    console.log({ viewStage, selectedProjectId, selectedTaskId })
+
 
     return (
         <ProjectViewContext.Provider value={contextValue}>
             {viewStage == 'project-list' && <ProjectListComponent />}
             {viewStage == 'project-create' && <ProjectCreateComponent />}
+            {viewStage == 'project-instance' && selectedProjectId != undefined && <ProjectInstanceComponent />}
+            {viewStage == 'task-instance' && selectedTaskId != undefined && <TaskInstanceView />}
         </ProjectViewContext.Provider>
     )
 }

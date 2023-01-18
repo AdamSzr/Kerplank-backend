@@ -13,45 +13,68 @@ import TableContainer from "@mui/material/TableContainer";
 import { Project } from "../models/Project";
 import { ProjectViewContext } from "./ProjectsComponent";
 
+import Link from '@mui/material/Link';
 
 const ProjectListComponent = () => {
 
     const ctx = useContext(ProjectViewContext)
 
-    const [projectsList, setProjectList] = useState<undefined | ProjectListResponse>()
+    const [projectsList, setProjectList] = useState<undefined | Project[]>()
 
     useEffect(() => {
-        getProjectsList().then(response => {
-            setProjectList(response.data)
-            console.log(response.data)
-        })
+        setProjectList(ctx.projectList)
+    }, [ctx.projectList]
+    )
 
-    }, [])
+    const onProjectIdClick = (projectId: string) => {
+        console.log(projectId)
+        ctx.setSelectedProjectId(projectId)
+        ctx.setViewStage("project-instance")
+    }
+
+    const onTaskClick = (taskId: string) => {
+        ctx.setSelectedTaskId(taskId)
+        ctx.setViewStage('task-instance')
+    }
+
+    const createFileLink = (path: string) => {
+        return <Link key={path} href={path} >
+            {path}
+        </Link>
+    }
+
+
 
     const createRow = (project: Project) => {
         return <StyledTableRow key={`project-table-row-${project.id}`}>
-            <StyledTableCell>{project.id}</StyledTableCell>
+            <StyledTableCell><Button onClick={() => { onProjectIdClick(project.id) }}>{project.id.substring(0, 6)}</Button></StyledTableCell>
             <StyledTableCell>{project.title}</StyledTableCell>
             <StyledTableCell>{project.description}</StyledTableCell>
             <StyledTableCell>{project.dateTimeCreation}</StyledTableCell>
             <StyledTableCell>{project.dateTimeDelivery}</StyledTableCell>
             <StyledTableCell>{project.status}</StyledTableCell>
-            <StyledTableCell>{JSON.stringify(project.tasks.map((task) => {
-                return task.title
-            }))}</StyledTableCell>
+            <StyledTableCell>
+                {
+                    project.tasks.length > 0 ?
+                        project.tasks.map((task) => {
+                            return <Typography key={task.id}>
+                                <Button onClick={() => { onTaskClick(task.id) }}>{task.title} </Button>
+                            </Typography>
+                        }) :
+                        "brak"
+                }
+            </StyledTableCell>
             <StyledTableCell>
                 {project.users.map((nickname) => {
-                    return <Typography>{nickname}</Typography>
+                    return <Typography key={nickname}>{nickname}</Typography>
                 })}
             </StyledTableCell>
-            <StyledTableCell>{project.files}</StyledTableCell>
+            <StyledTableCell>{project.files.map(it => createFileLink(it))}</StyledTableCell>
         </StyledTableRow>
     }
 
     if (!projectsList)
         return <div>Ładowanie</div>
-
-
 
 
     return (
@@ -73,9 +96,7 @@ const ProjectListComponent = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {projectsList.list.map((project) => {
-                            return createRow(project)
-                        })}
+                        {projectsList.map((project) => createRow(project))}
                     </TableBody>
                 </Table>
             </TableContainer>
