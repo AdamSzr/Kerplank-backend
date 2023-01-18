@@ -16,6 +16,7 @@ import ProjectCreateComponent from "./ProjectCreateComponent";
 import ProjectInstanceComponent from "./ProjectInstanceComponent";
 import TaskInstanceView from "./Tasks/TaskInstanceView";
 import TaskCreateComponent from "./Tasks/TaskCreateComponent";
+import TaskListComponent from "./Tasks/TaskListComponent";
 
 
 export type ProjectViewStages = "project-create" | "project-list" | "project-instance" | "task-create" | "task-instance" | "task-list"
@@ -70,6 +71,7 @@ const ProjectsComponent = () => {
             {viewStage == 'project-instance' && selectedProjectId != undefined && <ProjectInstanceComponent />}
             {viewStage == 'task-instance' && selectedTaskId != undefined && <TaskInstanceView />}
             {viewStage == 'task-create' && selectedProjectId != undefined && <TaskCreateComponent />}
+            {viewStage == 'task-list' && <TaskListComponent />}
         </ProjectViewContext.Provider>
     )
 }

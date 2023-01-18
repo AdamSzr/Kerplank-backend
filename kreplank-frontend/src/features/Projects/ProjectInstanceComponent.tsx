@@ -3,14 +3,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ProjectViewContext } from './ProjectsComponent'
 import { Button, Divider, Typography } from "@mui/material"
 import { Project } from '../models/Project'
-import deleteProjectRequest from '../api/delete-project-fetch'
-import projectDelete from '../api/delete-project-fetch copy'
 import { Task } from '../models/Task'
+import projectDelete from '../api/delete-project-fetch'
 
 const ProjectInstanceComponent = () => {
 
     const ctx = useContext(ProjectViewContext)
-
 
     const [project, setProject] = useState<Project | undefined>()
 

@@ -76,9 +76,14 @@ const ProjectListComponent = () => {
         return <div>Ładowanie</div>
 
 
+    const showTaskList = () =>{
+        ctx.setViewStage('task-list')
+    }
+
     return (
         <Paper>
             <Button onClick={() => { ctx.setViewStage('project-create') }}> utworz projekt</Button>
+            <Button onClick={showTaskList}> list zadań</Button>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
                     <TableHead>

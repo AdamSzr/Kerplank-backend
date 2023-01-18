@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import { it } from 'node:test'
 import React, { useContext, useEffect, useState } from 'react'
-import projectDelete from '../../api/delete-project-fetch copy'
+import projectDelete from '../../api/delete-project-fetch'
 import { Project } from '../../models/Project'
 import { Task } from '../../models/Task'
 import { ProjectViewContext } from '../ProjectsComponent'
@@ -28,7 +28,11 @@ const TaskInstanceView = () => {
 
     const tryFindTask = (taskId: string): Task | undefined => {
         if (ctx.projectList)
-            return tryFindProject(ctx.projectList, taskId)?.tasks.find(task => task.id == taskId)
+        {
+            const project = tryFindProject(ctx.projectList, taskId)
+            console.log({project})
+            return project?.tasks.find(task => task.id == taskId)
+        }
     }
 
     const tryFindProject = (projectList: Project[], taskId: string): Project | undefined => {
@@ -45,7 +49,6 @@ const TaskInstanceView = () => {
         ctx.setViewStage('project-list')
         ctx.setSelectedTaskId(undefined)
     }
-
 
     const deleteTask = async () => {
         if (!ctx.selectedProjectId || !task) return
