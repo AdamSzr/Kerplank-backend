@@ -77,7 +77,6 @@ const ProjectInstanceComponent = () => {
     return (
         <Box>
             ProjectInstanceComponent
-            <Button onClick={onBackClick}>wróć</Button>
             <Button onClick={deleteProject}> usun projekt </Button>
             <Button onClick={createTask}>
                 utworz zadanie
@@ -87,6 +86,8 @@ const ProjectInstanceComponent = () => {
                 <Divider />
                 {project?.tasks.map(task => taskItemComponent(task))}
             </Box>
+
+            <Button onClick={onBackClick}>wróć</Button>
         </Box>
     )
 }

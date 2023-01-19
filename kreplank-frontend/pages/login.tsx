@@ -16,7 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from "next/router"
 import { ReactNode, useState } from "react"
 import { login } from "../src/features/api/login-fetch"
-import { jwtTokenStorage } from "../src/features/config"
+import { jwtTokenStorage, userStorage } from "../src/features/config"
 
 
 function homePage(props: any) {
@@ -35,6 +35,7 @@ const theme = createTheme();
 const LoginPage = () => {
     const [nickname, setNickname] = useState<string>("")
     const [password, setPassw] = useState<string>("")
+   
 
     const [alert, setAlert] = useState<undefined | ReactNode>()
 
@@ -49,8 +50,10 @@ const LoginPage = () => {
             const loginResponse = await login({ nickname, password, type: "NICKNAME" })
             if (!loginResponse.data)
                 console.log(loginResponse)
+
             if (loginResponse.data.result == 'ok') {
                 jwtTokenStorage.set(loginResponse.data.token)
+                userStorage.set(loginResponse.data.user)
                 router.push("/")
             } else {
                 createFailLoginAlert()

@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios"
 import { DEV_MODE, Endpoints } from "../config"
 import { BaseResponse } from "../models/BaseResponse"
+import { User } from "../models/User"
 import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
@@ -14,7 +15,8 @@ export type LoginCredentials = {
 
 
 export type LoginResponse = {
-    token: string
+    token: string,
+    user:User
 } & BaseResponse
 
 

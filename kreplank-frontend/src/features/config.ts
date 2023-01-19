@@ -1,8 +1,10 @@
 import useStorage from "./hooks/useStorage"
+import { User } from "./models/User"
 
 
 export const backendUrlStorage = useStorage<string>('kerplank-backend-url')
 export const jwtTokenStorage = useStorage<string>('kerplank-jwt')
+export const userStorage = useStorage<User>('kerplank-user')
 
 
 

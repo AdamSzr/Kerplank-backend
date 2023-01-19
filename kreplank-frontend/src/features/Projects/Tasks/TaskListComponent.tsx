@@ -47,7 +47,8 @@ const TaskListComponent = () => {
   const getTaskList = () => {
 
     if (myTasksOnly)
-      return taskList?.filter(it => it.assignedTo?.email == 'adam.szr98@gmail.com')
+      return taskList?.filter(it => it.assignedTo?.email == 'adam.szr98@gmail.com') 
+      //  TODO: backend powinien zwracac usera przy logowaniu
     else
       return taskList
 
