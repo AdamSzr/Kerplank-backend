@@ -15,7 +15,7 @@ export class Endpoints {
    static 'my.project' = '/api/project/my'
    static 'create.project' = '/api/project'
    static "edit|delete.project" = '/api/project/:projectId:'
-   static "edit.task" = '/api/project/task'
+   static "edit.task" = '/api/project/task/:taskId:'
    static ping = '/api/ping'
    static "users.all" = '/api/user/all'
    static "edit.user" = '/api/user/:nickname:'

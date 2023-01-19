@@ -5,7 +5,7 @@ import { customFetch } from "./custom-fetch"
 
 const updateProject = (updateProjectRequest: UpdateProjectRequest) => {
 
-    return ax(Endpoints["edit.project"], 'POST', updateProjectRequest)
+    return ax(Endpoints['edit|delete.project'], 'POST', updateProjectRequest)
 }
 
 export default updateProject

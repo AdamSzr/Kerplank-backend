@@ -5,10 +5,10 @@ import projectDelete from '../../api/delete-project-fetch'
 import { Project } from '../../models/Project'
 import { Task } from '../../models/Task'
 import { ProjectViewContext } from '../ProjectsComponent'
+import TaskEditComponent from './TaskEditComponent'
 
 const TaskInstanceView = () => {
     const ctx = useContext(ProjectViewContext)
-
 
     const [task, setTask] = useState<Task | undefined>()
 
@@ -74,6 +74,7 @@ const TaskInstanceView = () => {
             </Typography>
             <Button onClick={backToList}> wroc</Button>
             <Button onClick={deleteTask}> usun zadanie</Button>
+            <TaskEditComponent task={task} />
         </Box>
     )
 }

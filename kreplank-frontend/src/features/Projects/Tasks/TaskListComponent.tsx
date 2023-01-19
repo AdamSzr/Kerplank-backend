@@ -1,5 +1,6 @@
 import { Box, Button, Divider } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { userStorage } from '../../config'
 import { Task } from '../../models/Task'
 import { ProjectViewContext } from '../ProjectsComponent'
 
@@ -45,10 +46,10 @@ const TaskListComponent = () => {
   }
 
   const getTaskList = () => {
+    const user = userStorage.tryGet()
 
-    if (myTasksOnly)
-      return taskList?.filter(it => it.assignedTo?.email == 'adam.szr98@gmail.com') 
-      //  TODO: backend powinien zwracac usera przy logowaniu
+    if (myTasksOnly && user )
+      return taskList?.filter(it => it.assignedTo == user.email) 
     else
       return taskList
 
