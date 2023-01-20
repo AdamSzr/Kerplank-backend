@@ -11,7 +11,7 @@ data class UserLoginRequest(
 
 enum class LoginType { EMAIL, NICKNAME }
 
-data class UserLoginResponse(val token: String) : BaseResponse()
+data class UserLoginResponse(val token: String,val user: User) : BaseResponse()
 
 data class UserSignUpRequest(
     val nickname: String,
