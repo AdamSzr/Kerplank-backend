@@ -5,6 +5,8 @@ import projectDelete from '../api/delete-project-fetch'
 import { Endpoints } from '../config'
 import { Project } from '../models/Project'
 import { Task } from '../models/Task'
+import ProjectAddUserComponent from './ProjectAddUserComponent'
+import ProjectFileUploadComponent from './ProjectFileUploadComponent'
 import { ProjectViewContext } from './ProjectsComponent'
 
 
@@ -14,7 +16,7 @@ const ProjectInstanceComponent = () => {
 
     const ctx = useContext(ProjectViewContext)
     const [project, setProject] = useState<Project | undefined>()
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [activeView, setActiveView] = useState<"project-details" | 'add-user' | 'upload-file'>('project-details')
 
     useEffect(() => {
         if (ctx.selectedProjectId) {
@@ -69,7 +71,7 @@ const ProjectInstanceComponent = () => {
     const taskItemComponent = (task: Task) => {
         return <Box key={task.id} >
             <Box>
-                {task.title} <Button onClick={() => {ctx.setSelectedTaskId(task.id); ctx.setViewStage('task-instance')}} > szczegóły</Button>
+                {task.title} <Button onClick={() => { ctx.setSelectedTaskId(task.id); ctx.setViewStage('task-instance') }} > szczegóły</Button>
 
             </Box>
             <Button onClick={() => onDeleteTaskClick(task)}>delete - task</Button>
@@ -80,45 +82,15 @@ const ProjectInstanceComponent = () => {
         ctx.setViewStage('task-create')
     }
 
-    const onUploadClick = async (e: FormEvent) => {
-        e.preventDefault()
-        console.log(e, "submit")
-        if (!selectedFile)
-            return
-
-        const fd = new FormData(e.currentTarget as HTMLFormElement)
-        console.log(fd)
-        if (selectedFile && project) {
-
-            const response = await ax(Endpoints['drive.upload'], "POST", fd, undefined) // { "Content-Type": `multipart/form-data;boundary=${selectedFile.size}` }
-
-            // const response = await uploadFile(`/${project.id}`, selectedFile)
-            console.log({ response })
-        }
-        console.log(e, "submit")
+    const onAddUsersClick = () => {
+        console.log("add user clicked")
+        setActiveView('add-user')
+    }
+    const onAddFileClick = () => {
+        setActiveView('upload-file')
     }
 
-    const onSelectedFile = (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault()
-        const fileList = event.currentTarget.files
-        if (fileList != null && Array.from(fileList).length == 1) {
-
-            const file = fileList[0]
-            setSelectedFile(file)
-            console.log('selected', file.name)
-
-
-            // setFiles(event.currentTarget.files );
-        }
-
-
-    }
-
-
-    const onAddUsersClick = () =>{
-
-    }
-
+    console.log({activeView})
 
     return (
         <Box>
@@ -128,7 +100,10 @@ const ProjectInstanceComponent = () => {
                 utworz zadanie
             </Button>
             <Button onClick={onAddUsersClick}>
-                dodaj użytkowników
+                dodaj/usun użytkowników
+            </Button>
+            <Button onClick={onAddFileClick}>
+                dodaj plik
             </Button>
             <Box>
                 Lista tasków
@@ -138,25 +113,9 @@ const ProjectInstanceComponent = () => {
 
             <Button onClick={onBackClick}>wróć</Button>
             <Divider />
-            <Box>
-                Dodaj plik
-                <form id="form" encType="multipart/form-data" onSubmit={onUploadClick}>
-                    <div>
-                        <div>
-                            <label htmlFor="file">Choose file to upload</label>
-                            <input type="file" id="file" name="file" onChange={onSelectedFile} />
-                        </div>
+            {activeView == 'upload-file' ? <ProjectFileUploadComponent  project={project}/>:'' }
 
-                        <button type='submit'> zapisz </ button>
-                    </div>
-                </form>
-
-
-            </Box>
-            <Box>
-                Dodane pliki:
-                {selectedFile?.name}
-            </Box>
+            {activeView == 'add-user' ? <ProjectAddUserComponent project={project} />:""}
         </Box>
     )
 }

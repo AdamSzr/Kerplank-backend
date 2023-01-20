@@ -12,4 +12,5 @@ export type Project = {
     users: string[]
     files: string[]
     tasks: Task[]
+    creator:string
 }
