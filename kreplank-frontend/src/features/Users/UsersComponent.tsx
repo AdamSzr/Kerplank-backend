@@ -38,6 +38,7 @@ const UsersComponent = () => {
     }
 
     if (!userList) return <div>Ładowanie</div>
+    
     return (
         <TableContainer component={Paper}>
             <Table sx={{minWidth: 300, maxWidth: 1000}} aria-label="customized table">

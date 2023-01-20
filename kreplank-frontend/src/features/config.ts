@@ -12,6 +12,8 @@ export class Endpoints {
    static login = '/api/user/login'
    static userMe = '/api/user/me'
    static signup = '/api/user/signup'
+
+   static 'delete.user' = '/api/user/:userId:'
    static 'my.project' = '/api/project/my'
    static 'create.project' = '/api/project'
    static "edit|delete.project" = '/api/project/:projectId:'
