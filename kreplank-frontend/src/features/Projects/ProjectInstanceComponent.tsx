@@ -7,6 +7,9 @@ import { Project } from '../models/Project'
 import { Task } from '../models/Task'
 import { ProjectViewContext } from './ProjectsComponent'
 
+
+
+
 const ProjectInstanceComponent = () => {
 
     const ctx = useContext(ProjectViewContext)
@@ -65,7 +68,10 @@ const ProjectInstanceComponent = () => {
 
     const taskItemComponent = (task: Task) => {
         return <Box key={task.id} >
-            {task.title}
+            <Box>
+                {task.title} <Button onClick={() => {ctx.setSelectedTaskId(task.id); ctx.setViewStage('task-instance')}} > szczegóły</Button>
+
+            </Box>
             <Button onClick={() => onDeleteTaskClick(task)}>delete - task</Button>
         </Box>
     }
@@ -109,12 +115,20 @@ const ProjectInstanceComponent = () => {
     }
 
 
+    const onAddUsersClick = () =>{
+
+    }
+
+
     return (
         <Box>
             ProjectInstanceComponent
             <Button onClick={deleteProject}> usun projekt </Button>
             <Button onClick={createTask}>
                 utworz zadanie
+            </Button>
+            <Button onClick={onAddUsersClick}>
+                dodaj użytkowników
             </Button>
             <Box>
                 Lista tasków

@@ -34,8 +34,11 @@ function ProjectCreateComponent() {
             <Button onClick={() => { ctx.setViewStage('project-list') }}> lista projektów</Button>
             <Box>
                 <TextField onChange={(e) => { setValue(e.target.value, 'title') }} label="title" />
+                <br />
                 <TextField onChange={(e) => { setValue(e.target.value, 'description') }} label="description" />
-                <TextField onChange={(e) => { setValue(e.target.value, 'dateTimeDelivery') }} label='dateTimeDelivery' />
+                    <br />
+                WYMAGANE jest użycie isoTime -- <TextField onChange={(e) => { setValue(e.target.value, 'dateTimeDelivery') }} label='dateTimeDelivery' />
+
             </Box>
             <Button onClick={onSubmitClick} >zapisz</Button>
         </>

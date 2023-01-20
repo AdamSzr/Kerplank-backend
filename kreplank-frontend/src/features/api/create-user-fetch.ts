@@ -24,7 +24,7 @@ const createUser = (request: CreateUserRequest) => {
    };
 
 
-   return ax<CreateUserResponse>(Endpoints.sign, 'PUT', request)
+   return ax<CreateUserResponse>(Endpoints.signup, 'PUT', request)
 }
 
 export default createUser

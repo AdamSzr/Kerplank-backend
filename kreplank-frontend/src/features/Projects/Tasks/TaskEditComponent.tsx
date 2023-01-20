@@ -49,7 +49,7 @@ const TaskEditComponent: React.FC<{ task?: Task }> = ({ task }) => {
             <Box display={'grid'}>
                 <TextField label="tytul" onChange={(e) => updateField('title', e.target.value)} value={request.title ?? task.title} > </TextField>
                 <TextField label="opis" onChange={(e) => updateField('description', e.target.value)} value={request.description ?? task.description}> </TextField>
-                <TextField label="przypisane do" value={request.assignedTo ?? task.assignedTo } disabled> </TextField>
+                <TextField label="przypisane do" value={request.assignedTo ?? task.assignedTo ?? '' } disabled> </TextField>
                 {!task.assignedTo && <Button onClick={onAssignClick}>Przypisz do mnie</Button>}
                 <TextField label="data utworzenia" onChange={(e) => updateField('dateTimeCreation', e.target.value)} value={request.dateTimeCreation ?? task.dateTimeCreation}> </TextField>
                 <TextField label="data zakonczenia" onChange={(e) => updateField('dateTimeDelivery', e.target.value)} value={request.dateTimeDelivery ?? task.dateTimeDelivery}> </TextField>

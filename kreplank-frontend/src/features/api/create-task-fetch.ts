@@ -5,7 +5,7 @@ import { ax } from "./ax"
 
 const createTaskFetch = (request: CreateTaskRequestBody) => {
 
-    return ax(Endpoints["edit.task"], 'POST', request)
+    return ax(Endpoints["create.task"], 'POST', request)
 }
 
 export default createTaskFetch

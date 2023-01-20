@@ -11,7 +11,8 @@ import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useEffect, useState } from 'react'
 import { backendUrlStorage, jwtTokenStorage } from '../src/features/config'
-
+import jwtDecode from 'jwt-decode';
+import { JwtPayload } from '../src/features/models/JwtPayload';
 
 export type KerplankEnv = {
   BACKEND_SERVER_URL: string,
@@ -25,14 +26,27 @@ export type SsrProps = {
 const IndexPage: NextPage<SsrProps> = (ssr) => {
   const router = useRouter()
 
-  const [state, setState] = useState< "LOGGED" | "UNLOGGED">("UNLOGGED")
+  const [state, setState] = useState<"LOGGED" | "UNLOGGED">("UNLOGGED")
 
   useEffect(() => {
     if (!backendUrlStorage.tryGet())
       backendUrlStorage.set(ssr.runtimeVariables.BACKEND_SERVER_URL)
 
-    if (jwtTokenStorage.tryGet())
+    const jwtToken = jwtTokenStorage.tryGet()?.split(' ')[1]
+
+    if (!jwtToken)
+      return
+
+    const jwtPayload = jwtDecode<JwtPayload>(jwtToken)
+    const jwtExiresAt = new Date(jwtPayload.exp * 1000)
+
+    if (jwtExiresAt > new Date()) {
+      console.log("You are logged already - redirecting")
       setState('LOGGED')
+    } else {
+      console.log("Your JWT token has been expired")
+      jwtTokenStorage.clear()
+    }
 
   }, [])
 
@@ -40,7 +54,7 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
   const RedirectView = () => {
     setTimeout(() => {
       router.push('/home')
-    }, 2000);
+    }, 1000);
 
     return (
       <Container component="main"

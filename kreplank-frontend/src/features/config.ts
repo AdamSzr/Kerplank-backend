@@ -11,11 +11,12 @@ export const userStorage = useStorage<User>('kerplank-user')
 export class Endpoints {
    static login = '/api/user/login'
    static userMe = '/api/user/me'
-   static sign = '/api/user/signup'
+   static signup = '/api/user/signup'
    static 'my.project' = '/api/project/my'
    static 'create.project' = '/api/project'
    static "edit|delete.project" = '/api/project/:projectId:'
    static "edit.task" = '/api/project/task/:taskId:'
+   static "create.task" = '/api/project/task'
    static ping = '/api/ping'
    static "users.all" = '/api/user/all'
    static "edit.user" = '/api/user/:nickname:'
