@@ -1,7 +1,7 @@
 import axios from "axios";
 import { backendUrlStorage, jwtTokenStorage } from "../config";
 
-export function ax<T>(endpoint: string, method?: "GET" | 'POST' | 'PUT' | "DELETE", body?: object, query?: object) {
+export function ax<T>(endpoint: string, method?: "GET" | 'POST' | 'PUT' | "DELETE", body?: object, query?: object, headers?:RawAxiosHeaders) {
     const host = backendUrlStorage.getOrThrow()
     const path = () => {
         let queryStr: string | undefined
@@ -10,7 +10,8 @@ export function ax<T>(endpoint: string, method?: "GET" | 'POST' | 'PUT' | "DELET
 
         return host + endpoint + (queryStr ?? "")
     }
-    const header = { "Authorization": jwtTokenStorage.tryGet(), 'content-type': "application/json" }
+    const header = { "Authorization": jwtTokenStorage.tryGet(), 'content-type': "application/json", ...headers }
+    
 
     console.log(`${method ?? "GET"} [${endpoint}]`, body)
 
