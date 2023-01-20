@@ -31,7 +31,8 @@ const ProjectListComponent = () => {
         ctx.setViewStage("project-instance")
     }
 
-    const onTaskClick = (taskId: string) => {
+    const onTaskClick = (projectId:string,taskId: string) => {
+        ctx.setSelectedProjectId(projectId)
         ctx.setSelectedTaskId(taskId)
         ctx.setViewStage('task-instance')
     }
@@ -57,7 +58,7 @@ const ProjectListComponent = () => {
                     project.tasks.length > 0 ?
                         project.tasks.map((task) => {
                             return <Typography key={task.id}>
-                                <Button onClick={() => { onTaskClick(task.id) }}>{task.title} </Button>
+                                <Button onClick={() => { onTaskClick(project.id,task.id) }}>{task.title} </Button>
                             </Typography>
                         }) :
                         "brak"

@@ -51,6 +51,7 @@ const TaskInstanceView = () => {
     }
 
     const deleteTask = async () => {
+        console.log({ctx})
         if (!ctx.selectedProjectId || !task) return
         const response = await projectDelete(ctx.selectedProjectId, { taskId: task.id })
         console.log(response)
