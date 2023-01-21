@@ -13,7 +13,7 @@ data class Task(
     val id: String = ObjectId().toHexString(),
     @Size(max = 100) var title: String,
     @Size(max = 2000) var description: String,
-    var assignedTo: User? = null,
+    var assignedTo: String? = null,
     var dateTimeCreation: Instant = Instant.now(),
     var dateTimeDelivery: Instant = Instant.now(),
     var status: TaskStatus = TaskStatus.NEW,
@@ -50,7 +50,7 @@ data class TaskCreateRequest(val projectId: String, val title: String, val descr
 data class TaskUpdateRequest(
     val title:String?,
     val description: String?,
-    val assignedTo: User?,
+    val assignedTo: String?,
     val dateTimeCreation: String?,
     val dateTimeDelivery: String?,
     val status: TaskStatus?

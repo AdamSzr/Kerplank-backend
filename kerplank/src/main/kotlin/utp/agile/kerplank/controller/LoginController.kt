@@ -71,12 +71,12 @@ class LoginController(
         .map { user ->
 
             if (checkSimpleLoginBySystemPassword(request.password))
-                return@map UserLoginResponse(TokenProvider.generateToken(user))
+                return@map UserLoginResponse(TokenProvider.generateToken(user),user)
 
             val token = LoginConfiguration.getAuthToken(user, request, applicationContext)
                 ?: return@map InvalidCredentials()
 
-            UserLoginResponse(TOKEN_PREFIX + token)
+            UserLoginResponse(TOKEN_PREFIX + token, user)
         }
         .onErrorReturn(InvalidCredentials())
         .switchIfEmpty(Mono.just(InvalidCredentials()))
