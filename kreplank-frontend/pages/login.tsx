@@ -1,44 +1,16 @@
-import * as React from 'react';
-import Alert from '@mui/material/Alert';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { Alert, Button, TextField, Avatar, CssBaseline, Grid, Box, Typography, Container } from "@mui/material"
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from "next/router"
 import { ReactNode, useState } from "react"
 import { login } from "../src/features/api/login-fetch"
 import { jwtTokenStorage, userStorage } from "../src/features/config"
 
-
-function homePage(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-
-            <Link color="inherit" href="/">
-                Strona główna
-            </Link>
-        </Typography>
-    );
-}
-
 const theme = createTheme();
 
 const LoginPage = () => {
     const [nickname, setNickname] = useState<string>("")
     const [password, setPassw] = useState<string>("")
-   
-
     const [alert, setAlert] = useState<undefined | ReactNode>()
-
     const router = useRouter()
 
     const createFailLoginAlert = (message?: string) => {
@@ -69,17 +41,25 @@ const LoginPage = () => {
                 <CssBaseline />
                 <Box
                     sx={{
+                        border: 3,
+                        borderRadius: 5,
+                        borderColor: 'secondary.main',
+                        Width: 420,
                         marginTop: 8,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main', marginTop: 2 }}></Avatar>
+                    <Typography component="h1" variant="h5" fontWeight="bold">
                         Zaloguj się
                     </Typography>
-                    <Box component="form">
+                    <Box component="form"
+                         sx={{
+                             width: 350,
+                         }}
+                    >
                         <TextField
                             onChange={(event) => setNickname(event.target.value)}
                             margin="normal"
@@ -108,35 +88,32 @@ const LoginPage = () => {
                         </Button>
                         {alert}
 
-                        <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Resetowanie Hasła
-                                </Link>
-                            </Grid>
-                            <Grid item >
-                                <Link href="#" variant="body2">
-                                    {"Zarejestruj się"}
-                                </Link>
-                            </Grid>
-                        </Grid>
                         <Grid
                             sx={{
-                                marginTop: 4,
+                                margin: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
                             }}
                         >
-                            <Link href="#" variant="body2">
-                                {"Strona Główna"}
-                            </Link>
+                            <Typography
+                            sx={{
+                                marginBottom: 1,
+                            }}>
+                                Nie posiadasz konta?
+                            </Typography>
+                            <Button
+                                href="/signup"
+                                variant="contained"
+                                color="secondary"
+                            >
+                                Zarejestruj się
+                            </Button>
                         </Grid>
                     </Box>
                 </Box>
             </Container>
         </ThemeProvider>
-
     );
 }
 
