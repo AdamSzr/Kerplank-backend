@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Button, Link } from '@mui/material'
 import { Container } from '@mui/material'
 import { Typography } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton';
@@ -11,7 +11,8 @@ import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useEffect, useState } from 'react'
 import { backendUrlStorage, jwtTokenStorage } from '../src/features/config'
-
+import jwtDecode from 'jwt-decode';
+import { JwtPayload } from '../src/features/models/JwtPayload';
 
 export type KerplankEnv = {
   BACKEND_SERVER_URL: string,
@@ -25,75 +26,89 @@ export type SsrProps = {
 const IndexPage: NextPage<SsrProps> = (ssr) => {
   const router = useRouter()
 
-  const [state, setState] = useState<"UNKNOWN" | "LOGGED" | "UNLOGGED">('UNKNOWN')
+  const [state, setState] = useState<"LOGGED" | "UNLOGGED">("UNLOGGED")
 
   useEffect(() => {
-    backendUrlStorage.set(ssr.runtimeVariables.BACKEND_SERVER_URL)
+    if (!backendUrlStorage.tryGet())
+      backendUrlStorage.set(ssr.runtimeVariables.BACKEND_SERVER_URL)
 
-    if (jwtTokenStorage.tryGet()) {
+    const jwtToken = jwtTokenStorage.tryGet()?.split(' ')[1]
+
+    if (!jwtToken)
+      return
+
+    const jwtPayload = jwtDecode<JwtPayload>(jwtToken)
+    const jwtExiresAt = new Date(jwtPayload.exp * 1000)
+
+    if (jwtExiresAt > new Date()) {
+      console.log("You are logged already - redirecting")
       setState('LOGGED')
-      setTimeout(() => {
-        router.push('/home')
-      }, 2000);
-    } else setState('UNLOGGED')
+    } else {
+      console.log("Your JWT token has been expired")
+      jwtTokenStorage.clear()
+    }
 
   }, [])
 
 
-  if (state == 'UNKNOWN') {
-      return(
-          <Container component="main"
-                     sx={{
-                         marginTop: 8,
-                         display: 'flex',
-                         flexDirection: 'column',
-                         alignItems: 'center'
-                     }}
-          >
-              <Typography>
-                  <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                      Proszę czekać - trwa ładowanie strony
-                  </Box>
-              </Typography>
-              <Stack spacing={1}>
-                  <CircularProgress />
-              </Stack>
-          </Container>)
-  }
+  const RedirectView = () => {
+    setTimeout(() => {
+      router.push('/home')
+    }, 1000);
 
-  if (state == 'LOGGED') {
-    return(
-  <Container component="main"
-      sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-      }}
-  >
-    <Typography>
+    return (
+      <Container component="main"
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+
         <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
-        Proszę czekać.
-        Za chwilę ostaniesz przekierowany do strony domowej.
+          <Typography>
+            Proszę czekać.
+            Za chwilę ostaniesz przekierowany do strony domowej.
+          </Typography>
         </Box>
-    </Typography>
         <Stack spacing={1}>
           <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-          <Skeleton variant="circular" width={40} height={40} sx={{alignItems: 'left'}}/>
+          <Skeleton variant="circular" width={40} height={40} sx={{ alignItems: 'left' }} />
           <Skeleton variant="rectangular" width={210} height={60} />
           <Skeleton variant="rounded" width={210} height={60} />
         </Stack>
-  </Container>)
+      </Container>)
+  }
+
+  const GoToLoadPageView = () => {
+    return (
+      <Container component="main"
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}
+      >
+        <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
+          Przejdz do strony logowania
+
+        </Box>
+        <Button href="/login">Zaloguj się</Button>
+
+      </Container>
+    )
   }
 
 
+
   return (
-    <div >
-      KERPLANK
-      <Button onClick={() => router.push('/login')}>
-        login
-      </Button>
-    </div>
+    <>
+      {state == 'UNLOGGED' && <GoToLoadPageView />}
+      {state == 'LOGGED' && <RedirectView />}
+    </>
+
   )
 }
 

@@ -9,7 +9,8 @@ export type Project = {
     dateTimeDelivery: string,
     dateTimeCreation: string,
     status: "ACTIVE" | "CLOSE",
-    users: User[]
+    users: string[]
     files: string[]
     tasks: Task[]
+    creator:string
 }

@@ -8,7 +8,7 @@ import { createContext, Dispatch, ReactNode, SetStateAction, useEffect, useState
 import { jwtTokenStorage } from '../config'
 import { HomePage, MenuTab, Pages } from '../Menu/menu-config'
 import MenuComponent from '../Menu/MenuComponent'
-import HomeMainView from '../HomeComponent/HomeMainView'
+import HomeMainView from '../Home/HomeMainView'
 
 
 export type PageContextType = {

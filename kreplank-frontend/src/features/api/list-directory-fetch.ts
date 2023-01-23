@@ -6,10 +6,9 @@ import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
 
-const uploadFile = (directoryPath:string) => { // TODO set query param
+const uploadFile = (directoryPath: string, files: File) => { // TODO set query param
 
-   directoryPath
-   return ax(Endpoints["drive.path"])
+   return ax(Endpoints["drive.path"] + directoryPath, 'POST', { file: files })
 }
 
 export default uploadFile

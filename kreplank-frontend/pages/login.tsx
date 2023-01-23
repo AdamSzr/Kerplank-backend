@@ -16,15 +16,15 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from "next/router"
 import { ReactNode, useState } from "react"
 import { login } from "../src/features/api/login-fetch"
-import { jwtTokenStorage } from "../src/features/config"
+import { jwtTokenStorage, userStorage } from "../src/features/config"
 
 
 function homePage(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
 
-            <Link color="inherit" href="http://localhost:3000/">
-            Strona główna
+            <Link color="inherit" href="/">
+                Strona główna
             </Link>
         </Typography>
     );
@@ -35,6 +35,7 @@ const theme = createTheme();
 const LoginPage = () => {
     const [nickname, setNickname] = useState<string>("")
     const [password, setPassw] = useState<string>("")
+   
 
     const [alert, setAlert] = useState<undefined | ReactNode>()
 
@@ -46,96 +47,97 @@ const LoginPage = () => {
 
     const onLoginClick = async () => {
         try {
-            const loginResponse = await login({  nickname, password, type: "NICKNAME" })
-            if (loginResponse)
+            const loginResponse = await login({ nickname, password, type: "NICKNAME" })
+            if (!loginResponse.data)
                 console.log(loginResponse)
-            if (loginResponse.result == 'ok') {
-                jwtTokenStorage.set(loginResponse.token)
+
+            if (loginResponse.data.result == 'ok') {
+                jwtTokenStorage.set(loginResponse.data.token)
+                userStorage.set(loginResponse.data.user)
                 router.push("/")
             } else {
                 createFailLoginAlert()
             }
-        } catch (exception:any) {
+        } catch (exception: any) {
             createFailLoginAlert(exception.message)
         }
     }
 
     return (
-    <ThemeProvider theme={theme}>
-    <Container component="main" maxWidth="xs">
-    <CssBaseline />
-    <Box
-        sx={{
-        marginTop: 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        }}
-    >
-    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
-    <Typography component="h1" variant="h5">
-        Zaloguj się
-    </Typography>
-    <Box component="form">
-        <TextField
-            onChange={(event) => setNickname(event.target.value)}
-            margin="normal"
-            required
-            fullWidth
-            label="Nick"
-            name="email"
-            autoFocus
-        />
-        <TextField
-            onChange={(event) => setPassw(event.target.value)}
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Hasło"
-            type="password"
-        />
-        <Button
-            onClick={onLoginClick}
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-        >
-            Zaloguj się
-        </Button>
-        {alert}
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <Box
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+                    <Typography component="h1" variant="h5">
+                        Zaloguj się
+                    </Typography>
+                    <Box component="form">
+                        <TextField
+                            onChange={(event) => setNickname(event.target.value)}
+                            margin="normal"
+                            required
+                            fullWidth
+                            label="Nick"
+                            name="email"
+                            autoFocus
+                        />
+                        <TextField
+                            onChange={(event) => setPassw(event.target.value)}
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Hasło"
+                            type="password"
+                        />
+                        <Button
+                            onClick={onLoginClick}
+                            fullWidth
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            Zaloguj się
+                        </Button>
+                        {alert}
 
-<Grid container>
-    <Grid item xs>
-        <Link href="#" variant="body3">
-            Resetowanie Hasła
-        </Link>
-    </Grid>
-    <Grid item >
-        <Link href="#" variant="body3">
-            {"Zarejestruj się"}
-        </Link>
-    </Grid>
-</Grid>
-<Grid
-    sx={{
-    marginTop: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    }}
->
-    <Link href="#" variant="body3">
-        {"Strona Główna"}
-    </Link>
-</Grid>
-        </Box>
-        </Box>
-<homePage sx={{ mt: 8, mb: 4 }} />
-        </Container>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="#" variant="body2">
+                                    Resetowanie Hasła
+                                </Link>
+                            </Grid>
+                            <Grid item >
+                                <Link href="#" variant="body2">
+                                    {"Zarejestruj się"}
+                                </Link>
+                            </Grid>
+                        </Grid>
+                        <Grid
+                            sx={{
+                                marginTop: 4,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Link href="#" variant="body2">
+                                {"Strona Główna"}
+                            </Link>
+                        </Grid>
+                    </Box>
+                </Box>
+            </Container>
         </ThemeProvider>
 
-);
+    );
 }
 
 export default LoginPage

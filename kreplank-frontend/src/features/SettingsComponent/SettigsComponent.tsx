@@ -1,4 +1,4 @@
-import { Divider} from "@mui/material"
+import { Box, Button, Divider } from "@mui/material"
 import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -10,9 +10,14 @@ import Paper from '@mui/material/Paper'
 import { useEffect, useState } from "react"
 import whoAmI from "../api/user-me-fetch"
 import { UserMe } from "../models/UserMe"
+import deleteAccount from "../api/user-delete-fetch"
+import { off } from "process"
+import { jwtTokenStorage, userStorage } from "../config"
+import Router, { useRouter } from "next/router"
 
 const SettingsComponent = () => {
     const [me, setMe] = useState<UserMe | undefined>()
+    const router = useRouter()
 
     useEffect(() => {
         whoAmI().then(response => {
@@ -21,29 +26,54 @@ const SettingsComponent = () => {
         })
     }, [])
 
+
+
+    const onDeleteAccountClick = async () =>{
+        if(!me)
+        return
+        
+        const response = await deleteAccount(me.nickname)
+        console.log({response})
+        if(response.status==200){
+            console.log("Delete user success")
+            jwtTokenStorage.clear()
+            userStorage.clear()
+            router.push('/login')
+        }
+
+    }
+
     if (!me) return <div>Ładowanie</div>
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Nazwa użytkownika</StyledTableCell>
-                        <StyledTableCell>Email</StyledTableCell>
-                        <StyledTableCell>Szczegóły</StyledTableCell>
-                        <StyledTableCell>Wynik</StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    <StyledTableRow>
-                        <StyledTableCell>{me.nickname}</StyledTableCell>
-                        <StyledTableCell>{me.email}</StyledTableCell>
-                        <StyledTableCell>{JSON.stringify(me.details)}</StyledTableCell>
-                        <StyledTableCell>{me.result}</StyledTableCell>
-                    </StyledTableRow>
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Box>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>Nazwa użytkownika</StyledTableCell>
+                            <StyledTableCell>Email</StyledTableCell>
+                            <StyledTableCell>Szczegóły</StyledTableCell>
+                            <StyledTableCell>Wynik</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        <StyledTableRow>
+                            <StyledTableCell>{me.nickname}</StyledTableCell>
+                            <StyledTableCell>{me.email}</StyledTableCell>
+                            <StyledTableCell>{JSON.stringify(me.details)}</StyledTableCell>
+                            <StyledTableCell>{me.result}</StyledTableCell>
+                        </StyledTableRow>
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Divider />
+            <Box>
+                <Button onClick={onDeleteAccountClick}>
+                    Usuń konto
+                </Button>
+            </Box>
+        </Box>
     )
 }
 

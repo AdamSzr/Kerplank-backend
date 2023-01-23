@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios"
 import { DEV_MODE, Endpoints } from "../config"
 import { BaseResponse } from "../models/BaseResponse"
+import { User } from "../models/User"
 import { ax } from "./ax"
 import { customFetch } from "./custom-fetch"
 
@@ -14,11 +15,12 @@ export type LoginCredentials = {
 
 
 export type LoginResponse = {
-    token: string
+    token: string,
+    user:User
 } & BaseResponse
 
 
-export function login(loginData: LoginCredentials):Promise<LoginResponse> {
+export function login(loginData: LoginCredentials) {
     console.log({loginData})
     if (!DEV_MODE) {
         if (!loginData.email && loginData.type == 'EMAIL')
@@ -28,24 +30,12 @@ export function login(loginData: LoginCredentials):Promise<LoginResponse> {
     }
 
 
-    var myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    
-    var raw = JSON.stringify({
-      "nickname": loginData.nickname,
-      "password": loginData.password,
-      "type": "NICKNAME"
-    });
-    
-    var requestOptions :RequestInit = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow'
-    };
-    
-   return fetch("http://dev.kanga.team:8907/api/user/login", requestOptions)
-      .then(response => response.json())
+    const request = {
+        "nickname": loginData.nickname,
+        "password": loginData.password,
+        "type": "NICKNAME"
+      }
 
+    return ax<LoginResponse>(Endpoints.login,"POST",request)
 }
 

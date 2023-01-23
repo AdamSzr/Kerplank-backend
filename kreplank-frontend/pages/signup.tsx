@@ -25,9 +25,9 @@ const SignUp = () => {
     const onSignUpClick = async () => {
         try {
             const loginResponse = await createUser({ email, password, nickname: nickName })
-            if (loginResponse.result == 'ok') {
+            if (loginResponse.data.result == 'ok') {
                 console.log(loginResponse)
-                setAlert(<Alert severity='success' onClick={() => setAlert(undefined)}>  {JSON.stringify(loginResponse.user)} </Alert>)
+                setAlert(<Alert severity='success' onClick={() => setAlert(undefined)}>  {JSON.stringify(loginResponse.data.user)} </Alert>)
             }
             setTimeout(() => {
                 router.push('/login')
