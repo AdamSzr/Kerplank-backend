@@ -1,6 +1,6 @@
 
 
-import { Box, Typography } from '@mui/material'
+import {Box, Container, Typography} from '@mui/material'
 import React, { FormEvent, useContext, useState } from 'react'
 import { ax } from '../api/ax'
 import updateProject from '../api/update-project-fetch'
@@ -68,35 +68,44 @@ const ProjectFileUploadComponent: React.FC<{ project?: Project}> = ({ project })
     }
 
     return (
-        <div>
+        <Container sx={{
+            marginTop: 2,
+            marginBottom: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'left',
+            minWidth: 700,
+            border: 3,
+            borderRadius: 5,
+            borderColor: 'primary.main',
+            padding: 2
+        }}>
             <Box>
-                Dodaj plik
+                <Typography fontWeight="bold">Dodaj plik</Typography>
                 <form id="form" encType="multipart/form-data" onSubmit={onUploadClick}>
-                    <div>
-                        <div>
-                            <label htmlFor="file">Choose file to upload</label>
-                            <input type="file" id="file" name="file" onChange={onSelectedFile} />
-                        </div>
 
-                        <button type='submit'> zapisz </ button>
-                    </div>
+                    <label htmlFor="file">Wybierz plik do dodania </label>
+                    <input type="file" id="file" name="file" onChange={onSelectedFile} />
+                    <Box sx={{marginTop: 1}}>
+                        <button type='submit'> Zapisz </ button>
+                    </Box>
                 </form>
-
-
             </Box>
-            <Box>
+            <Box sx={{marginTop: 2}}>
+                <Typography fontWeight="bold">
                 Dodane pliki:
+                </Typography>
                 {selectedFile?.name}
             </Box>
-            <Box>
-                <Typography>
+            <Box sx={{marginTop: 2}}>
+                <Typography fontWeight="bold">
                     Wszystkie pliki
                 </Typography>
                 <Box>
                     {project?.files.map(file => <Box key={file}>{file}</Box>)}
                 </Box>
             </Box>
-        </div>
+        </Container>
     )
 }
 

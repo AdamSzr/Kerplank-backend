@@ -1,8 +1,9 @@
-import { Box, Button, Divider } from '@mui/material'
+import {Box, Button, ThemeProvider, Container, Typography} from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { userStorage } from '../../config'
 import { Task } from '../../models/Task'
 import { ProjectViewContext } from '../ProjectsComponent'
+import {createTheme} from "@mui/material/styles";
 
 const TaskListComponent = () => {
 
@@ -22,56 +23,68 @@ const TaskListComponent = () => {
   if (!ctx.projectList)
     return <>Poczekaj</>
 
-
-
   console.log(taskList)
 
   const goToListView = () => {
     ctx.setViewStage('project-list')
   }
 
-
   const goToTaskInstanceView = (selectedTaskId: string) => {
     ctx.setViewStage('task-instance')
     ctx.setSelectedTaskId(selectedTaskId)
   }
 
-
-
   const createTaskItemView = (task: Task) => {
-    return <Box key={task.id}>
-      {task.title}
-      <Button onClick={() => goToTaskInstanceView(task.id)}> szczegoly </Button>
-    </Box>
+    return (
+        <Box key={task.id}>
+          {task.title}{" "}
+          <Button sx={{}} variant="outlined" color="warning" onClick={() => goToTaskInstanceView(task.id)}> Szczegóły </Button>
+        </Box>
+    )
   }
 
   const getTaskList = () => {
     const user = userStorage.tryGet()
 
     if (myTasksOnly && user )
-      return taskList?.filter(it => it.assignedTo == user.email) 
+      return taskList?.filter(it => it.assignedTo == user.email)
     else
       return taskList
-
   }
 
+  const theme = createTheme();
 
   return (
-    <Box>
-      <div>TasksListComponent</div>
-      <Divider />
 
-      <Box>
-        {getTaskList()?.map(task => createTaskItemView(task))}
-      </Box>
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
 
-      <Button onClick={() => setMyTasksOnly(state => !state)}> pokaż przypisane do mnie </Button>
-      <Box>
-        <Button onClick={goToListView}>wroc</Button>
-      </Box>
+          <Box
+              sx={{
+                border: 3,
+                borderRadius: 5,
+                borderColor: 'warning.main',
+                marginTop: 2,
+                padding: 2,
 
-    </Box>
-  )
+              }}
+          >
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              marginBottom: 2,
+            }}
+            >
+              <Button sx={{marginBottom: 1}} variant="contained" color="warning" onClick={goToListView}>Wróć do listy projektów</Button>
+              <Button sx={{marginBottom: 1}} variant="contained" color="warning" onClick={() => setMyTasksOnly(state => !state)}> Pokaż moje zadania </Button>
+            </Box>
+            <Typography fontWeight="bold">Lista zadań</Typography>
+            {getTaskList()?.map(task => createTaskItemView(task))}
+          </Box>
+        </Container>
+      </ThemeProvider>
+  );
 }
 
 export default TaskListComponent

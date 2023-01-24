@@ -1,8 +1,9 @@
-import { Box, Button, TextField } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import {Box, Button, TextField, Container, ThemeProvider, Typography} from '@mui/material'
+import React, { useContext, useState } from 'react'
 import createProject from '../api/create-project-fetch'
 import { CreateProjectRequestBody } from '../models/request/CreateProjectRequest'
 import { ProjectViewContext } from './ProjectsComponent'
+import {createTheme} from "@mui/material/styles";
 
 function ProjectCreateComponent() {
     const ctx = useContext(ProjectViewContext)
@@ -26,23 +27,64 @@ function ProjectCreateComponent() {
         })
     }
 
-
+    const theme = createTheme();
 
     return (
-        <>
-            <div>ProjectCreateComponent</div>
-            <Button onClick={() => { ctx.setViewStage('project-list') }}> lista projektów</Button>
-            <Box>
-                <TextField onChange={(e) => { setValue(e.target.value, 'title') }} label="title" />
-                <br />
-                <TextField onChange={(e) => { setValue(e.target.value, 'description') }} label="description" />
-                    <br />
-                WYMAGANE jest użycie isoTime -- <TextField onChange={(e) => { setValue(e.target.value, 'dateTimeDelivery') }} label='dateTimeDelivery' />
+        <ThemeProvider theme={theme}>
+            <Container component="main" maxWidth="xs">
 
-            </Box>
-            <Button onClick={onSubmitClick} >zapisz</Button>
-        </>
-    )
+                <Box
+                    sx={{
+                        border: 3,
+                        borderRadius: 5,
+                        borderColor: 'success.main',
+                        Width: 420,
+                        marginTop: 2,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Button sx={{marginTop: 2}} variant="contained" color="success" onClick={() => { ctx.setViewStage('project-list') }}> lista projektów</Button>
+                    <Box component="form"
+                         sx={{
+                             width: 350,
+                             display: 'flex',
+                             flexDirection: 'column',
+                             alignItems: 'center',
+                             marginBottom: 2,
+                         }}
+                    >
+                        <TextField
+                            onChange={(e) => { setValue(e.target.value, 'title') }}
+                            margin="normal"
+                            fullWidth
+                            label="Tytuł"
+                            autoFocus
+                        />
+                        <TextField
+                            onChange={(e) => { setValue(e.target.value, 'description')}}
+                            margin="normal"
+                            fullWidth
+                            label="Opis"
+                            autoFocus
+                        />
+                        <Typography sx={{marginTop: 1}} component="h1" fontWeight="bold">
+                            WYMAGANE jest użycie isoTime dla daty!
+                        </Typography>
+                        <TextField
+                            onChange={(e) => { setValue(e.target.value, 'dateTimeDelivery') }}
+                            margin="normal"
+                            fullWidth
+                            label="Data Dostarczenia"
+                            autoFocus
+                        />
+                        <Button variant="contained" color="success" onClick={onSubmitClick}>Dodaj</Button>
+                    </Box>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
 }
 
 export default ProjectCreateComponent

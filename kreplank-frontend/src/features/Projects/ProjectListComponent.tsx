@@ -1,10 +1,8 @@
-import { Button, Divider, Typography } from "@mui/material"
+import { Button, Typography } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
-import getProjectsList, { ProjectListResponse } from "../api/download-project-list"
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { User } from "../models/User";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableHead from "@mui/material/TableHead";
@@ -47,18 +45,18 @@ const ProjectListComponent = () => {
 
     const createRow = (project: Project) => {
         return <StyledTableRow key={`project-table-row-${project.id}`}>
-            <StyledTableCell><Button onClick={() => { onProjectIdClick(project.id) }}>{project.id.substring(0, 6)}</Button></StyledTableCell>
-            <StyledTableCell>{project.title}</StyledTableCell>
+            <StyledTableCell><Button variant="contained" color="success" onClick={() => { onProjectIdClick(project.id) }}>{project.id.substring(0, 6)}</Button></StyledTableCell>
+            <StyledTableCell><Typography fontWeight="bold">{project.title}</Typography></StyledTableCell>
             <StyledTableCell>{project.description}</StyledTableCell>
             <StyledTableCell>{project.dateTimeCreation}</StyledTableCell>
             <StyledTableCell>{project.dateTimeDelivery}</StyledTableCell>
-            <StyledTableCell>{project.status}</StyledTableCell>
+            <StyledTableCell><Typography fontWeight="bold">{project.status}</Typography></StyledTableCell>
             <StyledTableCell>
                 {
                     project.tasks.length > 0 ?
                         project.tasks.map((task) => {
                             return <Typography key={task.id}>
-                                <Button onClick={() => { onTaskClick(project.id,task.id) }}>{task.title} </Button>
+                                <Button sx={{marginTop: 0.5}}variant="contained" color="success" onClick={() => { onTaskClick(project.id,task.id) }}>{task.title} </Button>
                             </Typography>
                         }) :
                         "brak"
@@ -83,10 +81,10 @@ const ProjectListComponent = () => {
 
     return (
         <Paper>
-            <Button onClick={() => { ctx.setViewStage('project-create') }}> utworz projekt</Button>
-            <Button onClick={showTaskList}> list zadań</Button>
+            <Button sx={{ margin: 1 }} variant="contained" color="primary" onClick={() => { ctx.setViewStage('project-create') }}> Utwórz projekt</Button>
+            <Button sx={{ margin: 1 }} variant="contained" color="primary" onClick={showTaskList}> list zadań</Button>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
+                <Table aria-label="customized table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>ID</StyledTableCell>
@@ -111,8 +109,10 @@ const ProjectListComponent = () => {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: theme.palette.success.light,
         color: theme.palette.common.white,
+        fontSize: 14,
+        fontWeight: "bold"
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,

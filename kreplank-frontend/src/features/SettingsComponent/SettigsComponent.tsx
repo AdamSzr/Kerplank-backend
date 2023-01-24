@@ -11,7 +11,6 @@ import { useEffect, useState } from "react"
 import whoAmI from "../api/user-me-fetch"
 import { UserMe } from "../models/UserMe"
 import deleteAccount from "../api/user-delete-fetch"
-import { off } from "process"
 import { jwtTokenStorage, userStorage } from "../config"
 import Router, { useRouter } from "next/router"
 
@@ -46,9 +45,13 @@ const SettingsComponent = () => {
     if (!me) return <div>Ładowanie</div>
 
     return (
-        <Box>
+        <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }}>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 300, maxWidth: 1000 }} aria-label="customized table">
+                <Table sx={{marginTop: 1}} aria-label="customized table">
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Nazwa użytkownika</StyledTableCell>
@@ -68,8 +71,13 @@ const SettingsComponent = () => {
                 </Table>
             </TableContainer>
             <Divider />
-            <Box>
-                <Button onClick={onDeleteAccountClick}>
+            <Box sx={{
+                marginTop: 2,
+                // display: 'flex',
+                // flexDirection: 'column',
+                // alignItems: 'center',
+            }}>
+                <Button variant="contained" color="error" onClick={onDeleteAccountClick}>
                     Usuń konto
                 </Button>
             </Box>
@@ -79,8 +87,10 @@ const SettingsComponent = () => {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.common.white,
+        fontSize: 14,
+        fontWeight: "bold"
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
@@ -96,5 +106,4 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-
 export default SettingsComponent

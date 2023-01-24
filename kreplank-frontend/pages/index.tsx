@@ -1,12 +1,10 @@
-import { Button, Link } from '@mui/material'
+import { Button } from '@mui/material'
 import { Container } from '@mui/material'
 import { Typography } from '@mui/material'
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
-import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from '@mui/system'
 import { NextPage } from 'next'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { NextRequest, NextResponse } from 'next/server'
 import { useEffect, useState } from 'react'
@@ -67,7 +65,9 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
       >
 
         <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
-          <Typography>
+          <Typography sx={{
+            marginBottom: 2
+          }}>
             Proszę czekać.
             Za chwilę ostaniesz przekierowany do strony domowej.
           </Typography>

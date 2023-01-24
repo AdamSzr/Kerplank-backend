@@ -1,10 +1,10 @@
-import { Box, Button, Divider, MenuItem, Select, TextField, Typography } from '@mui/material'
-import { it } from 'node:test'
+import {Box, Button, Container, Divider, MenuItem, Select, TextField, Typography } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import updateTask, { UpdateTaskRequest } from '../../api/update-task-fetch'
 import { userStorage } from '../../config'
 import { Task } from '../../models/Task'
 import { ProjectViewContext } from '../ProjectsComponent'
+import {createTheme, ThemeProvider} from "@mui/material/styles";
 
 const TaskEditComponent: React.FC<{ task?: Task }> = ({ task }) => {
 
@@ -42,36 +42,106 @@ const TaskEditComponent: React.FC<{ task?: Task }> = ({ task }) => {
 
     }
 
-    return (
-        <Box>
-            <Typography> Modyfikacje </Typography>
-            <Divider />
-            <Box display={'grid'}>
-                <TextField label="tytul" onChange={(e) => updateField('title', e.target.value)} value={request.title ?? task.title} > </TextField>
-                <TextField label="opis" onChange={(e) => updateField('description', e.target.value)} value={request.description ?? task.description}> </TextField>
-                <TextField label="przypisane do" value={request.assignedTo ?? task.assignedTo ?? '' } disabled> </TextField>
-                {!task.assignedTo && <Button onClick={onAssignClick}>Przypisz do mnie</Button>}
-                <TextField label="data utworzenia" onChange={(e) => updateField('dateTimeCreation', e.target.value)} value={request.dateTimeCreation ?? task.dateTimeCreation}> </TextField>
-                <TextField label="data zakonczenia" onChange={(e) => updateField('dateTimeDelivery', e.target.value)} value={request.dateTimeDelivery ?? task.dateTimeDelivery}> </TextField>
-                <Select
-                    value={request.status ?? task.status}
-                    label="Age"
-                    onChange={(e) => updateField('status', e.target.value)}
-                >
-                    <MenuItem value={'NEW'}>NOWY</MenuItem>
-                    <MenuItem value={'IN_PROGRESS'}>W TRAKCIE</MenuItem>
-                    <MenuItem value={'DONE'}>ZAKONCZONE</MenuItem>
-                </Select>
-            </Box>
+    const theme = createTheme();
 
-            <Divider />
-            <Typography> zmiany do zapisania</Typography>
-            <pre>
-                {JSON.stringify(request, null, 2)}
-            </pre>
-            <Button onClick={onUpdateClick}>zapisz</Button>
-        </Box>
-    )
+    return (
+        <ThemeProvider theme={theme}>
+            <Container
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}>
+                <Box
+                    sx={{
+                        border: 3,
+                        borderRadius: 5,
+                        borderColor: 'warning.main',
+                        marginTop: 2,
+                        padding:2,
+                        minWidth: 500,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Typography variant="h5" fontWeight="bold">
+                        Modyfikacja
+                    </Typography>
+                    <Box component="form"
+                         sx={{
+                             display: 'flex',
+                             flexDirection: 'column',
+                             alignItems: 'center',
+                         }}
+                    >
+                        <TextField
+                            sx={{
+                                marginTop: 2,
+                                minWidth: 350,
+                            }}
+                            label="Tytuł"
+                            onChange={(e) => updateField('title', e.target.value)}
+                            value={request.title ?? task.title}>
+                        </TextField>
+                        <TextField
+                            sx={{
+                                marginTop: 1,
+                                minWidth: 350,
+                            }}
+                            label="Opis"
+                            onChange={(e) => updateField('description', e.target.value)}
+                            value={request.description ?? task.description}>
+                        </TextField>
+                        <TextField
+                            sx={{
+                                marginTop: 1,
+                                minWidth: 350,
+                            }}
+                            label="Przypisane do"
+                            value={request.assignedTo ?? task.assignedTo ?? '' }
+                            disabled>
+                        </TextField>
+                        {!task.assignedTo && <Button onClick={onAssignClick}>Przypisz do mnie</Button>}
+                        <TextField
+                            sx={{
+                                marginTop: 1,
+                                minWidth: 350,
+                            }}
+                            label="Data Utworzenia"
+                            onChange={(e) => updateField('dateTimeCreation', e.target.value)}
+                            value={request.dateTimeCreation ?? task.dateTimeCreation}>
+                        </TextField>
+                        <TextField
+                            sx={{
+                                marginTop: 1,
+                                minWidth: 350,
+                            }}
+                            label="Data zakończenia"
+                            onChange={(e) => updateField('dateTimeDelivery', e.target.value)}
+                            value={request.dateTimeDelivery ?? task.dateTimeDelivery}>
+                        </TextField>
+                        <Typography sx={{marginTop: 1}}>Status</Typography>
+                        <Select
+                            value={request.status ?? task.status}
+                            onChange={(e) => updateField('status', e.target.value)}
+                        >
+                            <MenuItem value={'NEW'}>NOWY</MenuItem>
+                            <MenuItem value={'IN_PROGRESS'}>W TRAKCIE</MenuItem>
+                            <MenuItem value={'DONE'}>ZAKONCZONE</MenuItem>
+                        </Select>
+                    </Box>
+                    <Divider />
+                    <Typography sx={{marginTop: 2}}> Zmiany do zapisania</Typography>
+                    <pre>
+                        {JSON.stringify(request, null, 2)}
+                    </pre>
+                    <Button variant="contained" color="primary" onClick={onUpdateClick}>Zapisz</Button>
+                </Box>
+            </Container>
+        </ThemeProvider>
+    );
+
 }
 
 export default TaskEditComponent

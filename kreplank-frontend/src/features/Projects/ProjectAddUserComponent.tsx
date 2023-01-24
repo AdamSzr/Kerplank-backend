@@ -1,15 +1,11 @@
-
-
 import { Box, Button, Divider, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import downloadAllUsers from '../api/user-all-fetch'
 import { Project } from '../models/Project'
-import { User } from '../models/User'
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 import updateProject from '../api/update-project-fetch'
 
@@ -78,10 +74,15 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
 
 
     return (
-        <Box>
-            <div>ProjectAddUserComponent</div>
+        <Box
+            sx={{
+                border: 3,
+                borderRadius: 5,
+                borderColor: 'primary.main',
+                padding: 2
+        }}>
             <Box>
-                <Typography>
+                <Typography fontWeight="Bold">
                     Lista użytkowników
                 </Typography>
                 <ul>
@@ -89,7 +90,7 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
                 </ul>
 
 
-                <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+                <FormControl sx={{ m: 1 }} component="fieldset" variant="standard">
                     <FormLabel component="legend">Zaznacz aby dodać lub odznacz aby usunąć</FormLabel>
                     <FormGroup>
                         {allUsersList?.map(email => generateCheckboxFor(email))}
@@ -99,11 +100,11 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
 
             <Divider />
             <Box>
-                Aktualnie w projekcie sa
-                <br />
+                <Typography sx={{marginTop: 1, marginBottom: 1}} fontWeight="bold">Aktualnie w projekcie są</Typography>
+
                 {usersInProj?.join(" | ")}
             </Box>
-            <Button onClick={onAddClick}>
+            <Button sx={{marginTop: 2}} variant="contained" color="primary" onClick={onAddClick}>
                 Zapisz
             </Button>
         </Box>

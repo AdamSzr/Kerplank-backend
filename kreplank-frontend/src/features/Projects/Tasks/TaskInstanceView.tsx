@@ -1,5 +1,4 @@
 import { Box, Button, Typography } from '@mui/material'
-import { it } from 'node:test'
 import React, { useContext, useEffect, useState } from 'react'
 import projectDelete from '../../api/delete-project-fetch'
 import { Project } from '../../models/Project'
@@ -65,16 +64,17 @@ const TaskInstanceView = () => {
 
 
     return (
-        <Box>
-            TaskInstanceView
+        <Box sx={{marginTop: 2}}>
             <Typography>
-                task id -{ctx.selectedTaskId}
+                Task ID: {ctx.selectedTaskId}
             </Typography>
             <Typography>
-                title - {task?.title}
+                Tytuł: {task?.title}
             </Typography>
-            <Button onClick={backToList}> wroc</Button>
-            <Button onClick={deleteTask}> usun zadanie</Button>
+            <Box sx={{marginTop: 1, marginBottom: 1}}>
+                <Button sx={{marginRight: 1}} variant="contained" color="primary" onClick={backToList}> Wróć</Button>
+                <Button variant="contained" color="error" onClick={deleteTask}> Usuń zadanie</Button>
+            </Box>
             <TaskEditComponent task={task} />
         </Box>
     )
