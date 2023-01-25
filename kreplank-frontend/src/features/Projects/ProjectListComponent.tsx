@@ -48,6 +48,7 @@ const ProjectListComponent = () => {
             <StyledTableCell><Button variant="contained" color="success" onClick={() => { onProjectIdClick(project.id) }}>{project.id.substring(0, 6)}</Button></StyledTableCell>
             <StyledTableCell><Typography fontWeight="bold">{project.title}</Typography></StyledTableCell>
             <StyledTableCell>{project.description}</StyledTableCell>
+            <StyledTableCell>{project.creator}</StyledTableCell>
             <StyledTableCell>{project.dateTimeCreation}</StyledTableCell>
             <StyledTableCell>{project.dateTimeDelivery}</StyledTableCell>
             <StyledTableCell><Typography fontWeight="bold">{project.status}</Typography></StyledTableCell>
@@ -90,6 +91,7 @@ const ProjectListComponent = () => {
                             <StyledTableCell>ID</StyledTableCell>
                             <StyledTableCell>Tytuł</StyledTableCell>
                             <StyledTableCell>Opis</StyledTableCell>
+                            <StyledTableCell>Właściciel</StyledTableCell>
                             <StyledTableCell>Data utworzenia</StyledTableCell>
                             <StyledTableCell>Data dostarczenia</StyledTableCell>
                             <StyledTableCell>Status</StyledTableCell>
