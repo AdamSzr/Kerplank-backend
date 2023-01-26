@@ -95,26 +95,26 @@ class ProjectController(private val projectService: ProjectService) {
         @RequestParam filePath: String?,
         @RequestParam taskId: String?,
         authenticatedUser: AuthenticatedUser
-    ): Mono<ResponseEntity<Project>> {
+    ): Mono<out ResponseEntity<out Any>> {
 
         return when {
             !userEmail.isNullOrBlank() -> {
                 projectService.deleteUserFromProject(authenticatedUser.email, projectId, userEmail)
-                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
-                    .switchIfEmpty { ResponseEntity<Project>(HttpStatus.FORBIDDEN).toMono() }
+                    .mapNotNull { ResponseEntity(ProjectResponse(it), HttpStatus.OK) }
+                    .switchIfEmpty { ResponseEntity<ProjectResponse>(HttpStatus.FORBIDDEN).toMono() }
 //                Mono.just("Delete - user from project")
             }
 
             !filePath.isNullOrBlank() -> {
                 projectService.deletePathFromProject(authenticatedUser.email, projectId, filePath)
-                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
+                    .mapNotNull { ResponseEntity(ProjectResponse(it), HttpStatus.OK) }
                     .switchIfEmpty { Mono.just(ResponseEntity(HttpStatus.FORBIDDEN)) }
 //                Mono.just("Delete - file from project")
             }
 
             !taskId.isNullOrBlank() -> {
                 projectService.deleteTaskFromProject(authenticatedUser.email, projectId, taskId)
-                    .mapNotNull { ResponseEntity(it, HttpStatus.OK) }
+                    .mapNotNull { ResponseEntity(ProjectResponse(it), HttpStatus.OK) }
                     .switchIfEmpty { Mono.just(ResponseEntity(HttpStatus.FORBIDDEN)) }
 //                Mono.just("Delete - task from project")
             }

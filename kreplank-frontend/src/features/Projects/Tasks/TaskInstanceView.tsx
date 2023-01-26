@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import projectDelete from '../../api/delete-project-fetch'
 import { Project } from '../../models/Project'
 import { Task } from '../../models/Task'
+import { replaceItemInArray } from '../../utils/ArrayUtils'
 import { ProjectViewContext } from '../ProjectsComponent'
 import TaskEditComponent from './TaskEditComponent'
 
@@ -45,7 +46,7 @@ const TaskInstanceView = () => {
 
 
     const backToList = () => {
-        ctx.setViewStage('project-list')
+        ctx.setViewStage('project-instance')
         ctx.setSelectedTaskId(undefined)
     }
 
@@ -54,9 +55,12 @@ const TaskInstanceView = () => {
         if (!ctx.selectedProjectId || !task) return
         const response = await projectDelete(ctx.selectedProjectId, { taskId: task.id })
         console.log(response)
-        if (response.status == 200) {
+        if (response.status == 200 && ctx.projectList) {
             console.log("delete task success", task.id)
-
+            ctx.setProjectList(replaceItemInArray(ctx.projectList, response.data.project, (item) => item.id == ctx.selectedProjectId))
+            ctx.setViewStage('project-instance')
+            ctx.setSelectedTaskId(undefined)
+            
         } else {
             console.log("FAILED")
         }
@@ -66,10 +70,22 @@ const TaskInstanceView = () => {
     return (
         <Box sx={{marginTop: 2}}>
             <Typography>
-                Task ID: {ctx.selectedTaskId}
+                Tytuł: {task?.title}
             </Typography>
             <Typography>
-                Tytuł: {task?.title}
+                Opis: {task?.description}
+            </Typography>
+            <Typography>
+                Przypisany do: {task?.assignedTo}
+            </Typography>
+            <Typography>
+                Status: {task?.status}
+            </Typography>
+            <Typography>
+                Data utworzenia zgłoszenia: {task?.dateTimeCreation}
+            </Typography>
+            <Typography>
+                Przewidywana data zakończenia: {task?.dateTimeCreation}
             </Typography>
             <Box sx={{marginTop: 1, marginBottom: 1}}>
                 <Button sx={{marginRight: 1}} variant="contained" color="primary" onClick={backToList}> Wróć</Button>

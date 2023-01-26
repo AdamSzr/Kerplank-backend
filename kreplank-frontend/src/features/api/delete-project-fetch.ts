@@ -1,5 +1,7 @@
 
 import { Endpoints } from "../config"
+import { BaseResponse } from "../models/BaseResponse"
+import { Project } from "../models/Project"
 import { CreateUserRequest } from "../models/request/CreateUserRequest"
 import { ax } from "./ax"
 
@@ -16,7 +18,7 @@ const projectDelete = (projectId: string, query?: DeleteFromProjectQuery) => {
     }
 
     const url = Endpoints["edit|delete.project"].replace(':projectId:', projectId)
-    return ax(url, 'DELETE', undefined, query)
+    return ax<{ project: Project } & BaseResponse>(url, 'DELETE', undefined, query)
 }
 
 export default projectDelete

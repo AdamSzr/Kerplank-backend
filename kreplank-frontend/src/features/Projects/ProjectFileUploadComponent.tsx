@@ -6,6 +6,7 @@ import { ax } from '../api/ax'
 import updateProject from '../api/update-project-fetch'
 import { Endpoints } from '../config'
 import { Project } from '../models/Project'
+import { replaceItemInArray } from '../utils/ArrayUtils'
 import { ProjectViewContext } from './ProjectsComponent'
 
 const ProjectFileUploadComponent: React.FC<{ project?: Project}> = ({ project }) => {
@@ -21,8 +22,11 @@ const ProjectFileUploadComponent: React.FC<{ project?: Project}> = ({ project })
 
        const response = await updateProject(project.id,{files: [...project.files, selectedFile.name]})
         console.log({response})
-        if(response.status==200){
+        if(response.status==200 && ctx.projectList){
             console.log("File has been added")
+
+            ctx.setProjectList(replaceItemInArray(ctx.projectList, response.data.project, (item) => item.id == ctx.selectedProjectId))
+            ctx.setViewStage('project-instance')
         }
 
     }

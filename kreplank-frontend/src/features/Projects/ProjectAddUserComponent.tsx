@@ -1,5 +1,5 @@
 import { Box, Button, Divider, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import downloadAllUsers from '../api/user-all-fetch'
 import { Project } from '../models/Project'
 import FormLabel from '@mui/material/FormLabel';
@@ -8,9 +8,14 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import updateProject from '../api/update-project-fetch'
+import { ProjectViewContext } from './ProjectsComponent';
+import { replaceItemInArray } from '../utils/ArrayUtils';
 
 
 const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) => {
+
+    const ctx = useContext(ProjectViewContext)
+    
     if (!project) {
         <>Proszę czekać</>
     }
@@ -18,11 +23,14 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
     const [usersInProj, setUsersInProj] = useState<string[]>()
     const [allUsersList, setAllUsersList] = useState<string[]>()
 
-    useEffect(() => {
+    useEffect(()=>{
         if (project) {
             setUsersInProj(project.users)
         }
 
+    },[ctx.projectList,project])
+
+    useEffect(() => {
         downloadAllUsers().then(
             (response) => {
                 console.log(response)
@@ -31,7 +39,6 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
                 }
             }
         )
-
     }, [])
 
 
@@ -50,13 +57,14 @@ const ProjectAddUserComponent: React.FC<{ project?: Project }> = ({ project }) =
 
 
     const onAddClick = async () => {
-        if(!project)
+        if(!project || !ctx.projectList)
         return
 
         const response = await updateProject(project.id,{users:usersInProj})
         console.log(response)
-        if(response.status==200){
+        if(response.status==200 ){
             console.log("Users are added.")
+            ctx.setProjectList(replaceItemInArray(ctx.projectList, response.data.project, (item) => item.id == ctx.selectedProjectId))
         }
     }
 

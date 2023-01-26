@@ -1,9 +1,11 @@
-import {Button, Container, TextField, ThemeProvider} from '@mui/material'
+import { Button, Container, TextField, ThemeProvider } from '@mui/material'
 import { Box } from '@mui/system'
 import React, { useContext, useRef } from 'react'
 import createTaskFetch from '../../api/create-task-fetch'
 import { ProjectViewContext } from '../ProjectsComponent'
-import {createTheme} from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
+import { Project } from '../../models/Project'
+import { replaceItemInArray } from '../../utils/ArrayUtils'
 
 const TaskCreateComponent = () => {
 
@@ -17,10 +19,13 @@ const TaskCreateComponent = () => {
 
         const description = taskDescriptionRef.current?.value
 
-        if (description && title && ctx.selectedProjectId) {
+        if (description && title && ctx.selectedProjectId && ctx.projectList) {
             const response = await createTaskFetch({ description, title, projectId: ctx.selectedProjectId })
             if (response.status == 201) {
                 console.log("CREATED")
+
+                ctx.setProjectList(replaceItemInArray(ctx.projectList, response.data.project, (item) => item.id == ctx.selectedProjectId))
+                ctx.setViewStage('project-instance')
             }
 
             console.log({ response })
@@ -34,25 +39,7 @@ const TaskCreateComponent = () => {
         ctx.setViewStage('project-instance')
     }
 
-    //
-    // return (
-    //     <Box>
-    //         TaskCreateComponent
-    //         <Box>
-    //             <TextField label="title"  />
-    //             <TextField label="description"  />
-    //             <Button onClick={createTask}>
-    //                 utworz
-    //             </Button>
-    //         </Box>
-    //
-    //         <Button onClick={backToList}>
-    //             wroc
-    //         </Button>
-    //
-    //
-    //     </Box>
-    // )
+
     const theme = createTheme();
 
     return (
@@ -71,15 +58,15 @@ const TaskCreateComponent = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <Button sx={{marginTop: 2}} variant="contained" color="warning" onClick={backToList}>Wróć do listy</Button>
+                    <Button sx={{ marginTop: 2 }} variant="contained" color="warning" onClick={backToList}>Wróć do listy</Button>
                     <Box component="form"
-                         sx={{
-                             width: 350,
-                             display: 'flex',
-                             flexDirection: 'column',
-                             alignItems: 'center',
-                             marginBottom: 2,
-                         }}
+                        sx={{
+                            width: 350,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            marginBottom: 2,
+                        }}
                     >
                         <TextField
                             inputRef={taskTitleRef}

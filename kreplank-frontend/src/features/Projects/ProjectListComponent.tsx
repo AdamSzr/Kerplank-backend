@@ -29,16 +29,18 @@ const ProjectListComponent = () => {
         ctx.setViewStage("project-instance")
     }
 
-    const onTaskClick = (projectId:string,taskId: string) => {
+    const onTaskClick = (projectId: string, taskId: string) => {
         ctx.setSelectedProjectId(projectId)
         ctx.setSelectedTaskId(taskId)
         ctx.setViewStage('task-instance')
     }
 
     const createFileLink = (path: string) => {
-        return <Link key={path} href={path} >
-            {path}
-        </Link>
+        return <div key={path} >
+            <Link href={path} >
+                {path}
+            </Link>
+        </div>
     }
 
 
@@ -57,7 +59,7 @@ const ProjectListComponent = () => {
                     project.tasks.length > 0 ?
                         project.tasks.map((task) => {
                             return <Typography key={task.id}>
-                                <Button sx={{marginTop: 0.5}}variant="contained" color="success" onClick={() => { onTaskClick(project.id,task.id) }}>{task.title} </Button>
+                                <Button sx={{ marginTop: 0.5 }} variant="contained" color="success" onClick={() => { onTaskClick(project.id, task.id) }}>{task.title} </Button>
                             </Typography>
                         }) :
                         "brak"
@@ -65,7 +67,7 @@ const ProjectListComponent = () => {
             </StyledTableCell>
             <StyledTableCell>
                 {project.users.map((nickname) => {
-                    return <Typography key={nickname}>{nickname}</Typography>
+                    return <Typography key={nickname}>{nickname.split('@')[0] ?? nickname}</Typography>
                 })}
             </StyledTableCell>
             <StyledTableCell>{project.files.map(it => createFileLink(it))}</StyledTableCell>
@@ -76,7 +78,7 @@ const ProjectListComponent = () => {
         return <div>Ładowanie</div>
 
 
-    const showTaskList = () =>{
+    const showTaskList = () => {
         ctx.setViewStage('task-list')
     }
 
