@@ -41,7 +41,7 @@ object UserUtils {
         User(
             nickname = signup.nickname,
             password = encryptedPassword,
-            role = UserRole.MODERATOR,
+            role = UserRole.USER,
             email = signup.email,
             details = hashMapOf(),
         )

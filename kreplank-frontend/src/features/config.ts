@@ -26,6 +26,8 @@ export class Endpoints {
    static "drive.file" = '/api/drive/file'
    static "drive.path" = '/api/drive/path'
    static "drive.upload" = '/api/drive/upload'
+   static "chat.create" = '/api/chat'
+   static "chat.delete" = '/api/chat/:postId:'
 }
 
 
