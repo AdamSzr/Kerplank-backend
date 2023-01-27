@@ -1,5 +1,6 @@
 package utp.agile.kerplank.service
 
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
 import reactor.core.publisher.Flux
@@ -15,7 +16,7 @@ class ChatService(private val repository: ChatPostRepository) {
 
 
     fun latestChatPosts(): Flux<ChatPost> {
-       return repository.findAll()
+       return repository.findAll(Sort.by(Sort.Direction.DESC,"created"))
     }
 
     fun createChatPost(request: ChatPostRequest): Mono<ChatPost> {

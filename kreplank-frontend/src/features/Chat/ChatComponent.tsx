@@ -67,7 +67,7 @@ const ChatComponent = () => {
     <Box>
 
       <Typography textAlign={'center'} fontSize={'20px'}>
-        Witaj! Na chacie publikowane są najważniejsze informacje. Przeglądaj go co jakiś czas.
+        Witaj na czacie publikowane są najważniejsze informacje. Przeglądaj go co jakiś czas.
       </Typography>
       <Box sx={{
         gap: '20px',

@@ -1,5 +1,6 @@
 package utp.agile.kerplank.model
 
+import org.springframework.core.annotation.Order
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import utp.agile.kerplank.response.BaseResponse
