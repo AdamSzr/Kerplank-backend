@@ -1,1 +1,1 @@
-npx next dev
+clear & npx next dev
