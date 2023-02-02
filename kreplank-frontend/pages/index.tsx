@@ -91,12 +91,25 @@ const IndexPage: NextPage<SsrProps> = (ssr) => {
           alignItems: 'center'
         }}
       >
-        <Box sx={{ fontWeight: 'bold', fontSize: 16 }}>
-          Przejdz do strony logowania
+          <Box>
+            <img src="https://esahayakio.s3.ap-southeast-1.amazonaws.com/wp-content/uploads/2021/10/23114934/360_F_304766094_oGfiNaNzXOXli1xFLLeqYgZjBABsUB29.jpg"
+                 alt="welcomeImage"
+            />
+          </Box>
+          <Box>
+            <Typography sx={{ fontWeight: 'bold', fontSize: 16, marginTop: 2}}>
+              Przejdz do strony logowania
+            </Typography>
+          </Box>
+          <Button sx={{ marginTop: 2, marginBottom: 2 }} variant="contained" color="primary" href="/login">Zaloguj się</Button>
+          <Typography >
+            lub
+          </Typography>
+          <Typography sx={{ fontWeight: 'bold', fontSize: 16, marginTop: 2 }}>
+            Zarejestruj się
+          </Typography>
 
-        </Box>
-        <Button href="/login">Zaloguj się</Button>
-
+          <Button sx={{ margin: 1 }} variant="contained" color="secondary" href="/login">Zarejestruj się</Button>
       </Container>
     )
   }

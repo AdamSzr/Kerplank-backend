@@ -1,9 +1,8 @@
-
-
-import { Box, Button, Input, TextField } from '@mui/material'
+import {Box, Button, CssBaseline, Input, TextField, ThemeProvider, Container} from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
 import { passwordReset, PasswordResetRequest } from '../../../src/features/api/password-reset-fetch'
+import {createTheme} from "@mui/material/styles";
 
 const ResetComponent = () => {
 
@@ -46,28 +45,40 @@ const ResetComponent = () => {
     </div>
   }
 
+  const theme = createTheme();
 
   const FormViewComponent = () => {
-    return <div>
-      < TextField inputRef={inputRef}  placeholder='Wpisz nowe hasło'>
-      </TextField>
-      <Button onClick={onResetClick}>
-        zatwierdz
-      </Button>
-    </div>
+    return <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+            sx={{
+              border: 3,
+              borderRadius: 5,
+              borderColor: 'primary.main',
+              Width: 420,
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+        >
+          <TextField sx={{mt: 2, mb: 2}} inputRef={inputRef}  placeholder='Wpisz nowe hasło'>
+          </TextField>
+          <Button sx={{mb:1}} variant="contained" color="secondary" onClick={onResetClick}>
+            Zatwierdź
+          </Button>
+        </Box>
+      </Container>
+    </ThemeProvider>
   }
 
   return (
-    <div>
-      reset-component
-
+    <Box>
       {isSuccess == undefined && <FormViewComponent />}
       {isSuccess == false && <EmailChangeFailedComponent />}
       {isSuccess == true && <EmailChangeSuccessComponent />}
-
-
-
-    </div>
+    </Box>
   )
 }
 
