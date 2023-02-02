@@ -7,12 +7,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { useContext, useEffect } from 'react'
 import { PageContext } from '../AppRootComponent/AppRootViewComponent'
 import { Pages } from '../Menu/menu-config'
+import img from './panda.jpg'
+import Image from 'next/image'
 
 const HomeMainView = () => {
 
     return <Box >
-        home main view
-        there will be small description of the app .. how app works, what can do
+        <Image src={img} alt="panda"></Image>
+    {/* For variant="text", adjust the height via font-size */}
     </Box>
 }
 

@@ -22,7 +22,7 @@ data class Project(
 ) {
     fun appendTask(task: Task) = this.apply { tasks.add(task) }
     fun appendUser(userEmail: String) = this.apply { users.add(userEmail) }
-    fun appendUsers(userEmailList: List<String>) = this.apply { users.addAll(userEmailList) }
+    fun replaceUsers(userEmailList: List<String>) = this.apply { users = userEmailList.toMutableSet() }
     fun appendFile(filePath: String) = this.apply { files.add(filePath) }
     fun appendFiles(filePathList: List<String>) = this.apply { files.addAll(filePathList) }
     fun updateStatus(newStatus: ProjectStatus) = this.apply { status = newStatus }

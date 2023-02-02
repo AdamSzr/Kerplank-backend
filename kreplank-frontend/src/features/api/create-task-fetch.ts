@@ -1,12 +1,13 @@
 import { Endpoints } from "../config"
+import { BaseResponse } from "../models/BaseResponse"
+import { Project } from "../models/Project"
 import { CreateTaskRequestBody } from "../models/request/CreateTaskRequest"
 import { ax } from "./ax"
-import { customFetch } from "./custom-fetch"
 
 
-const createTask = (request: CreateTaskRequestBody) => {
+const createTaskFetch = (request: CreateTaskRequestBody) => {
 
-    return ax(Endpoints["edit.task"], 'POST', request)
+    return ax<{ project: Project } & BaseResponse>(Endpoints["create.task"], 'POST', request)
 }
 
-export default createTask
+export default createTaskFetch

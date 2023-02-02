@@ -5,6 +5,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toFlux
+import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.model.*
 import utp.agile.kerplank.repository.ProjectRepository
 import utp.agile.kerplank.repository.UserRepository
@@ -73,7 +74,11 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                         projectRepository.findByIdAndUserEmail(email = userEmail, id = projectId)
                             .filter { it.creator == userEmail }
                             .map { project ->
-                                project.appendUsers(userList.map { it.email })
+                                val userEmailList = userList.map { it.email }.toMutableList()
+                                if(!userEmailList.contains(project.creator))
+                                    userEmailList.add(project.creator)
+
+                                project.replaceUsers(userEmailList)
                             }
                             .flatMap { project -> projectRepository.save(project) }
                             .switchIfEmpty { Mono.empty() }
@@ -99,7 +104,7 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
 
 
     fun deleteProject(creatorEmail: String, projectId: String): Mono<Project> {
-        return projectRepository.findByIdAndCreator(creatorEmail, projectId)
+        return projectRepository.findByIdAndCreator( projectId, creatorEmail)
             .doOnNext {
                 projectRepository.deleteById(projectId).subscribe()
             }

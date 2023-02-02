@@ -1,10 +1,9 @@
 import { Endpoints } from "../config"
 import { CreateUserRequest, CreateUserResponse } from "../models/request/CreateUserRequest"
 import { ax } from "./ax"
-import { customFetch } from "./custom-fetch"
 
 
-const createUser = (request: CreateUserRequest): Promise<CreateUserResponse> => {
+const createUser = (request: CreateUserRequest) => {
    var myHeaders = new Headers();
    myHeaders.append("Content-Type", "application/json");
 
@@ -24,10 +23,8 @@ const createUser = (request: CreateUserRequest): Promise<CreateUserResponse> => 
       redirect: 'follow'
    };
 
-   return fetch("http://192.168.1.22:8080/api/user/signup", requestOptions)
-      .then(response => response.json())
 
-   // return ax<CreateUserResponse>(Endpoints.sign, 'PUT', request)
+   return ax<CreateUserResponse>(Endpoints.signup, 'PUT', request)
 }
 
 export default createUser
