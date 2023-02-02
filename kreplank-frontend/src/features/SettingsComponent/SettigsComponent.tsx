@@ -55,6 +55,7 @@ const SettingsComponent = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell>Nazwa użytkownika</StyledTableCell>
+                            <StyledTableCell>Rola</StyledTableCell>
                             <StyledTableCell>Email</StyledTableCell>
                             <StyledTableCell>Szczegóły</StyledTableCell>
                             <StyledTableCell>Wynik</StyledTableCell>
@@ -63,6 +64,7 @@ const SettingsComponent = () => {
                     <TableBody>
                         <StyledTableRow>
                             <StyledTableCell>{me.nickname}</StyledTableCell>
+                            <StyledTableCell>{`{${(me.roles??[])?.join(", ")}}`}</StyledTableCell>
                             <StyledTableCell>{me.email}</StyledTableCell>
                             <StyledTableCell>{JSON.stringify(me.details)}</StyledTableCell>
                             <StyledTableCell>{me.result}</StyledTableCell>

@@ -1,5 +1,6 @@
 export type UserMe = {
     nickname: string
+    roles: string[],
     email: string,
     details: object,
     result: string,
