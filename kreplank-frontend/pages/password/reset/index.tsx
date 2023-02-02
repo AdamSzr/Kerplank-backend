@@ -3,27 +3,24 @@
 import { Box, Button, Input, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
+import { generatePasswordReset } from '../../../src/features/api/generate-password-reset'
 import { passwordReset, PasswordResetRequest } from '../../../src/features/api/password-reset-fetch'
 
 const ResetComponent = () => {
 
-  const router = useRouter()
+
   const [isSuccess, setIsSuccess] = useState<boolean | undefined>(undefined)
   const inputRef = useRef<HTMLInputElement>()
-  const uuid = router.query.uuid as string
+  
 
+  const onSendClick = async () => {
 
-  const onResetClick = async () => {
-
-    if ( uuid == '' || !inputRef || inputRef.current?.value=='')
+    if ( !inputRef || inputRef.current?.value=='')
       return
 
+    const email =  inputRef.current!.value
 
-    const request: PasswordResetRequest = {
-      uuid,
-      password:(inputRef.current!).value
-    }
-    const response = await passwordReset(request)
+    const response =  await  generatePasswordReset(email)
     console.log({response})
     if (response.status == 200) {
       setIsSuccess(true)
@@ -36,29 +33,31 @@ const ResetComponent = () => {
 
   const EmailChangeSuccessComponent = () => {
     return <Box>
-      Pomyślnie.
+      Pomyślnie idz sprawdz email.
+      dalesze kroki beda w email.
     </Box>
   }
   const EmailChangeFailedComponent = () => {
     return <div>
-      Nie udało się.
+    cos robisz nie tak.
     </div>
   }
 
 
   const FormViewComponent = () => {
     return <div>
-      < TextField inputRef={inputRef}  placeholder='Wpisz nowe hasło'>
+      < TextField inputRef={inputRef}  placeholder='Wpisz adres email'>
       </TextField>
-      <Button onClick={onResetClick}>
-        zatwierdz
-      </Button>
+      <Button onClick={onSendClick}>
+        Wyświj formularz na email
+        </Button>
     </div>
   }
 
   return (
     <div>
-      reset-component
+      zresetuj hasło
+
 
       {isSuccess == undefined && <FormViewComponent />}
       {isSuccess == false && <EmailChangeFailedComponent />}

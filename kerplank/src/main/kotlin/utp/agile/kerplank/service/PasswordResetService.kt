@@ -39,7 +39,13 @@ class PasswordResetService(
                             "kerplank.project@gmail.com",
                             userEmail,
                             "Kerplank Password Reset",
-                            "Your unique token to password reset is: ${passwordResetEntry.uuid}"
+                            """
+                                <div style="text-align:center;"> 
+                                <h2>Zmiana hasła</h2> 
+                                <p>Aby zresetować swoje hasło, kliknij poniższy link i postępuj zgodnie z instrukcjami.</p> 
+                                <a href="http://localhost:3000/password/reset/${passwordResetEntry.uuid}" style="font-size:20px" >Resetuj hasło</a>
+                                </div>
+                            """.trimIndent()
                         )
                     }
             }
