@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
+import utp.agile.kerplank.MODERATOR_ROLE
 import utp.agile.kerplank.model.*
 import utp.agile.kerplank.response.BaseResponse
 import utp.agile.kerplank.service.ProjectService
@@ -36,7 +37,11 @@ class ProjectController(private val projectService: ProjectService) {
     fun createProject(
         @RequestBody projectCreateRequest: ProjectCreateRequest,
         authenticatedUser: AuthenticatedUser
-    ): Mono<ResponseEntity<ProjectResponse>> {
+    ): Mono<ResponseEntity<out BaseResponse>> {
+        if (!authenticatedUser.roles.contains(MODERATOR_ROLE)) {
+            return ResponseEntity(BaseResponse("fail"), null, HttpStatus.FORBIDDEN).toMono()
+        }
+
         return projectService.createProject(authenticatedUser.email, projectCreateRequest)
             .flatMap {
                 ResponseEntity<ProjectResponse>(

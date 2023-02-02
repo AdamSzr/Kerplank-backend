@@ -15,6 +15,8 @@ import utp.agile.kerplank.repository.UserRepository
 class ProjectService(val projectRepository: ProjectRepository, val userRepository: UserRepository) {
 
     fun createProject(creatorEmail: String, request: ProjectCreateRequest): Mono<Project> {
+
+
         val project = request.createProject(creatorEmail)
 
         return userRepository.findByEmail(creatorEmail)
