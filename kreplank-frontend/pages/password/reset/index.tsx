@@ -1,10 +1,11 @@
 
 
-import { Box, Button, Input, TextField } from '@mui/material'
+import {Box, Button, CssBaseline, Input, TextField, ThemeProvider, Container, Typography} from '@mui/material'
 import { useRouter } from 'next/router'
 import React, { useRef, useState } from 'react'
 import { generatePasswordReset } from '../../../src/features/api/generate-password-reset'
 import { passwordReset, PasswordResetRequest } from '../../../src/features/api/password-reset-fetch'
+import {createTheme} from "@mui/material/styles";
 
 const ResetComponent = () => {
 
@@ -43,15 +44,36 @@ const ResetComponent = () => {
     </div>
   }
 
+  const theme = createTheme();
 
   const FormViewComponent = () => {
-    return <div>
-      < TextField inputRef={inputRef}  placeholder='Wpisz adres email'>
-      </TextField>
-      <Button onClick={onSendClick}>
-        Wyświj formularz na email
-        </Button>
-    </div>
+    return <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+            sx={{
+              border: 3,
+              borderRadius: 5,
+              borderColor: 'primary.main',
+              width: 620,
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+        >
+          <img src="/icon_pass.png"
+               alt="icon"
+          />
+          <Typography sx={{mt:2, textAlign: 'center'}}>Zresetuj swoje hasło. Na podany adres email wysłana zostanie wiadomość resetująca hasło. Wiadomość może być folderze SPAM.</Typography>
+          <TextField sx={{mt: 2, mb: 2, minWidth: 500}} inputRef={inputRef}  placeholder='Adres email'>
+          </TextField>
+          <Button sx={{mb:1}} variant="contained" color="secondary" onClick={onSendClick}>
+            Zatwierdź
+          </Button>
+        </Box>
+      </Container>
+    </ThemeProvider>
   }
 
   return (

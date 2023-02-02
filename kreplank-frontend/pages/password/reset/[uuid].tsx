@@ -55,14 +55,14 @@ const ResetComponent = () => {
               border: 3,
               borderRadius: 5,
               borderColor: 'primary.main',
-              Width: 420,
+              width: 620,
               marginTop: 8,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
         >
-          <TextField sx={{mt: 2, mb: 2}} inputRef={inputRef}  placeholder='Wpisz nowe hasło'>
+          <TextField sx={{mt: 2, mb: 2, minWidth: 500}} inputRef={inputRef}  placeholder='Wpisz nowe hasło'>
           </TextField>
           <Button sx={{mb:1}} variant="contained" color="secondary" onClick={onResetClick}>
             Zatwierdź
