@@ -28,6 +28,7 @@ export class Endpoints {
    static "drive.upload" = '/api/drive/upload'
    static "chat.create" = '/api/chat'
    static "chat.delete" = '/api/chat/:postId:'
+   static "password.reset" = '/api/auth/reset'
 }
 
 

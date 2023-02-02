@@ -38,7 +38,7 @@ class SecurityConfiguration(
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
         http
             .authorizeExchange()
-            .pathMatchers("/api/ping", "/api/user/login", "/api/user/signup")
+            .pathMatchers("/api/ping", "/api/auth/login", "/api/auth/signup")
             .permitAll()
             .anyExchange().authenticated().and()
             .cors().and()

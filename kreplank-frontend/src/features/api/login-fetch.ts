@@ -31,9 +31,9 @@ export function login(loginData: LoginCredentials) {
 
 
     const request = {
-        "nickname": loginData.nickname,
-        "password": loginData.password,
-        "type": "NICKNAME"
+        nickname: loginData.nickname,
+        password: loginData.password,
+        type: "NICKNAME"
       }
 
     return ax<LoginResponse>(Endpoints.login,"POST",request)

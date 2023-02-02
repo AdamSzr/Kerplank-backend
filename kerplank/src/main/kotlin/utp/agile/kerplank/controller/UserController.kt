@@ -8,12 +8,17 @@ import reactor.core.publisher.Mono
 import utp.agile.kerplank.model.*
 import utp.agile.kerplank.repository.UserRepository
 import utp.agile.kerplank.response.*
+import utp.agile.kerplank.service.EmailService
+import utp.agile.kerplank.service.UserService
 
 @RestController
 @RequestMapping("/api/user")
 class UserController(
-    private val userRepository: UserRepository,
+  private  val userService: UserService,
 ) {
+
+
+
 
     @GetMapping("/me")
     fun getMyUserInformation(
@@ -23,7 +28,8 @@ class UserController(
             WhoAmIResponse(
                 authentication.username,
                 authentication.email,
-                authentication.details
+                authentication.details,
+                authentication.roles.map { it.authority }
             ), null, HttpStatus.OK
         )
 
@@ -31,12 +37,9 @@ class UserController(
     @GetMapping("/all")
     fun getAllUsers(
         authentication: Authentication,
-    ) =
-        userRepository.findAll()
-            .collectList()
+    ) = userService.getAllUsers().collectList()
             .map { UsersListResponse(it) }
             .defaultIfEmpty(UsersListResponse(emptyList()))
-
 
 
     @DeleteMapping("/{nickname}")
@@ -44,7 +47,7 @@ class UserController(
         authentication: Authentication,
         @PathVariable nickname: String
     ): Mono<BaseResponse> =
-        userRepository.deleteById(nickname)
+        userService.deleteUser(nickname)
             .map { SuccessResponse() as BaseResponse }
             .onErrorReturn(FailResponse("Nie udało się usunąć użytkownika", 1002) as BaseResponse)
 
