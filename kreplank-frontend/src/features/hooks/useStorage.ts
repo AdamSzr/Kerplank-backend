@@ -72,10 +72,19 @@ export interface useStorageInterface<T> {
   
       localStorage.setItem(variableKey, item)
     }
+
+    const getOrDefault = () => {
+      const item = getValue()
+  
+      if (item == undefined)
+        return defaultValue
+
+      return tryParse(item)
+    }
   
     if (defaultValue) {
       set(defaultValue)
     }
   
-    return { getOrThrow, set, clear, tryGet } as useStorageInterface<T>
+    return { getOrThrow, set, clear, tryGet, getOrDefault} as useStorageInterface<T>
   }

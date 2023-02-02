@@ -6,6 +6,7 @@ import deleteChatPost from '../api/delete-chat-post-fetch'
 import downloadChatPosts from '../api/download-chat-post-fetch'
 import { userStorage } from '../config'
 import { ChatPost } from '../models/ChatPost'
+import { formatDate } from '../utils/DataFormater';
 
 const ChatComponent = () => {
 
@@ -54,7 +55,7 @@ const ChatComponent = () => {
           <br />
           Wiadomość - {post.content}
           <br />
-          data: {post.created}
+          data: {formatDate(post.created)}
         </span>
 
         <Button variant='contained' color="error" onClick={() => onDeletePostClick(post.id)}> usuń </Button>
