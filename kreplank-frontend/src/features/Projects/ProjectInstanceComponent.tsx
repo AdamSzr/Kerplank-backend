@@ -125,7 +125,15 @@ const ProjectInstanceComponent = () => {
                 alignItems: 'center',
                 padding: 2
             }}>
-            <Typography component={'h2'} fontSize={'30px'} > Projekt: {project?.title} </Typography>
+            <Typography fontSize={'30px'} > Projekt: {project?.title} </Typography>
+            <Box sx={{mt: 2, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'left', minWidth: 800,}}>
+                <Typography fontSize={'16px'} > Autor: {project?.creator}</Typography>
+                <Typography fontSize={'16px'} > Opis: {project?.description}</Typography>
+                <Typography fontSize={'16px'} > Status: {project?.status}</Typography>
+                <Typography fontSize={'16px'} > Data uwtorzenia: {project?.dateTimeCreation}</Typography>
+                <Typography fontSize={'16px'} > Data dostarczenia: {project?.dateTimeDelivery}</Typography>
+                <Typography fontSize={'16px'} > Użytkownicy: {project?.users.join(', ')}</Typography>
+            </Box>
             <Box
                 sx={{
                 }}>

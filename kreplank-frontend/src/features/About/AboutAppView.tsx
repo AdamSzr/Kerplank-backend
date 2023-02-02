@@ -35,8 +35,9 @@ const AboutAppView = () => {
                         <ListItemText primary="- zarządzanie projektami oraz zadaniami przypisanymi do projektu," />
                         <ListItemText primary="- możliwość przesyłania na serwer i pobierania plików z określonego projektu," />
                         <ListItemText primary="- funkcjonalność systemu pozwalającą dodawać, modyfikować i usuwać dane projektów, zadań i studentów," />
-                        <ListItemText primary="- ogólnodostępny chat korzystający z dwukierunkowego kanału websocketowego," />
-                        <ListItemText primary="- transmisja danych szyfrowana protokołem." />
+                        <ListItemText primary="- ogólnodostępny cht," />
+                        <ListItemText primary="- transmisja danych szyfrowana protokołem," />
+                        <ListItemText primary="- resetowanie hasła." />
                     </List>
                 </nav>
             </Box>

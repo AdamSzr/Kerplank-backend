@@ -103,11 +103,28 @@ const LoginPage = () => {
                                 Nie posiadasz konta?
                             </Typography>
                             <Button
+                                sx={{
+                                    marginBottom: 2,
+                                }}
                                 href="/signup"
                                 variant="contained"
                                 color="secondary"
                             >
                                 Zarejestruj się
+                            </Button>
+
+                            <Typography
+                                sx={{
+                                    marginBottom: 1,
+                                }}>
+                                Zapomniałeś hasła?
+                            </Typography>
+                            <Button
+                                href="/password/reset"
+                                variant="contained"
+                                color="primary"
+                            >
+                                Zresetuj hasło
                             </Button>
                         </Grid>
                     </Box>

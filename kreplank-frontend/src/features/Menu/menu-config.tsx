@@ -13,7 +13,7 @@ export type MenuTab = {
     name: string
 }
 
-export const HomePage = { title: "Strona domowa", name: "home", view: <HomeMainView /> } as MenuTab
+export const HomePage = { title: "Strona domowa", name: "home", view: <AboutAppView /> } as MenuTab
 
 export class Pages {
     static About = { title: "O aplikacji", name: "about", view: <AboutAppView /> } as MenuTab
