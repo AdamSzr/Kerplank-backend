@@ -49,31 +49,32 @@ const ChatComponent = () => {
 
   const PostComponent = ({ post }: { post: ChatPost }) => {
     return (
-      <Box sx={{ padding: '10px', borderBottom: '1px solid black', display: 'flex', justifyContent: 'space-between' }} >
+      <Box sx={{ padding: '10px', borderBottom: '1px solid', borderColor: 'primary.main',display: 'flex', justifyContent: 'space-between' }} >
         <span>
-          użytkownik {post.author}
+          <Typography sx={{fontWeight: 'bold', fontSize: 14}}> Użytkownik </Typography> {post.author}
           <br />
           Wiadomość - {post.content}
           <br />
-          data: {formatDate(post.created)}
+          Data: {formatDate(post.created)}
         </span>
 
-        <Button variant='contained' color="error" onClick={() => onDeletePostClick(post.id)}> usuń </Button>
+        <Button variant='contained' color="error" onClick={() => onDeletePostClick(post.id)}> Usuń </Button>
       </Box>
     )
   }
 
 
   return (
-    <Box>
-
+    <Box sx={{mt: 2}}>
       <Typography textAlign={'center'} fontSize={'20px'}>
         Witaj na czacie publikowane są najważniejsze informacje. Przeglądaj go co jakiś czas.
       </Typography>
       <Box sx={{
         gap: '20px',
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        mt: 2,
+        mb: 2
       }}>
         <TextField sx={{ minWidth: '40%' }} value={text} onChange={(e) => { setText(e.target.value) }} />
         <Button onClick={onSendClick} variant='contained'  >Wyślij</Button>

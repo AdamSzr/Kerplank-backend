@@ -1,4 +1,4 @@
-import { Typography, CardMedia, Box, Button, Link, Image, Paper, createTheme, ThemeProvider, CssBaseline, Container } from "@mui/material";
+import { Typography, Box, Button, createTheme, ThemeProvider, CssBaseline, Container } from "@mui/material";
         import { useRouter } from "next/router";
 
         const theme = createTheme();
