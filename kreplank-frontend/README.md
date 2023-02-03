@@ -1,34 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+/custom/posts
+  ? ids: number[]
+  & slug: string
+  & category: string
+  & tag: string
+  & pinned: bool
+  => application/json 200 {
+  }
+  => application/json 404 {
+  }
+  eg: /posts?ids=123
+  eg: /posts?ids=123,456,789
+  eg: /posts?slug=abc
+  eg: /posts?slug=marchewka-czerwona-albo-pomaranczowa
+/custom/posts/:id(\d+)
+  =>  /posts/1
+  =>  /posts/123
+/posts/:slug(\w+)
+  =>  /posts/homepage
+  =>  /posts/contact
+  =>  /posts/about
+  =>  /posts/szla-dzieweczka
+  =>  /posts/adam-zjada-ciasteczka
+---
+/custom/pages
+  ? view: 'homepage'|'about'|'contact'
+/custom/pages/:id(\d+)
+  =>  /pages/1
+  =>  /pages/123
+/custom/pages/:slug(\w+)
+  =>  /pages/homepage
+  =>  /pages/contact
+  =>  /pages/about
+  =>  /pages/szla-dzieweczka
+  =>  /pages/adam-zjada-ciasteczka
