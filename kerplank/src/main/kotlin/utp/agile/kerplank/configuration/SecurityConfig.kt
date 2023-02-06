@@ -22,7 +22,6 @@ class SecurityConfiguration(
     private val securityContextRepository: SecurityContextRepository
 ) {
 
-
     private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
 
     private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
@@ -38,7 +37,14 @@ class SecurityConfiguration(
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
         http
             .authorizeExchange()
-            .pathMatchers("/api/ping", "/api/auth/login", "/api/auth/signup", "/api/auth/reset")
+            .pathMatchers(
+                "/api/ping",
+                "/api/auth/login",
+                "/api/auth/signup",
+                "/api/auth/reset",
+                "/api/drive/upload",
+                "/api/drive/upload/multi"
+            )
             .permitAll()
             .anyExchange().authenticated().and()
             .cors().and()
