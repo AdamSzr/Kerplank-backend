@@ -38,7 +38,7 @@ const ChatComponent = () => {
   }
 
 
-  const onDeletePostClick = async (postId: string) => {
+  const handleClick = async (postId: string) => {
     const response = await deleteChatPost(postId)
     console.log(response)
     if (response.status == 200) {
@@ -49,23 +49,23 @@ const ChatComponent = () => {
 
   const PostComponent = ({ post }: { post: ChatPost }) => {
     return (
-      <Box sx={{ padding: '10px', borderBottom: '1px solid', borderColor: 'primary.main',display: 'flex', justifyContent: 'space-between' }} >
+      <Box sx={{ padding: '10px', borderBottom: '1px solid', borderColor: 'primary.main', display: 'flex', justifyContent: 'space-between' }} >
         <span>
-          <Typography sx={{fontWeight: 'bold', fontSize: 14}}> Użytkownik </Typography> {post.author}
+          <Typography sx={{ fontWeight: 'bold', fontSize: 14 }}> Użytkownik </Typography> {post.author}
           <br />
           Wiadomość - {post.content}
           <br />
           Data: {formatDate(post.created)}
         </span>
 
-        <Button variant='contained' color="error" onClick={() => onDeletePostClick(post.id)}> Usuń </Button>
+        <Button variant='contained' color="error" onClick={() => handleClick(post.id)}> Usuń </Button>
       </Box>
     )
   }
 
 
   return (
-    <Box sx={{mt: 2}}>
+    <Box sx={{ mt: 2 }}>
       <Typography textAlign={'center'} fontSize={'20px'}>
         Witaj na czacie publikowane są najważniejsze informacje. Przeglądaj go co jakiś czas.
       </Typography>
@@ -90,3 +90,7 @@ const ChatComponent = () => {
 }
 
 export default ChatComponent
+
+
+
+type x = [...[any, any], ...[any, any, any]]['length']

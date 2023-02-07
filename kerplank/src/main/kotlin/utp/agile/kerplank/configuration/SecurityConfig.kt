@@ -43,7 +43,10 @@ class SecurityConfiguration(
                 "/api/auth/signup",
                 "/api/auth/reset",
                 "/api/drive/upload",
-                "/api/drive/upload/multi"
+                "/api/drive/upload/multi",
+                "/api/drive/file",
+                "/api/drive/path",
+                "/api/drive/directory",
             )
             .permitAll()
             .anyExchange().authenticated().and()

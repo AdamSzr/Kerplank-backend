@@ -1,21 +1,30 @@
 package utp.agile.kerplank.controller
 
+import com.sun.mail.iap.Response
+import org.springframework.data.mongodb.core.aggregation.BooleanOperators.Not
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
+import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.context.request.ServletWebRequest
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
+import utp.agile.kerplank.model.FileDrive
+import utp.agile.kerplank.model.UploadFileResponse
+import utp.agile.kerplank.response.BaseResponse
 import utp.agile.kerplank.service.DriveService
 import java.io.File
+import java.net.URI
 import java.nio.file.Files
 import java.util.UUID
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
+import kotlin.io.path.pathString
 
 
 @RestController
@@ -50,12 +59,7 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
 
     @GetMapping(
-        "file", produces = [
-            MediaType.TEXT_PLAIN_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE,
-            MediaType.APPLICATION_OCTET_STREAM_VALUE,
-            MediaType.ALL_VALUE]
+        "file"
     )
     fun getMyFile(
         @RequestParam("path") pathToFile: String
@@ -67,6 +71,7 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
             .apply { set(HttpHeaders.CONTENT_TYPE, mime) }
             .apply { set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=${pathToFile.split("/").last()}") }
 
+        println("Requested ${pathObj.pathString}")
         return driveService.readFile(pathToFile)
             .let {
                 when (it.result.isSuccess) {
@@ -97,25 +102,24 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
         }
     }
 
-    @PostMapping("/upload/multi") 
-    fun saveMultipleFile(@RequestPart("files") files: Flux<FilePart>): Flux<String> {
-        val prefix = UUID.randomUUID()
+    @PostMapping("/upload/multi")
+    fun saveMultipleFile(
+        @RequestParam directory:String?,
+        @RequestPart("files") files: Flux<FilePart>,
+        request: ServerHttpRequest
+    ): Mono<ResponseEntity<BaseResponse>> {
 
-        return files.flatMap {
-            val file = File(driveConfiguration.directory + "/" + it.filename())
-            file.createNewFile()
-            it.transferTo(file).subscribe()
-            println(file.path)
-            file.path.toMono()
-        }
+        return files.flatMap { filePart ->
+            val fullFilename = filePart.filename().replace(" ","_")
+//            driveService.createFile(filePart.name())
+            
+            val x = File(driveConfiguration.directory + "/" + fullFilename)
 
+            println("Saving file ${filePart.filename()} to [${x.path}]")
+            filePart.transferTo(x).subscribe()
 
-//        return file.flatMap { filePart ->
-//            val x = File(driveConfiguration.directory + "/" + filePart.filename())
-//            println("Saving file ${filePart.filename()} to [${x.path}]")
-//            filePart.transferTo(x).subscribe()
-//            x.path.toString().toMono()
-//        }
+            FileDrive( x.name, "/${x.name}" ).toMono()
+        }.collectList().map { ResponseEntity(UploadFileResponse(it),HttpStatus.CREATED) }
     }
 
 }
