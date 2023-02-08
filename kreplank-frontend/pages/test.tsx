@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import uploadFile, { uploadMultipleFile } from '../src/features/api/upload-file-fetch'
 import { backendUrlStorage, Endpoints } from '../src/features/config'
-import { SingleFile } from '../src/features/models/SingleFile'
+import { SingleFile } from '../src/features/models/DirectoryItem'
 // import FormData from 'form-data'
 
 

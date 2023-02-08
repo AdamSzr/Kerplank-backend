@@ -47,6 +47,7 @@ class SecurityConfiguration(
                 "/api/drive/file",
                 "/api/drive/path",
                 "/api/drive/directory",
+                "/api/drive/mkdir",
             )
             .permitAll()
             .anyExchange().authenticated().and()

@@ -1,27 +1,19 @@
 package utp.agile.kerplank.controller
 
-import com.sun.mail.iap.Response
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators.Not
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.codec.multipart.FilePart
 import org.springframework.http.server.reactive.ServerHttpRequest
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.context.request.ServletWebRequest
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
-import utp.agile.kerplank.model.FileDrive
-import utp.agile.kerplank.model.UploadFileResponse
-import utp.agile.kerplank.response.BaseResponse
+import utp.agile.kerplank.model.DirectoryItem
+import utp.agile.kerplank.response.DirectoryItemsResponse
 import utp.agile.kerplank.service.DriveService
-import java.io.File
-import java.net.URI
 import java.nio.file.Files
-import java.util.UUID
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 import kotlin.io.path.pathString
@@ -45,14 +37,15 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
     fun listDirectory(
         @RequestParam path: String
     ): Any {
+
         driveService.listDirectoryItems(path).let {
-            if (it.isNullOrEmpty())
+            if (it == null)
                 return ResponseEntity<String>(
-                    "Wrong path to directory", HttpStatus.BAD_REQUEST
+                    "Directory not Exists", HttpStatus.NOT_FOUND
                 )
             else
-                return ResponseEntity<List<DriveService.DirectoryItem>>(
-                    it, HttpStatus.OK
+                return ResponseEntity<DirectoryItemsResponse>(
+                    DirectoryItemsResponse(it), HttpStatus.OK
                 )
         }
     }
@@ -95,31 +88,52 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
 
         return file.flatMap { filePart ->
-            val x = File(driveConfiguration.directory + "/" + filePart.filename())
-            println("Saving file ${filePart.filename()} to [${x.path}]")
-            filePart.transferTo(x).subscribe()
-            x.path.toString().toMono()
+            val fullFilename = filePart.filename().replace(" ", "_")
+            val destinationFile = driveService.createFile(filePart.name())
+            println("Saving file ${filePart.filename()} to [${destinationFile.path}]")
+            filePart.transferTo(destinationFile).subscribe()
+            destinationFile.path.toString().toMono()
         }
     }
 
     @PostMapping("/upload/multi")
     fun saveMultipleFile(
-        @RequestParam directory:String?,
+        @RequestParam directory: String?,
         @RequestPart("files") files: Flux<FilePart>,
         request: ServerHttpRequest
-    ): Mono<ResponseEntity<BaseResponse>> {
+    ): Mono<ResponseEntity<DirectoryItemsResponse>> {
+//        val file = if (directory != null && !directory.isNullOrBlank())
+//            driveService.createSubDirectory(directory) else null
 
         return files.flatMap { filePart ->
-            val fullFilename = filePart.filename().replace(" ","_")
-//            driveService.createFile(filePart.name())
-            
-            val x = File(driveConfiguration.directory + "/" + fullFilename)
+            val fullFilename = filePart.filename().replace(" ", "_")
 
-            println("Saving file ${filePart.filename()} to [${x.path}]")
-            filePart.transferTo(x).subscribe()
+            val destinationFile =driveService.createFile(fullFilename,directory)
 
-            FileDrive( x.name, "/${x.name}" ).toMono()
-        }.collectList().map { ResponseEntity(UploadFileResponse(it),HttpStatus.CREATED) }
+            println("Saving file $fullFilename to [${destinationFile.path}]")
+            filePart.transferTo(destinationFile).subscribe()
+
+            val directoryItem = driveService.createDirectoryItem(destinationFile)
+
+            directoryItem.toMono()
+        }.collectList().map { ResponseEntity(DirectoryItemsResponse(it), HttpStatus.CREATED) }
     }
+
+
+    @GetMapping("mkdir")
+    fun createDirectory(
+        @RequestParam path: String,
+        request: ServerHttpRequest
+    ): ResponseEntity<DirectoryItemsResponse> {
+        val pathsToCreate = path.split(",")
+
+        val directories = driveService.createSubDirectories(pathsToCreate)
+        val items =
+            directories.filter { it.result.isSuccess }.map { driveService.createDirectoryItem(it.result.getOrThrow()) }
+
+        return ResponseEntity(DirectoryItemsResponse(items), HttpStatus.CREATED)
+
+    }
+
 
 }

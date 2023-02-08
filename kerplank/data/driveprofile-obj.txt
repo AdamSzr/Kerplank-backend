@@ -1,0 +1,290 @@
+Profile 637dc60b80def24f315c73b6  2022-11-23 08:04:43 5eb9349bd301571319c499be  Kanga Exchange  xgAEjMKDJ3WVDQmDdALBzvBD3J4BFn8zHssYnlugroexGo6DeW55U1TKHR  uGGWNj8X88tjAQjevSPKyDFbuAKgYu  UYIvmE0obwhvBOY8glFHEKhGbvb1XKIB2cfSTJeU  https://kanga.cash    0 "[
+  {
+    ""currency"": ""PLN"",
+    ""crypto"": ""oPLN"",
+    ""buyFee"": 0,
+    ""sellFee"": 0
+  },
+  {
+    ""currency"": ""EUR"",
+    ""crypto"": ""oEUR"",
+    ""buyFee"": 0,
+    ""sellFee"": 0
+  },
+  {
+    ""currency"": ""USD"",
+    ""crypto"": ""oUSD"",
+    ""buyFee"": 0,
+    ""sellFee"": 0
+  },
+  {
+    ""currency"": ""GBP"",
+    ""crypto"": ""oGBP"",
+    ""buyFee"": 0,
+    ""sellFee"": 0
+  }
+]"  "[
+  {
+    ""currency"": ""PLN"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 0,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 0,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""EUR"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 0,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 0,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""PLN"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 0.4,
+    ""unit"": 5,
+    ""feeMin"": 5,
+    ""feeMax"": 99,
+    ""min"": 0,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""EUR"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 0.08,
+    ""unit"": 5,
+    ""feeMin"": 1,
+    ""feeMax"": 99,
+    ""min"": 0,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""PLN"",
+    ""method"": ""BLIK"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 3,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 50,
+    ""max"": 500,
+    ""kycRequired"": false,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""USD"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 0,
+    ""unit"": 5,
+    ""feeMin"": 5,
+    ""feeMax"": 0,
+    ""min"": 5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""USD"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 0.5,
+    ""unit"": 0,
+    ""feeMin"": 5,
+    ""feeMax"": 99,
+    ""min"": 5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""PLN"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 1,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""PLN"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 1,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""EUR"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""EUR"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""USD"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""USD"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""GBP"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 0,
+    ""unit"": 5,
+    ""feeMin"": 5,
+    ""feeMax"": 0,
+    ""min"": 5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""GBP"",
+    ""method"": ""BANK_TRANSFER"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 0.5,
+    ""unit"": 5,
+    ""feeMin"": 5,
+    ""feeMax"": 99,
+    ""min"": 5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""GBP"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""DEPOSIT"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  },
+  {
+    ""currency"": ""GBP"",
+    ""method"": ""ZEN_CARD"",
+    ""type"": ""WITHDRAW"",
+    ""percent"": 1,
+    ""unit"": 0,
+    ""feeMin"": 0,
+    ""feeMax"": 0,
+    ""min"": 2.5,
+    ""max"": 0,
+    ""kycRequired"": true,
+    ""enabled"": true
+  }
+]"  "[
+  ""pl"",
+  ""en""
+]"  "{
+  ""mail.smtp.host"": ""smtp.gmail.com"",
+  ""mail.smtp.port"": ""587"",
+  ""mail.smtp.auth"": ""true"",
+  ""mail.smtp.starttls.enable"": ""true"",
+  ""auth.username"": ""noreply@kanga.exchange"",
+  ""auth.password"": ""!Kanga38%Ex"",
+  ""mail.from.address"": ""noreply@kanga.exchage"",
+  ""mail.from.name"": ""Kanga Cash"",
+  ""templateBaseUrl"": ""https://kanga.cash/mail/"",
+  ""logoUrl"": ""https://kanga.cash/mail/logo.png""
+}"  "{
+  ""internationalBankTransferFee:PLN"": ""50"",
+  ""clubInitialCharge"": ""0"",
+  ""refundItems"": ""Zwrot na życzenie klienta - KYC;Brak kodu w tytule przelewu;Zwrot - brak oświadczenia;Niezgodność danych osobowych konta;Incorrect transfer title"",
+  ""instantBankTransferFee:PLN"": ""0"",
+  ""pofLimit"": ""60000"",
+  ""pofStart"": ""2022-03-01""
+}"  "{
+  ""terms"": {
+    ""text"": ""terms-consent"",
+    ""required"": true,
+    ""kangaMarketingConsent"": false
+  },
+  ""personal"": {
+    ""text"": ""personal-consent"",
+    ""required"": true,
+    ""kangaMarketingConsent"": false
+  },
+  ""communication"": {
+    ""text"": ""communication-consent"",
+    ""required"": true,
+    ""kangaMarketingConsent"": false
+  },
+  ""kanga"": {
+    ""text"": ""kanga-consent"",
+    ""required"": false,
+    ""kangaMarketingConsent"": true
+  }
+}"                        

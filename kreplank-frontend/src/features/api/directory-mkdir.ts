@@ -5,8 +5,8 @@ import { CreateUserRequest } from "../models/request/CreateUserRequest"
 import { ax } from "./ax"
 
 
-const directoryRootPath = () => {
-   return ax(Endpoints['drive.path'])
+const directoryMkDir = (path?: string) => {
+   return ax(Endpoints['drive.mkdir'] + `?path=${path ?? '/'}`)
 }
 
-export default directoryRootPath
+export default directoryMkDir

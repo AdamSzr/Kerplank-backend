@@ -23,6 +23,7 @@ export class Endpoints {
    static "users.all" = '/api/user/all'
    static "edit.user" = '/api/user/:nickname:'
    static "drive.directory" = '/api/drive/directory'
+   static "drive.mkdir" = '/api/drive/mkdir'
    static "drive.file" = '/api/drive/file'
    static "drive.path" = '/api/drive/path'
    static "drive.upload" = '/api/drive/upload'
