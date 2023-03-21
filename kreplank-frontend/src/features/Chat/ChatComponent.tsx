@@ -5,7 +5,7 @@ import createChatPost from '../api/create-chat-post-fetch'
 import deleteChatPost from '../api/delete-chat-post-fetch'
 import downloadChatPosts from '../api/download-chat-post-fetch'
 import { userStorage } from '../config'
-import { ChatPost } from '../models/ChatPost'
+import { ChatPost } from '../models/ChatMessage'
 import { formatDate } from '../utils/DataFormater';
 
 const ChatComponent = () => {

@@ -49,12 +49,12 @@ const ProjectListComponent = () => {
         return <StyledTableRow key={`project-table-row-${project.id}`}>
             <StyledTableCell><Button variant="contained" color="success" onClick={() => { onProjectIdClick(project.id) }}>{project.id.substring(0, 6)}</Button></StyledTableCell>
             <StyledTableCell><Typography fontWeight="bold">{project.title}</Typography></StyledTableCell>
-            <StyledTableCell>{project.description}</StyledTableCell>
+            {/* <StyledTableCell>{project.description}</StyledTableCell> */}
             <StyledTableCell>{project.creator}</StyledTableCell>
             <StyledTableCell>{project.dateTimeCreation}</StyledTableCell>
-            <StyledTableCell>{project.dateTimeDelivery}</StyledTableCell>
+            {/* <StyledTableCell>{project.dateTimeDelivery}</StyledTableCell> */}
             <StyledTableCell><Typography fontWeight="bold">{project.status}</Typography></StyledTableCell>
-            <StyledTableCell>
+            {/* <StyledTableCell>
                 {
                     project.tasks.length > 0 ?
                         project.tasks.map((task) => {
@@ -64,13 +64,13 @@ const ProjectListComponent = () => {
                         }) :
                         "brak"
                 }
-            </StyledTableCell>
+            </StyledTableCell> */}
             <StyledTableCell>
                 {project.users.map((nickname) => {
                     return <Typography key={nickname}>{nickname.split('@')[0] ?? nickname}</Typography>
                 })}
             </StyledTableCell>
-            <StyledTableCell>{project.files.map(it => createFileLink(it))}</StyledTableCell>
+            {/* <StyledTableCell>{project.files.map(it => createFileLink(it))}</StyledTableCell> */}
         </StyledTableRow>
     }
 
@@ -92,14 +92,14 @@ const ProjectListComponent = () => {
                         <TableRow>
                             <StyledTableCell>ID</StyledTableCell>
                             <StyledTableCell>Tytuł</StyledTableCell>
-                            <StyledTableCell>Opis</StyledTableCell>
+                            {/* <StyledTableCell>Opis</StyledTableCell> */}
                             <StyledTableCell>Właściciel</StyledTableCell>
                             <StyledTableCell>Data utworzenia</StyledTableCell>
-                            <StyledTableCell>Data dostarczenia</StyledTableCell>
+                            {/* <StyledTableCell>Data dostarczenia</StyledTableCell> */}
                             <StyledTableCell>Status</StyledTableCell>
-                            <StyledTableCell>Zadania</StyledTableCell>
+                            {/* <StyledTableCell>Zadania</StyledTableCell> */}
                             <StyledTableCell>Użytkownicy</StyledTableCell>
-                            <StyledTableCell>Pliki</StyledTableCell>
+                            {/* <StyledTableCell>Pliki</StyledTableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
