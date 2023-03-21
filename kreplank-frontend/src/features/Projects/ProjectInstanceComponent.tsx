@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { text } from 'node:stream/consumers'
 import React, { useContext, useEffect, useState } from 'react'
 import projectDelete from '../api/delete-project-fetch'
+import { backendUrlStorage } from '../config'
 import { Project } from '../models/Project'
 import { Task } from '../models/Task'
 import { replaceItemInArray } from '../utils/ArrayUtils'
@@ -108,7 +109,7 @@ const ProjectInstanceComponent = () => {
 
     const FileListComponent = () => {
         return <>
-            {project?.files.map(file => <div key={file} ><Link href={file}>{file}</Link></div>)}
+            {project?.files.map(file => <div key={file} ><Link href={`${backendUrlStorage.tryGet()}/api/drive/file?path=${file}`}>{file}</Link></div>)}
         </>
     }
 
