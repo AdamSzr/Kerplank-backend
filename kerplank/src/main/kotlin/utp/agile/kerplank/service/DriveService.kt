@@ -44,7 +44,7 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
         println("path to file to save ${f.path}")
 
         if (f.exists() && f.isFile)
-            return f
+            throw Exception("File already exists")
 
         if (!f.exists() && f.parentFile.exists() && f.parentFile.isDirectory) {
             if (f.createNewFile())
@@ -66,13 +66,7 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
         return f
     }
 
-    fun createSubDirectories(directoryList: List<String>): List<SubDirectoriesCreationResult> {
-        return directoryList.map {
-            kotlin.runCatching { createSubDirectory(it) }
-        }.map {
-            SubDirectoriesCreationResult(it, it.exceptionOrNull()?.message)
-        }
-    }
+
 
     fun readFile(path: String) =
         kotlin.runCatching {
@@ -105,7 +99,10 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
         }
     }
 
+
+
     fun createDirectoryItem(file: File): DirectoryItem {
+        println(file.absolutePath.replace(driveDirectory.absolutePath, ""))
         return DirectoryItem(
             file.isDirectory,
             file.isFile,

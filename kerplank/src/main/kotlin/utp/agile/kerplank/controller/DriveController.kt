@@ -10,9 +10,16 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
-import utp.agile.kerplank.model.DirectoryItem
+import utp.agile.kerplank.model.AuthenticatedUser
+import utp.agile.kerplank.model.ProjectResponse
+import utp.agile.kerplank.model.ProjectUpdateRequest
+import utp.agile.kerplank.response.BaseResponse
+import utp.agile.kerplank.response.DirectoryItemResponse
 import utp.agile.kerplank.response.DirectoryItemsResponse
+import utp.agile.kerplank.response.FailResponse
 import utp.agile.kerplank.service.DriveService
+import utp.agile.kerplank.service.ProjectService
+import java.io.File
 import java.nio.file.Files
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
@@ -21,7 +28,7 @@ import kotlin.io.path.pathString
 
 @RestController
 @RequestMapping("/api/drive")
-class DriveController(val driveConfiguration: DriveConfiguration, val driveService: DriveService) {
+class DriveController(val driveConfiguration: DriveConfiguration, val driveService: DriveService, val projectService: ProjectService) {
 
 
     @GetMapping("/path")
@@ -98,17 +105,18 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
     @PostMapping("/upload/multi")
     fun saveMultipleFile(
-        @RequestParam directory: String?,
+        @RequestParam directory: String = "/",
         @RequestPart("files") files: Flux<FilePart>,
-        request: ServerHttpRequest
-    ): Mono<ResponseEntity<DirectoryItemsResponse>> {
+        request: ServerHttpRequest,
+        authenticatedUser: AuthenticatedUser,
+    ): Mono<ResponseEntity<ProjectResponse>> {
 //        val file = if (directory != null && !directory.isNullOrBlank())
 //            driveService.createSubDirectory(directory) else null
 
         return files.flatMap { filePart ->
             val fullFilename = filePart.filename().replace(" ", "_")
 
-            val destinationFile =driveService.createFile(fullFilename,directory)
+            val destinationFile = driveService.createFile(fullFilename, directory)
 
             println("Saving file $fullFilename to [${destinationFile.path}]")
             filePart.transferTo(destinationFile).subscribe()
@@ -116,7 +124,10 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
             val directoryItem = driveService.createDirectoryItem(destinationFile)
 
             directoryItem.toMono()
-        }.collectList().map { ResponseEntity(DirectoryItemsResponse(it), HttpStatus.CREATED) }
+        }.collectList()
+            .flatMap {
+                projectService.updateProject(authenticatedUser.email,directory.substring(1), ProjectUpdateRequest(files = it.map { f -> f.path },null,null,null))
+            }.map { ResponseEntity(ProjectResponse(it), HttpStatus.CREATED) }
     }
 
 
@@ -124,16 +135,32 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
     fun createDirectory(
         @RequestParam path: String,
         request: ServerHttpRequest
-    ): ResponseEntity<DirectoryItemsResponse> {
-        val pathsToCreate = path.split(",")
-
-        val directories = driveService.createSubDirectories(pathsToCreate)
-        val items =
-            directories.filter { it.result.isSuccess }.map { driveService.createDirectoryItem(it.result.getOrThrow()) }
-
-        return ResponseEntity(DirectoryItemsResponse(items), HttpStatus.CREATED)
+    ): Any {
+        return  kotlin.runCatching { driveService.createSubDirectory(path) }
+            .let {
+                if (it.isSuccess)
+                    ResponseEntity(
+                        DirectoryItemResponse(driveService.createDirectoryItem(it.getOrThrow())),
+                        HttpStatus.CREATED
+                    )
+                else ResponseEntity(
+                    FailResponse(it.exceptionOrNull()?.message ?: "somethink wrong happends", 9999),
+                    HttpStatus.BAD_REQUEST
+                )
+            }
+//        return kotlin.runCatching { driveService.createSubDirectory(path) }
+//            .onSuccess {
+//                ResponseEntity(
+//                    DirectoryItemResponse(driveService.createDirectoryItem(it)),
+//                    HttpStatus.CREATED
+//                )
+//            }
+//            .onFailure {
+//                ResponseEntity(
+//                    FailResponse(it.message ?: "somethink wrong happends", 9999),
+//                    HttpStatus.BAD_REQUEST
+//                )
+//            }
 
     }
-
-
 }
