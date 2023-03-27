@@ -1,35 +1,46 @@
-/custom/posts
-  ? ids: number[]
-  & slug: string
-  & category: string
-  & tag: string
-  & pinned: bool
-  => application/json 200 {
-  }
-  => application/json 404 {
-  }
-  eg: /posts?ids=123
-  eg: /posts?ids=123,456,789
-  eg: /posts?slug=abc
-  eg: /posts?slug=marchewka-czerwona-albo-pomaranczowa
-/custom/posts/:id(\d+)
-  =>  /posts/1
-  =>  /posts/123
-/posts/:slug(\w+)
-  =>  /posts/homepage
-  =>  /posts/contact
-  =>  /posts/about
-  =>  /posts/szla-dzieweczka
-  =>  /posts/adam-zjada-ciasteczka
+Szanowni Państwo,
+poniżej przesyłam zaktualizowaną listę zadań, które można rozważyć podczas realizacji projektu.
+
+
+## Realizacja powinna uwzględniać m.in.:
+- zabezpieczenie danych i aplikacji przed niepożądanym dostępem,
+- protokół szyfrowania transmisji danych (w tym celu należy wygenerować certyfikat SSL np. za pomocą
+narzędzia keytool dostępnego w każdym JDK),
+- odrębne uprawnienia dla prowadzącego i studentów,
+- testy jednostkowe i integracyjne (koniecznie serwisów i kontrolerów, zalecane JUnit5, Mockito i
+MockMVC),
+- pełną funkcjonalność systemu pozwalającą dodawać, modyfikować i usuwać dane projektów, zadań i
+studentów. Powinna istnieć możliwość stronicowania i wyszukiwania, opcjonalnie sortowania, danych
+projektów i studentów.
+- możliwość przesyłania na serwer i pobierania plików przypisywanych do danego projektu lub zadania,
+- ogólnodostępny chat korzystający z dwukierunkowego kanału websocketowego (można przy tym użyć
+frameworku Atmosphere lub skorzystać ze Springa tworząc kanał websocketowy z wykorzystaniem
+protokołu STOMP). Dla chętnych funkcjonalność komunikacji w obrębie grupy projektowej i możliwość
+przesyłania plików do wybranych użytkowników,
+- aplikacja powinna używać mechanizmu rejestracji np. Logback z SLF4J.
+
 ---
-/custom/pages
-  ? view: 'homepage'|'about'|'contact'
-/custom/pages/:id(\d+)
-  =>  /pages/1
-  =>  /pages/123
-/custom/pages/:slug(\w+)
-  =>  /pages/homepage
-  =>  /pages/contact
-  =>  /pages/about
-  =>  /pages/szla-dzieweczka
-  =>  /pages/adam-zjada-ciasteczka
+
+## Kolejne zadania i technologie do rozważenia:
+- Aplikacja reaktywna z użyciem Spring WebFlux (R2DBC - Reactive Relational Database Connectivity,
+Reactive Transactions, Backpressure, RSocket) lub korzystająca z wątków wirtualnych (z projektu Loom,
+wymagana Java 19 lub nowsza),
+- implementacja tablicy scrumowej,
+- implementacja tablicy kanbanowej z ustawianymi limitami prac w każdej kolumnie, a także
+skumulowanego wykresu przepływu z nanoszonymi liniami trendu dla tempa przybywania i liczby
+elementów w systemie,
+- aplikacja springowa z wykorzystaniem programowania funkcyjnego zastępującego większość adnotacji,
+- GraphQL z użyciem Spring Boota.
+Trzeba będzie definiować m.in.:
+- tzw. Input czyli prostą klasę (POJO) dla przyjmowania danych z edycji w GraphQL,
+- QueryResolver, klasę obsługująca zapytania w GraphQL,
+- MutationResolver, klasę obsługująca modyfikacje w GraphQL,
+- plik schema dla GraphQL, opisujący strukturę bazy danych i dostępne metody,
+- Elasticsearch w Spring Boot,
+- SOAP (ang. Simple Object Access Protocol) - usługa opisywana przez udostępniany plik WSDL (nazwa
+operacji, jej dane wejściowe, ich typ itp.) zabezpieczona za pomocą SAML-a (ang. Security Assertion
+Markup Language),
+- mechanizm bazodanowych triggerów do automatycznego archiwizowania zmian projektu i jego zadań,
+- utworzenie Springowej aplikacji natywnej przy użyciu kompilatora GraalVM.
+
+--
