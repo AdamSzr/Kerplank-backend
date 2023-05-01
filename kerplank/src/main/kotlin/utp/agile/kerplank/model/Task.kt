@@ -1,18 +1,14 @@
 package utp.agile.kerplank.model
 
 import org.bson.types.ObjectId
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.Document
-import utp.agile.kerplank.model.enumerate.ProjectStatus
 import utp.agile.kerplank.model.enumerate.TaskStatus
 import java.time.Instant
-import javax.validation.constraints.Size
 
 
 data class Task(
     val id: String = ObjectId().toHexString(),
-    @Size(max = 100) var title: String,
-    @Size(max = 2000) var description: String,
+    var title: String,
+    var description: String,
     var assignedTo: String? = null,
     var dateTimeCreation: Instant = Instant.now(),
     var dateTimeDelivery: Instant = Instant.now(),

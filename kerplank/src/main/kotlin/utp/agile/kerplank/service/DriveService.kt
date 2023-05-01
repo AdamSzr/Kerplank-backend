@@ -2,6 +2,8 @@ package utp.agile.kerplank.service
 
 import org.springframework.stereotype.Service
 import utp.agile.kerplank.configuration.DriveConfiguration
+import utp.agile.kerplank.model.DirectoryItem
+import utp.agile.kerplank.model.FileReadResult
 import utp.agile.kerplank.model.SubDirectoriesCreationResult
 import java.io.File
 import javax.annotation.PostConstruct
@@ -32,8 +34,14 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
             throw Exception("directory to path should start with '/'")
     }
 
-    fun createFile(fileNameWitExt: String): File {
-        val f = File("${driveConfiguration.directory}${fileNameWitExt}")
+    fun createFile(fileNameWitExt: String, destination: String? = null): File {
+        val f: File = if (destination != null)
+            File("${driveConfiguration.directory}/${destination}/${fileNameWitExt}")
+        else
+            File("${driveConfiguration.directory}/${fileNameWitExt}")
+
+
+        println("path to file to save ${f.path}")
 
         if (f.exists() && f.isFile)
             return f
@@ -66,14 +74,6 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
         }
     }
 
-    fun readTextFile(path: String) =
-        kotlin.runCatching {
-            File((driveDirectory.absolutePath).plus(path)).readText()
-        }.let {
-            FileReadResult<String>(path, it, it.exceptionOrNull()?.message)
-        }
-
-
     fun readFile(path: String) =
         kotlin.runCatching {
             File((driveDirectory.absolutePath).plus(path)).readBytes()
@@ -92,18 +92,28 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
 
     fun listDirectoryItems(path: String): List<DirectoryItem>? {
         return File((driveDirectory.absolutePath).plus(path)).let {
-            if (!it.isDirectory)
+            if (!it.exists())
                 return null
+
+            if (!it.isDirectory)
+                throw Error("Can not list directory")
             else
                 it.listFiles()
                     ?.map { file ->
-                        DirectoryItem(file.isDirectory, file.isFile, file.path.replace(driveDirectory.absolutePath, ""))
+                        createDirectoryItem(file)
                     }
         }
     }
 
-    data class DirectoryItem(val isDirectory: Boolean, val isFile: Boolean, val path: String)
+    fun createDirectoryItem(file: File): DirectoryItem {
+        return DirectoryItem(
+            file.isDirectory,
+            file.isFile,
+            file.absolutePath.replace(driveDirectory.absolutePath, ""),
+            file.name
+        )
+    }
 
-    data class FileReadResult<T>(val path: String, val result: Result<T>, val errorMessage: String?)
 
 }
+
