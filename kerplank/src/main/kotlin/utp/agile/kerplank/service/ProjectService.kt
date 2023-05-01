@@ -1,5 +1,6 @@
 package utp.agile.kerplank.service
 
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -7,6 +8,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toFlux
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.model.*
+import utp.agile.kerplank.model.event.ProjectFileUpdateEvent
 import utp.agile.kerplank.repository.ProjectRepository
 import utp.agile.kerplank.repository.UserRepository
 
@@ -56,6 +58,17 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
                 } else Mono.empty()
             }
 
+    }
+
+    @EventListener
+    fun updateFilesInProject(event:ProjectFileUpdateEvent ){
+        projectRepository.findById(event.projectId)
+            .flatMap {
+                val updatedProj =  it.files.plus(event.files.map { f -> f.path }).toMutableSet()
+                it.files = updatedProj
+                projectRepository.save(it)
+            }
+            .subscribe()
     }
 
     fun updateProject(userEmail: String, projectId: String, request: ProjectUpdateRequest): Mono<Project> {

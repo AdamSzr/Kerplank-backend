@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import org.springframework.context.ApplicationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
 import utp.agile.kerplank.model.DirectoryItem
+import utp.agile.kerplank.model.event.ProjectFileUpdateEvent
 import utp.agile.kerplank.response.DirectoryItemsResponse
 import utp.agile.kerplank.service.DriveService
 import java.nio.file.Files
@@ -21,7 +23,10 @@ import kotlin.io.path.pathString
 
 @RestController
 @RequestMapping("/api/drive")
-class DriveController(val driveConfiguration: DriveConfiguration, val driveService: DriveService) {
+class DriveController(
+    private val appContext: ApplicationContext,
+    val driveConfiguration: DriveConfiguration,
+    val driveService: DriveService) {
 
 
     @GetMapping("/path")
@@ -98,14 +103,16 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
 
     @PostMapping("/upload/multi")
     fun saveMultipleFile(
-        @RequestParam directory: String?,
+        @RequestParam directory: String,
         @RequestPart("files") files: Flux<FilePart>,
         request: ServerHttpRequest
     ): Mono<ResponseEntity<DirectoryItemsResponse>> {
 //        val file = if (directory != null && !directory.isNullOrBlank())
 //            driveService.createSubDirectory(directory) else null
 
+        val projectId = directory.trimStart('/')
         return files.flatMap { filePart ->
+
             val fullFilename = filePart.filename().replace(" ", "_")
 
             val destinationFile =driveService.createFile(fullFilename,directory)
@@ -114,9 +121,11 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
             filePart.transferTo(destinationFile).subscribe()
 
             val directoryItem = driveService.createDirectoryItem(destinationFile)
-
+//            appContext.publishEvent(ProjectFileUpdateEvent(projectId, listOf(DirectoryItem(false,false,"path","name"))))
             directoryItem.toMono()
-        }.collectList().map { ResponseEntity(DirectoryItemsResponse(it), HttpStatus.CREATED) }
+        }.collectList()
+            .doOnNext{   appContext.publishEvent(ProjectFileUpdateEvent(projectId, it ))}
+            .map { it ->  ResponseEntity(DirectoryItemsResponse(it), HttpStatus.CREATED)}
     }
 
 
