@@ -41,10 +41,13 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
             File("${driveConfiguration.directory}/${fileNameWitExt}")
 
 
-        println("path to file to save ${f.path}")
+        println("Requested file-path [${f.path}]")
 
-        if (f.exists() && f.isFile)
+        if (f.exists() && f.isFile){
+            println("file already exists - returning file")
             return f
+        }
+
 
         if (!f.exists() && f.parentFile.exists() && f.parentFile.isDirectory) {
             if (f.createNewFile())
@@ -76,7 +79,10 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
 
     fun readFile(path: String) =
         kotlin.runCatching {
-            File((driveDirectory.absolutePath).plus(path)).readBytes()
+            var parsedPath =  path//(driveDirectory.absolutePath).plus()
+            if(!parsedPath.startsWith('/'))
+            parsedPath = "/$path"
+            File(driveDirectory.absolutePath.plus(parsedPath)).readBytes()
         }.let {
             FileReadResult<ByteArray>(path, it, it.exceptionOrNull()?.message)
         }
