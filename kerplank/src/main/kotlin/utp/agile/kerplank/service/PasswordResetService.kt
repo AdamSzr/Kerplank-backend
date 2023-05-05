@@ -36,7 +36,6 @@ class PasswordResetService(
                 passwordResetRepository.save(passwordResetEntry)
                     .doOnNext {
                         val sended = emailService.sendEmail(
-                            "kerplank.project@gmail.com",
                             userEmail,
                             "Kerplank Password Reset",
                             """
