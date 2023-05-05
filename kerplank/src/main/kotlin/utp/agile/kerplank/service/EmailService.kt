@@ -11,17 +11,19 @@ import javax.mail.Message
 @Service
 class EmailService(private val emailConfiguration: EmailAccountConfiguration) {
     private final val sender = JavaMailSenderImpl()
+    private final val mailProps = Properties()
+
 
     init {
+        mailProps["mail.smtps.auth"] = "true"
+        mailProps["mail.smtp.starttls.enable"] = "true"
+        mailProps["mail.smtp.debug"] = "true"
+
         sender.protocol = "smtp"
         sender.host = "smtp.gmail.com"
         sender.port = 587
         sender.username = emailConfiguration.userName
         sender.password = emailConfiguration.password
-        val mailProps = Properties()
-        mailProps["mail.smtps.auth"] = "true"
-        mailProps["mail.smtp.starttls.enable"] = "true"
-        mailProps["mail.smtp.debug"] = "true"
         sender.javaMailProperties = mailProps
     }
 
