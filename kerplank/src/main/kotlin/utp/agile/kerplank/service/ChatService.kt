@@ -15,9 +15,6 @@ import utp.agile.kerplank.repository.ChatPostRepository
 @Service
 class ChatService(private val repository: ChatPostRepository) {
 
-    fun getAllChatPosts(pageable: Pageable): Flux<ChatPost> {
-        return repository.findAllPagable(pageable)
-    }
     fun latestChatPosts(): Flux<ChatPost> {
        return repository.findAll(Sort.by(Sort.Direction.DESC,"created"))
     }

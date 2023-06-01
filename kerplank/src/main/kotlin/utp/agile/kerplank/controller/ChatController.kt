@@ -28,18 +28,6 @@ class ChatController(private val chatService: ChatService) {
             .map { ChatPostListResponse(it) }
     }
 
-
-    @GetMapping("posts-all")
-    fun getAllPostsV2(@RequestParam(defaultValue = "0") page: Int,
-                      @RequestParam(defaultValue = "10") size: Int): Mono<Any> {
-        val pageable = PageRequest.of(page, size, Sort.by("createdAt").descending())
-
-        return pageable.toMono()
-//        chatService.getAllChatPosts(pageable)
-//            .collectList()
-//            .map { ChatPostListResponse(it) }
-    }
-
     @PostMapping
     fun publicPost(@RequestBody request: ChatPostRequest): Mono<ResponseEntity<ChatPostResponse>> {
         return chatService.createChatPost(request).map { ResponseEntity.ok().body(ChatPostResponse(it)) }

@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.context.ApplicationContext
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -33,6 +34,7 @@ class DriveController(
 
 
     @GetMapping("/path")
+    @Operation(summary = "Get a product by id", description = "Returns a product as per the id")
     fun getMyDirectory(): ResponseEntity<String> {
         return ResponseEntity<String>(
             Path(driveConfiguration.directory).absolutePathString(),

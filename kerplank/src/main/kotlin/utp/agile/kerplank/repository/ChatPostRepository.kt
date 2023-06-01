@@ -12,5 +12,5 @@ import utp.agile.kerplank.model.ChatPost
 @Repository
 interface ChatPostRepository : ReactiveMongoRepository<ChatPost, String>{
 
-    fun findAllPagable(pageable: Pageable): Flux<ChatPost>
+//    fun findAllPagable(pageable: Pageable): Flux<ChatPost>
 }
