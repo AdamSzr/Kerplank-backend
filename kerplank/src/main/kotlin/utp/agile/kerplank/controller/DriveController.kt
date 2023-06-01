@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.configuration.DriveConfiguration
 import utp.agile.kerplank.model.DirectoryItem
+import utp.agile.kerplank.model.event.FileDeleteEvent
 import utp.agile.kerplank.model.event.ProjectFileUpdateEvent
 import utp.agile.kerplank.response.DirectoryItemsResponse
 import utp.agile.kerplank.service.DriveService
@@ -26,7 +27,9 @@ import kotlin.io.path.pathString
 class DriveController(
     private val appContext: ApplicationContext,
     val driveConfiguration: DriveConfiguration,
-    val driveService: DriveService) {
+    val driveService: DriveService
+
+) {
 
 
     @GetMapping("/path")
@@ -107,8 +110,6 @@ class DriveController(
         @RequestPart("files") files: Flux<FilePart>,
         request: ServerHttpRequest
     ): Mono<ResponseEntity<DirectoryItemsResponse>> {
-//        val file = if (directory != null && !directory.isNullOrBlank())
-//            driveService.createSubDirectory(directory) else null
 
         val projectId = directory.trimStart('/')
         return files.flatMap { filePart ->
@@ -142,6 +143,13 @@ class DriveController(
 
         return ResponseEntity(DirectoryItemsResponse(items), HttpStatus.CREATED)
 
+    }
+
+
+    @DeleteMapping("file")
+    fun fileDelete( @RequestParam path: String){
+        driveService.deleteFile(path)
+        appContext.publishEvent( FileDeleteEvent(path) )
     }
 
 

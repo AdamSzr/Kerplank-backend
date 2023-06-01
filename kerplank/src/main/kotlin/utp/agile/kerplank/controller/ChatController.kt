@@ -1,14 +1,10 @@
 package utp.agile.kerplank.controller
 
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.MODERATOR_ROLE
@@ -32,6 +28,17 @@ class ChatController(private val chatService: ChatService) {
             .map { ChatPostListResponse(it) }
     }
 
+
+    @GetMapping("posts-all")
+    fun getAllPostsV2(@RequestParam(defaultValue = "0") page: Int,
+                      @RequestParam(defaultValue = "10") size: Int): Mono<Any> {
+        val pageable = PageRequest.of(page, size, Sort.by("createdAt").descending())
+
+        return pageable.toMono()
+//        chatService.getAllChatPosts(pageable)
+//            .collectList()
+//            .map { ChatPostListResponse(it) }
+    }
 
     @PostMapping
     fun publicPost(@RequestBody request: ChatPostRequest): Mono<ResponseEntity<ChatPostResponse>> {

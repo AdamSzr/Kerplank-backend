@@ -1,5 +1,6 @@
 package utp.agile.kerplank.service
 
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,7 +15,9 @@ import utp.agile.kerplank.repository.ChatPostRepository
 @Service
 class ChatService(private val repository: ChatPostRepository) {
 
-
+    fun getAllChatPosts(pageable: Pageable): Flux<ChatPost> {
+        return repository.findAllPagable(pageable)
+    }
     fun latestChatPosts(): Flux<ChatPost> {
        return repository.findAll(Sort.by(Sort.Direction.DESC,"created"))
     }

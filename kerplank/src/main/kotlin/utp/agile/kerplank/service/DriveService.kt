@@ -121,5 +121,12 @@ class DriveService(private val driveConfiguration: DriveConfiguration) {
     }
 
 
+    fun deleteFile(pathToFile:String){
+        pathToFile.let { it.startsWith("/")}.let { if(it) pathToFile else "/$pathToFile" }
+            .let {
+                runCatching {  File(driveDirectory.path.plus(pathToFile)) }.isSuccess
+            }
+    }
+
 }
 

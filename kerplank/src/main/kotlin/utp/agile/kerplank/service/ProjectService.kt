@@ -8,6 +8,7 @@ import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toFlux
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.model.*
+import utp.agile.kerplank.model.event.FileDeleteEvent
 import utp.agile.kerplank.model.event.ProjectFileUpdateEvent
 import utp.agile.kerplank.repository.ProjectRepository
 import utp.agile.kerplank.repository.UserRepository
@@ -60,16 +61,9 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
 
     }
 
-    @EventListener
-    fun updateFilesInProject(event:ProjectFileUpdateEvent ){
-        projectRepository.findById(event.projectId)
-            .flatMap {
-                val updatedProj =  it.files.plus(event.files.map { f -> f.path }).toMutableSet()
-                it.files = updatedProj
-                projectRepository.save(it)
-            }
-            .subscribe()
-    }
+
+
+
 
     fun updateProject(userEmail: String, projectId: String, request: ProjectUpdateRequest): Mono<Project> {
 
@@ -151,5 +145,28 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
             }
             .switchIfEmpty { Mono.empty() }
     }
+
+
+
+    @EventListener
+    fun updateFilesInProject(event:ProjectFileUpdateEvent ){
+        projectRepository.findById(event.projectId)
+            .flatMap {
+                val updatedProj =  it.files.plus(event.files.map { f -> f.path }).toMutableSet()
+                it.files = updatedProj
+                projectRepository.save(it)
+            }
+            .subscribe()
+    }
+
+    @EventListener
+    fun updateFilesInProject( event:FileDeleteEvent ){
+        val projectId = event.filePath.substring(1).substringBefore("\\")
+        projectRepository.findById(projectId)
+            .doOnNext { it.files.remove(event.filePath) }
+            .flatMap{ projectRepository.save( it )}
+    }
+
+
 
 }
