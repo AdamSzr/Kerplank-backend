@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -17,6 +18,7 @@ import utp.agile.kerplank.service.ProjectService
 class ProjectController(private val projectService: ProjectService) {
 
     @GetMapping
+    @Operation(summary = "Pobierz wszystkie projekty.", description = "Zwraca obiekt typu ProjectListResponse, który reprezentuje listę wszystkich projektów.")
     fun getAll(): Mono<ProjectListResponse> {
         return projectService
             .findAllProjects()
@@ -25,6 +27,7 @@ class ProjectController(private val projectService: ProjectService) {
     }
 
     @GetMapping("/my")
+    @Operation(summary = "Pobierz projekty powiązane z zalogowanym użytkownikiem.", description = "Zwraca obiekt typu ProjectListResponse, który reprezentuje listę projektów powiązanych z zalogowanym użytkownikiem.")
     fun getMyProj(authenticatedUser: AuthenticatedUser): Mono<ProjectListResponse> {
         return projectService
             .findMyProjects(authenticatedUser.email)
@@ -34,6 +37,7 @@ class ProjectController(private val projectService: ProjectService) {
 
 
     @PostMapping
+    @Operation(summary = "Utwórz nowy projekt.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o utworzonym projekcie lub błąd.")
     fun createProject(
         @RequestBody projectCreateRequest: ProjectCreateRequest,
         authenticatedUser: AuthenticatedUser
@@ -53,6 +57,7 @@ class ProjectController(private val projectService: ProjectService) {
     }
 
     @PostMapping("/task")
+    @Operation(summary = "Utwórz nowe zadanie projektu.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o utworzonym zadaniu lub błąd.")
     fun createTask(
         @RequestBody taskRequest: TaskCreateRequest,
         authenticatedUser: AuthenticatedUser,
@@ -63,6 +68,7 @@ class ProjectController(private val projectService: ProjectService) {
     }
 
     @PutMapping("/task/{taskId}")
+    @Operation(summary = "Zaktualizuj zadanie projektu o określonym identyfikatorze.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o zaktualizowanym zadaniu lub błąd.")
     fun updateTask(
         @RequestBody taskUpdateRequest: TaskUpdateRequest,
         @PathVariable taskId: String,
@@ -75,6 +81,7 @@ class ProjectController(private val projectService: ProjectService) {
 
 
     @PutMapping("/{projectId}")
+    @Operation(summary = "Zaktualizuj projekt o określonym identyfikatorze.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o zaktualizowanym projekcie lub błąd.")
     fun updateProject(
         @PathVariable projectId: String,
         @RequestBody update: ProjectUpdateRequest,
@@ -86,6 +93,7 @@ class ProjectController(private val projectService: ProjectService) {
     }
 
     @GetMapping("/{projectId}")
+    @Operation(summary = "Pobierz projekt o określonym identyfikatorze.", description = "Zwraca obiekt typu ProjectResponse, który reprezentuje informacje o projekcie na podstawie jego identyfikatora.")
     fun getProj(@PathVariable projectId: String, authenticatedUser: AuthenticatedUser): Mono<ProjectResponse> {
         return projectService
             .findProjectById(projectId, authenticatedUser.email)
@@ -94,6 +102,7 @@ class ProjectController(private val projectService: ProjectService) {
 
 
     @DeleteMapping("/{projectId}")
+    @Operation(summary = "Usuń projekt o określonym identyfikatorze.", description = "Zwraca obiekt typu ResponseEntity, który reprezentuje informacje o usuniętym projekcie lub błąd.")
     fun deleteProject(
         @PathVariable projectId: String,
         @RequestParam userEmail: String?,

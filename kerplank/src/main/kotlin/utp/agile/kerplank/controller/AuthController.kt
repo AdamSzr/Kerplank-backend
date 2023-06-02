@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.context.ApplicationContext
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -29,6 +30,7 @@ class AuthController(
 
 
     @PostMapping("/reset")
+    @Operation(summary = "Zresetuj hasło.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o ustawieniu nowego hasła użytkownika lub błąd.")
     fun setNewPassword(
         @RequestBody passwordResetRequest: PasswordResetRequest
     ): Mono<ResponseEntity<BaseResponse>> {
@@ -38,6 +40,7 @@ class AuthController(
     }
 
     @GetMapping("/reset")
+    @Operation(summary = "Zresetuj hasło i wyślij je na e-mail.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o zresetowaniu hasła użytkownika na podstawie przekazanego adresu e-mail lub błąd.")
     fun passwordReset(@RequestParam("email") userEmail: String): Mono<ResponseEntity<BaseResponse>> {
         return passwordResetService.createNewPasswordResetEntry(userEmail)
             .flatMap { ResponseEntity.ok().build<BaseResponse>().toMono() }
@@ -47,6 +50,7 @@ class AuthController(
 
 
     @PutMapping("/signup")
+    @Operation(summary = "Zarejestruj nowego użytkownika.", description = "Zwraca obiekt typu BaseResponse, który reprezentuje informacje o zarejestrowaniu nowego użytkownika lub błąd.")
     fun signUp(@RequestBody request: UserSignUpRequest): Mono<out BaseResponse> =
         userService.createUser(request)
             .map { UserSignupResponse(it) as BaseResponse }
@@ -55,6 +59,7 @@ class AuthController(
     // TODO: Utworzony task nie jest do nikogo przypisany
 
     @PostMapping("/login", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @Operation(summary = "Zaloguj użytkownika.", description = "Zwraca obiekt typu BaseResponse, który reprezentuje informacje o zalogowaniu użytkownika lub błąd.")
     fun login(@RequestBody request: UserLoginRequest): Mono<out BaseResponse> = when {
         (request.type == LoginType.EMAIL && request.email?.isNotBlank() == true) ->
             findActivatedUserByEmail(request.email)

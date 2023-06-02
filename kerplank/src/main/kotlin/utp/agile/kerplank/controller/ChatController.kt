@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
@@ -22,6 +23,7 @@ class ChatController(private val chatService: ChatService) {
 //    ChatPostListResponse
 
     @GetMapping
+    @Operation(summary = "Pobierz wszystkie wiadomości czatu.", description = "wraca obiekt typu ChatPostListResponse, który reprezentuje listę wszystkich postów w czacie.")
     fun getAllPosts(): Mono<ChatPostListResponse> {
         return chatService.latestChatPosts()
             .collectList()
@@ -29,12 +31,14 @@ class ChatController(private val chatService: ChatService) {
     }
 
     @PostMapping
+    @Operation(summary = "Wyślij nową wiadomość.", description = "Zwraca ResponseEntity z obiektem typu ChatPostResponse, który reprezentuje opublikowany post w czacie lub błąd.")
     fun publicPost(@RequestBody request: ChatPostRequest): Mono<ResponseEntity<ChatPostResponse>> {
         return chatService.createChatPost(request).map { ResponseEntity.ok().body(ChatPostResponse(it)) }
     }
 
 
     @DeleteMapping("/{postId}")
+    @Operation(summary = "Usuń wiadomość czatu na podstawie identyfikatora.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o usunięciu posta o określonym identyfikatorze lub błąd.")
     fun deletePost(
         @PathVariable postId: String,
         authenticatedUser: AuthenticatedUser

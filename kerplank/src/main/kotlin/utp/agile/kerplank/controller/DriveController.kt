@@ -34,7 +34,7 @@ class DriveController(
 
 
     @GetMapping("/path")
-    @Operation(summary = "Get a product by id", description = "Returns a product as per the id")
+    @Operation(summary = "Pobierz informacje o pliku lub katalogu na podstawie ścieżki.", description = "Zwraca ResponseEntity z obiektem typu String, który reprezentuje informacje o katalogu powiązanym z zalogowanym użytkownikiem.")
     fun getMyDirectory(): ResponseEntity<String> {
         return ResponseEntity<String>(
             Path(driveConfiguration.directory).absolutePathString(),
@@ -44,6 +44,7 @@ class DriveController(
 
 
     @GetMapping("/directory")
+    @Operation(summary = "Pobierz informacje o zawartości katalogu.", description = "Zwraca ResponseEntity z obiektem typu DirectoryItemsResponse, który reprezentuje informacje o zawartości katalogu na podstawie przekazanej ścieżki lub informację o błędzie.")
     fun listDirectory(
         @RequestParam path: String
     ): Any {
@@ -64,6 +65,7 @@ class DriveController(
     @GetMapping(
         "file"
     )
+    @Operation(summary = "Pobierz plik na podstawie ścieżki.", description = "Zwraca obiekt, który reprezentuje informacje o pliku powiązanym z zalogowanym użytkownikiem na podstawie przekazanej ścieżki.")
     fun getMyFile(
         @RequestParam("path") pathToFile: String
     ): Any {
@@ -90,6 +92,7 @@ class DriveController(
 
 
     @PostMapping("upload") // https://hantsy.github.io/spring-reactive-sample/web/multipart.html
+    @Operation(summary = "Prześlij plik.", description = "Zwraca obiekt typu String, który reprezentuje informacje o zapisanym pliku lub ścieżce do zapisanego pliku.")
     fun saveFile(
         @RequestPart("fileToUpload") file: Mono<FilePart>,
         @RequestPart("user-name") userName: String
@@ -107,6 +110,7 @@ class DriveController(
     }
 
     @PostMapping("/upload/multi")
+    @Operation(summary = "Prześlij wiele plików.", description = "Zwraca ResponseEntity z obiektem typu DirectoryItemsResponse, który reprezentuje informacje o zapisanych plikach w podanym katalogu.")
     fun saveMultipleFile(
         @RequestParam directory: String,
         @RequestPart("files") files: Flux<FilePart>,
@@ -133,6 +137,7 @@ class DriveController(
 
 
     @GetMapping("mkdir")
+    @Operation(summary = "Utwórz nowy katalog.", description = "Zwraca ResponseEntity z obiektem typu DirectoryItemsResponse, który reprezentuje informacje o utworzonym katalogu lub błąd.")
     fun createDirectory(
         @RequestParam path: String,
         request: ServerHttpRequest
@@ -149,6 +154,7 @@ class DriveController(
 
 
     @DeleteMapping("file")
+    @Operation(summary = "Usuń plik na podstawie ścieżki.", description = "Nie zwraca żadnego obiektu, służy do usuwania pliku na podstawie przekazanej ścieżki.")
     fun fileDelete( @RequestParam path: String){
         driveService.deleteFile(path)
         appContext.publishEvent( FileDeleteEvent(path) )

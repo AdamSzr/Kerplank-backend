@@ -1,5 +1,6 @@
 package utp.agile.kerplank.controller
 
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
@@ -21,6 +22,7 @@ class UserController(
 
 
     @GetMapping("/me")
+    @Operation(summary = "Pobierz informacje o zalogowanym użytkowniku.", description = "Zwraca ResponseEntity z obiektem typu BaseResponse, który reprezentuje informacje o użytkowniku powiązanym z zalogowanym użytkownikiem.")
     fun getMyUserInformation(
         authentication: AuthenticatedUser,
     ) =
@@ -35,6 +37,7 @@ class UserController(
 
 
     @GetMapping("/all")
+    @Operation(summary = "Pobierz informacje o wszystkich użytkownikach.", description = "Zwraca listę wszystkich użytkowników w postaci kolekcji.")
     fun getAllUsers(
         authentication: Authentication,
     ) = userService.getAllUsers().collectList()
@@ -43,6 +46,7 @@ class UserController(
 
 
     @DeleteMapping("/{nickname}")
+    @Operation(summary = "Usuń użytkownika na podstawie jego nazwy.", description = "Zwraca obiekt typu BaseResponse, który reprezentuje informacje o usunięciu użytkownika o określonej nazwie.")
     fun delete(
         authentication: Authentication,
         @PathVariable nickname: String
