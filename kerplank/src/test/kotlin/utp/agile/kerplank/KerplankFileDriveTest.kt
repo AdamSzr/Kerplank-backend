@@ -105,10 +105,4 @@ class KerplankFileDriveTest {
         Assertions.assertFalse(f.exists(), "File still exists")
     }
 
-//    @Test
-//    fun shouldDeleteFileViaEvent(){
-//
-//    }
-
-
 }

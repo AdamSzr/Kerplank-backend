@@ -159,10 +159,11 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
 
     @EventListener
     fun updateFilesInProject( event:FileDeleteEvent ){
-        val projectId = event.filePath.substring(1).substringBefore("\\")
+        val projectId = event.filePath.substring(1).substringBefore("/")
         projectRepository.findById(projectId)
             .doOnNext { it.files.remove(event.filePath) }
             .flatMap{ projectRepository.save( it )}
+            .subscribe()
     }
 
 
