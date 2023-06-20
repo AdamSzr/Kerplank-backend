@@ -20,7 +20,7 @@ class KerplankUserServiceTests {
 
     @Test
     fun Should_Create_User_With_Given_Name() {
-        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier");
+        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier")
 
         StepVerifier.create<User>(userService.createUser(request))
             .expectNextMatches { user -> user.email == (request.email) }
@@ -30,7 +30,7 @@ class KerplankUserServiceTests {
 
     @Test
     fun Should_Create_User_With_Encrypted_Password() {
-        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier");
+        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier")
 
         StepVerifier.create<User>(userService.createUser(request))
             .expectNextMatches { user -> passwordencoder.matches(request.password, user.password) }

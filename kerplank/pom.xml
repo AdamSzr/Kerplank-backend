@@ -80,19 +80,6 @@
 			<artifactId>kotlinx-coroutines-reactor</artifactId>
 		</dependency>
 
-		<!-- WEB SOCKET -->
-		<dependency>
-			<groupId>org.springframework.integration</groupId>
-			<artifactId>spring-integration-stomp</artifactId>
-		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.integration</groupId>-->
-<!--			<artifactId>spring-integration-websocket</artifactId>-->
-<!--		</dependency>-->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
 
 
 		<dependency>

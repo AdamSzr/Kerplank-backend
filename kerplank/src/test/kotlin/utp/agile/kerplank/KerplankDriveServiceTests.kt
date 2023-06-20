@@ -1,4 +1,3 @@
 package utp.agile.kerplank
 
-class KerplankDriveServiceTests {
-}
+class KerplankDriveServiceTests

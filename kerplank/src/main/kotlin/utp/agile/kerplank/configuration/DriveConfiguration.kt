@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Configuration
 class DriveConfiguration {
 
     @Value("\${data.drive.directory}")
-    var directory ="";
+    var directory =""
 }

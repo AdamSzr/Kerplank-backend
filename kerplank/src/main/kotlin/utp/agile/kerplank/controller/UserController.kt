@@ -17,9 +17,6 @@ class UserController(
   private  val userService: UserService,
 ) {
 
-
-
-
     @GetMapping("/me")
     fun getMyUserInformation(
         authentication: AuthenticatedUser,

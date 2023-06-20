@@ -12,12 +12,14 @@ data class ChatPost(
     @Id val id: String = ObjectId().toHexString(),
     val author: String,
     val created: Instant,
-    val content: String
+    val content: String,
+    val chatId: Number,
+    val reciver: String?
 )
 
 data class ChatPostRequest(val author: String, val content: String) {
     fun createChatPost(): ChatPost {
-        return ChatPost(author = this.author, created = Instant.now(), content = this.content)
+        return ChatPost(author = this.author, created = Instant.now(), content = this.content, chatId = 1, reciver = null)
     }
 }
 

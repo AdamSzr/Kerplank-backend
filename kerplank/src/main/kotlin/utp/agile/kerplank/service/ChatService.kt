@@ -24,8 +24,6 @@ class ChatService(private val repository: ChatPostRepository) {
     }
 
     fun deleteChatPost(postId: String): Mono<Boolean> {
-
-
         return repository.findById(postId)
             .doOnNext { repository.deleteById(postId).subscribe() }
             .flatMap { Mono.just(true) }

@@ -1,4 +1,3 @@
 package utp.agile.kerplank.utils
 
-class ExtensionMethods {
-}
+class ExtensionMethods

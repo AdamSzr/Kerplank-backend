@@ -15,7 +15,7 @@ data class AuthenticatedUser(
 
     override fun getAuthorities(): Collection<GrantedAuthority?> = roles
     override fun getCredentials(): Any = username
-    override fun getDetails(): Any? = username
+    override fun getDetails(): Any = username
     override fun getPrincipal(): Any = username
     override fun isAuthenticated(): Boolean = auth
     override fun getName(): String = username

@@ -5,8 +5,8 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
-import reactor.core.publisher.toMono
 import reactor.kotlin.core.publisher.switchIfEmpty
+import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.TOKEN_PREFIX
 import utp.agile.kerplank.auth.TokenProvider
 import utp.agile.kerplank.configuration.LoginConfiguration
@@ -49,7 +49,7 @@ class AuthController(
     @PutMapping("/signup")
     fun signUp(@RequestBody request: UserSignUpRequest): Mono<out BaseResponse> =
         userService.createUser(request)
-            .map { UserSignupResponse(it) as BaseResponse }
+            .map { UserSignupResponse(it) }
 
 
     // TODO: Utworzony task nie jest do nikogo przypisany

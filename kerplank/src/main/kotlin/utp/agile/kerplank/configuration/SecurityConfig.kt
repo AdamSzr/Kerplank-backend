@@ -37,20 +37,23 @@ class SecurityConfiguration(
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
         http
             .authorizeExchange()
-            .pathMatchers(
-                "/api/ping",
-                "/api/auth/login",
-                "/api/auth/signup",
-                "/api/auth/reset",
-                "/api/drive/upload",
-                "/api/drive/upload/multi",
-                "/api/drive/file",
-                "/api/drive/path",
-                "/api/drive/directory",
-                "/api/drive/mkdir",
-            )
-            .permitAll()
-            .anyExchange().authenticated().and()
+//            .pathMatchers(
+//                "/api/ping",
+//                "/api/auth/login",
+//                "/api/auth/signup",
+//                "/api/auth/reset",
+//                "/api/drive/upload",
+//                "/api/drive/upload/multi",
+//                "/api/drive/file",
+//                "/api/drive/path",
+//                "/api/drive/directory",
+//                "/api/drive/mkdir",
+//            )
+//            .permitAll()
+//            .anyExchange()
+//            .authenticated()
+            .anyExchange().permitAll()
+            .and()
             .cors().and()
             .exceptionHandling()
             .authenticationEntryPoint { serverWebExchange, _ ->
