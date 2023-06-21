@@ -7,32 +7,21 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import reactor.test.StepVerifier
 import utp.agile.kerplank.model.*
-import utp.agile.kerplank.model.enumerate.ProjectStatus
 import utp.agile.kerplank.model.enumerate.TaskStatus
 import utp.agile.kerplank.model.event.FileDeleteEvent
 import utp.agile.kerplank.repository.ProjectRepository
 import utp.agile.kerplank.service.ProjectService
-import utp.agile.kerplank.service.UserService
-import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.function.Predicate
 
 
 @SpringBootTest
-class KerplankProjectTests {
-
-    @Autowired
-    lateinit var userService: UserService
+class ProjectServiceTests {
 
     @Autowired
     lateinit var projectService: ProjectService
-
-    @Autowired
-    lateinit var passwordencoder: BCryptPasswordEncoder
 
     @Autowired
     lateinit var publisher: ApplicationEventPublisher
@@ -41,10 +30,10 @@ class KerplankProjectTests {
     lateinit var projectRepository: ProjectRepository
 
     @Test
-    fun Should_Create_Project_With_Given_Name() {
+    fun should_Create_Project_With_Given_Name() {
         val request = ProjectCreateRequest("test-reactor-verifier", "adam-test-backned", Instant.now())
         val creatorEmail = "stepverifier"
-        StepVerifier.create<Project>(projectService.createProject(creatorEmail = creatorEmail, request))
+        StepVerifier.create(projectService.createProject(creatorEmail = creatorEmail, request))
                 .expectNextMatches { it.creator==creatorEmail}
                 .expectComplete()
                 .verify()
@@ -52,12 +41,12 @@ class KerplankProjectTests {
 
 
     @Test
-    fun Should_Delete_File_WithIn_Given_Proj() {
+    fun should_Delete_File_WithIn_Given_Proj() {
         val projectId = "644feb7a7a4ad85d5de3ea83"
 
         val project = projectService.findProjectById(projectId,"user").block() ?: return
 
-        publisher.publishEvent(FileDeleteEvent(project.files.toList().get(0)))
+        publisher.publishEvent(FileDeleteEvent(project.files.toList()[0]))
         Thread.sleep(2000)
         val afterUpdate = projectService.findProjectById(projectId,"user").block()?:return
 
@@ -85,7 +74,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Return_My_Projects() {
+    fun should_Return_My_Projects() {
         val userEmail = "get_my_project_test_user"
 
         val project1 = Project(
@@ -118,7 +107,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Return_All_Projects() {
+    fun should_Return_All_Projects() {
         val project1 = Project(
             creator = "user1@example.com",
             dateTimeCreation = Instant.now().truncatedTo(ChronoUnit.MILLIS),
@@ -148,7 +137,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Return_Project_By_Id_And_User_Email() {
+    fun should_Return_Project_By_Id_And_User_Email() {
         val userEmail = "user1@example.com"
         val project = Project(
             creator = userEmail,
@@ -171,7 +160,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Create_Task_In_Project() {
+    fun should_Create_Task_In_Project() {
         val userEmail = "user1@example.com"
         val project = Project(
             creator = userEmail,
@@ -209,7 +198,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Update_Task_In_Project() {
+    fun should_Update_Task_In_Project() {
         val userEmail = "user1@example.com"
 
         val project = Project(
@@ -260,51 +249,8 @@ class KerplankProjectTests {
         projectService.deleteProject(userEmail, savedProject?.id ?: "").block()
     }
 
-//    @Test
-//    fun Should_Update_Project_With_Given_Parameters() {
-//        val userEmail = "user1@example.com"
-//
-//        val project = Project(
-//            creator = userEmail,
-//            dateTimeCreation = Instant.now().truncatedTo(ChronoUnit.MILLIS),
-//            dateTimeDelivery = Instant.now().plus(7, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS),
-//            description = "Project description",
-//            title = "Test project",
-//            users = mutableSetOf(userEmail)
-//        )
-//
-//        val savedProject = projectRepository.save(project).block()
-//
-//        val projectId = savedProject?.id ?: ""
-//
-//        val updateRequest = ProjectUpdateRequest(
-//            description = "Updated project description",
-//            files = emptyList<String>(),
-//            users = listOf<String>(userEmail),
-//            status = ProjectStatus.ACTIVE
-//        )
-//        StepVerifier.create(projectService.updateProject(userEmail, projectId, updateRequest))
-//            .expectNextMatches { retrievedProject ->
-//                retrievedProject.title == project.title &&
-//                        retrievedProject.description == "Updated project description" &&
-//                        retrievedProject.dateTimeCreation == project.dateTimeCreation &&
-//                        retrievedProject.dateTimeDelivery == project.dateTimeDelivery &&
-//                        retrievedProject.creator == project.creator &&
-//                        retrievedProject.users == listOf<String>(userEmail) &&
-//                        retrievedProject.status == ProjectStatus.ACTIVE
-//            }
-//            .expectComplete()
-//            .verify()
-//
-//        val updatedProject = projectRepository.findById(projectId).block()
-//        assertNotNull(updatedProject)
-//        assertEquals("Updated project description", updatedProject?.description)
-//
-//        projectService.deleteProject(userEmail, savedProject?.id ?: "").block()
-//    }
-
     @Test
-    fun Should_Delete_Project() {
+    fun should_Delete_Project() {
         val creatorEmail = "user1@example.com"
         val project = Project(
             creator = creatorEmail,
@@ -328,7 +274,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Delete_User_From_Project() {
+    fun should_Delete_User_From_Project() {
         val userEmail = "user1@example.com"
         val project = Project(
             creator = userEmail,
@@ -361,7 +307,7 @@ class KerplankProjectTests {
     }
 
     @Test
-    fun Should_Delete_Path_From_Project() {
+    fun should_Delete_Path_From_Project() {
         val userEmail = "user1@example.com"
         val filePath = "/path/to/file.txt"
         val project = Project(
@@ -393,41 +339,4 @@ class KerplankProjectTests {
 
         projectService.deleteProject(userEmail, savedProject?.id ?: "").block()
     }
-
-//    @Test
-//    fun Should_Delete_Task_From_Project() {
-//        val userEmail = "user1@example.com"
-//        val taskId = "task1"
-//        val project = Project(
-//            creator = userEmail,
-//            dateTimeCreation = Instant.now().truncatedTo(ChronoUnit.MILLIS),
-//            dateTimeDelivery = Instant.now().plus(7, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS),
-//            description = "Project description",
-//            title = "Test project",
-//            tasks = mutableListOf(
-//                Task(id = "task1", title = "Test task 1", description = "Task 1 description"),
-//                Task(id = "task2", title = "Test task 2", description = "Task 2 description")
-//            )
-//        )
-//
-//        val savedProject = projectRepository.save(project).block()
-//        val projectId = savedProject?.id ?: ""
-//
-//        StepVerifier.create(projectService.deleteTaskFromProject(userEmail, projectId, taskId))
-//            .expectNextMatches { retrievedProject ->
-//                retrievedProject.title == project.title &&
-//                        retrievedProject.description == project.description &&
-//                        retrievedProject.dateTimeCreation == project.dateTimeCreation &&
-//                        retrievedProject.dateTimeDelivery == project.dateTimeDelivery &&
-//                        retrievedProject.creator == project.creator
-//            }
-//            .expectComplete()
-//            .verify()
-//
-//        val updatedProject = projectRepository.findById(projectId).block()
-//        assertNotNull(updatedProject)
-//        assertTrue(updatedProject?.tasks?.none { it.id == taskId } ?: false)
-//
-//        projectService.deleteProject(userEmail, savedProject?.id ?: "").block()
-//    }
 }

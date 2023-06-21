@@ -16,7 +16,7 @@ import utp.agile.kerplank.service.UserService
 import utp.agile.kerplank.repository.UserRepository
 
 @SpringBootTest
-class KerplankUserServiceTests {
+class UserServiceTests {
 
     @Autowired
     lateinit var userService: UserService
@@ -28,20 +28,20 @@ class KerplankUserServiceTests {
     lateinit var userRepository: UserRepository
 
     @Test
-    fun Should_Create_User_With_Given_Name() {
-        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier");
+    fun should_Create_User_With_Given_Name() {
+        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier")
 
-        StepVerifier.create<User>(userService.createUser(request))
+        StepVerifier.create(userService.createUser(request))
             .expectNextMatches { user -> user.email == (request.email) }
             .expectComplete()
             .verify()
     }
 
     @Test
-    fun Should_Create_User_With_Encrypted_Password() {
-        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier");
+    fun should_Create_User_With_Encrypted_Password() {
+        val request = UserSignUpRequest(nickname = "stepverifier", email = "stepverifier", password = "stepverifier")
 
-        StepVerifier.create<User>(userService.createUser(request))
+        StepVerifier.create(userService.createUser(request))
             .expectNextMatches { user -> passwordEncoder.matches(request.password, user.password) }
             .expectComplete()
             .verify()
@@ -63,7 +63,7 @@ class KerplankUserServiceTests {
     }
 
     @Test
-    fun Should_Get_User_By_Email() {
+    fun should_Get_User_By_Email() {
         val userEmail = "test_get_user@example.com"
         val userNickname = "test_get_user"
         val userDetails = mutableMapOf<String, String>()
@@ -91,7 +91,7 @@ class KerplankUserServiceTests {
     }
 
     @Test
-    fun Should_Change_User_Password() {
+    fun should_Change_User_Password() {
         val userEmail = "test_pass_user@example.com"
         val newPassword = "newPassword123"
         val userNickname = "test_pass_user"
@@ -122,23 +122,23 @@ class KerplankUserServiceTests {
     }
 
     @Test
-    fun Should_Get_All_Users() {
+    fun should_Get_All_Users() {
         val user1 = User(
             email = "user1@example.com",
             password = passwordEncoder.encode("password123"),
-            details = mutableMapOf<String, String>(),
+            details = mutableMapOf(),
             nickname = "testUser1"
         )
         val user2 = User(
             email = "user2@example.com",
             password = passwordEncoder.encode("password456"),
-            details = mutableMapOf<String, String>(),
+            details = mutableMapOf(),
             nickname = "testUser2"
         )
         val user3 = User(
             email = "user3@example.com",
             password = passwordEncoder.encode("password789"),
-            details = mutableMapOf<String, String>(),
+            details = mutableMapOf(),
             nickname = "testUser3"
         )
         val actualUserNumber = userService.getAllUsers().count().block()
