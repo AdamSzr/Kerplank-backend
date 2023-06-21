@@ -31,13 +31,35 @@ class ChatController(private val chatService: ChatService, private val repositor
 //         return repository.findAllByChatId(1).delayElements(Duration.ofSeconds(1))
 //    }
 
-    @GetMapping(value = ["/{chatId}"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
-    fun getMessages( @PathVariable chatId:Number ): Flux<ChatPost> {
-        return repository.findAllByChatId(1)
+//    @GetMapping(value = ["/{chatId}"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+//    fun getMessages( @PathVariable chatId:Number ): Flux<ChatPost> {
+//        return repository.findAllByChatId(1)
+//    }
+
+    @GetMapping( produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
+    fun getChatMessages(
+//        authenticatedUser: AuthenticatedUser
+            @RequestParam(required = false) chatId:String?,
+            @RequestParam( required =  false) addresseId: String?
+    ): Flux<ChatPost> {
+        if( chatId!= null && addresseId!= null)
+            return Flux.empty()
+
+        if (chatId != null) {
+                return repository.findAllByChatId(chatId)
+        }
+
+        if(addresseId != null)
+            return repository.findAllByAddresseeId(addresseId)
+
+        return  repository.findAllByAuthorId("author")
     }
 
     @PostMapping
     fun publicPost(@RequestBody request: ChatPostRequest): Mono<ResponseEntity<ChatPostResponse>> {
+        if(request.addresseeId == null && request.chatId==null)
+            return Mono.just(ResponseEntity.badRequest().build())
+
         return chatService.createChatPost(request)
                 .map { ResponseEntity.ok().body(ChatPostResponse(it)) }
     }
