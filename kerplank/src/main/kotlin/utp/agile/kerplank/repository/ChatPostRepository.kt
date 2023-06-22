@@ -10,9 +10,9 @@ import utp.agile.kerplank.model.ChatPost
 @Repository
 interface ChatPostRepository : ReactiveMongoRepository<ChatPost, String>{
     @Tailable
-    fun findAllByChatId(chatId: String): Flux<ChatPost>
+    fun findAllByChatName(chatName: String): Flux<ChatPost>
     @Tailable
-    fun findAllByAuthorId(authorId: String): Flux<ChatPost>
+    fun findAllByAuthorName(authorName: String): Flux<ChatPost>
     @Tailable
-    fun findAllByAddresseeId(addresseId: String): Flux<ChatPost>
+    fun findAllByAddresseeName(addresseeName: String): Flux<ChatPost>
 }

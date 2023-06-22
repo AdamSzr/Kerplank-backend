@@ -33,7 +33,7 @@ class UserController(
 
     @GetMapping("/all")
     fun getAllUsers(
-        authentication: Authentication,
+//        authentication: Authentication,
     ) = userService.getAllUsers().collectList()
             .map { UsersListResponse(it) }
             .defaultIfEmpty(UsersListResponse(emptyList()))

@@ -9,16 +9,16 @@ import java.time.Instant
 @Document
 data class ChatPost(
     @Id val id: String = ObjectId().toHexString(),
-    val authorId: String,
-    val addresseeId:String?,
+    val authorName: String,
+    val addresseeName:String?,
     val created: Instant,
     val content: String,
-    val chatId: String?,
+    val chatName: String?,
 )
 
-data class ChatPostRequest(val authorId: String, val chatId: String?, val content: String, val addresseeId: String?) {
+data class ChatPostRequest(val authorName: String, val chatName: String?, val content: String, val addresseeName: String?) {
     fun createChatPost(): ChatPost {
-        return ChatPost(authorId = authorId, created = Instant.now(), content = this.content, addresseeId = addresseeId, chatId = chatId )
+        return ChatPost(authorName = authorName, created = Instant.now(), content = this.content, addresseeName = addresseeName , chatName = chatName )
     }
 }
 

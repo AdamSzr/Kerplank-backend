@@ -35,29 +35,36 @@ class ChatController(private val chatService: ChatService, private val repositor
 //    fun getMessages( @PathVariable chatId:Number ): Flux<ChatPost> {
 //        return repository.findAllByChatId(1)
 //    }
+    @GetMapping( value = ["/messages"])
+    fun getJsonMessages(
+    //        authenticatedUser: AuthenticatedUser
+    ): Flux<ChatPost> {
+        return  repository.findAll()
+    }
+
 
     @GetMapping( produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun getChatMessages(
 //        authenticatedUser: AuthenticatedUser
-            @RequestParam(required = false) chatId:String?,
-            @RequestParam( required =  false) addresseId: String?
+            @RequestParam(required = false) chatName:String?,
+            @RequestParam( required =  false) addresseeName: String?
     ): Flux<ChatPost> {
-        if( chatId!= null && addresseId!= null)
+        if( chatName!= null && addresseeName!= null)
             return Flux.empty()
 
-        if (chatId != null) {
-                return repository.findAllByChatId(chatId)
+        if (chatName != null) {
+                return repository.findAllByChatName(chatName)
         }
 
-        if(addresseId != null)
-            return repository.findAllByAddresseeId(addresseId)
+        if(addresseeName != null)
+            return repository.findAllByAddresseeName(addresseeName)
 
-        return  repository.findAllByAuthorId("author")
+        return  repository.findAllByAuthorName("adam")
     }
 
     @PostMapping
     fun publicPost(@RequestBody request: ChatPostRequest): Mono<ResponseEntity<ChatPostResponse>> {
-        if(request.addresseeId == null && request.chatId==null)
+        if(request.addresseeName == null && request.chatName==null)
             return Mono.just(ResponseEntity.badRequest().build())
 
         return chatService.createChatPost(request)
@@ -78,22 +85,22 @@ class ChatController(private val chatService: ChatService, private val repositor
 //    }
 //
 //
-//    @DeleteMapping("/{postId}")
-//    fun deletePost(
-//        @PathVariable postId: String,
-//        authenticatedUser: AuthenticatedUser
-//    ): Mono<ResponseEntity<BaseResponse>> {
-//        if (!authenticatedUser.roles.contains(MODERATOR_ROLE))
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<BaseResponse?>().toMono()
-//
-//        return chatService.deleteChatPost(postId)
-//            .flatMap {
-//                when (it) {
-//                    true -> ResponseEntity.ok().body(BaseResponse("ok"))
-//                    false -> ResponseEntity.noContent().build<BaseResponse?>()
-//                }.toMono()
-//            }
-//    }
+    @DeleteMapping("/{postId}")
+    fun deletePost(
+        @PathVariable postId: String,
+        authenticatedUser: AuthenticatedUser
+    ): Mono<ResponseEntity<BaseResponse>> {
+        if (!authenticatedUser.roles.contains(MODERATOR_ROLE))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build<BaseResponse?>().toMono()
+
+        return chatService.deleteChatPost(postId)
+            .flatMap {
+                when (it) {
+                    true -> ResponseEntity.ok().body(BaseResponse("ok"))
+                    false -> ResponseEntity.noContent().build<BaseResponse?>()
+                }.toMono()
+            }
+    }
 
 
 }
