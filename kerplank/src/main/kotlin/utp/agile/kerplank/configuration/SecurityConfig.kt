@@ -18,15 +18,14 @@ import utp.agile.kerplank.repository.SecurityContextRepository
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfiguration(
-    private val authenticationManager: UserAuthManager,
-    private val securityContextRepository: SecurityContextRepository
+        private val authenticationManager: UserAuthManager,
+        private val securityContextRepository: SecurityContextRepository
 ) {
-
 
     private val frontendCorsConfiguration = CorsConfiguration().applyPermitDefaultValues()
 
     private val corsConfiguration: Map<String, CorsConfiguration> = mapOf(
-        "/api/**" to frontendCorsConfiguration
+            "/api/**" to frontendCorsConfiguration
     )
 
     init {
@@ -36,45 +35,47 @@ class SecurityConfiguration(
 
     @Bean
     fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain =
-        http
-            .authorizeExchange()
-            .anyExchange().permitAll()
-//            .pathMatchers(
-//                "/api/ping",
-//                "/api/auth/login",
-//                "/api/auth/signup",
-//                "/api/auth/reset",
-//                "/api/drive/upload",
-//                "/api/drive/upload/multi",
-//                "/api/drive/file",
-//                "/api/drive/path",
-//                "/api/drive/directory",
-//                "/api/drive/mkdir",
-//            )
-//            .permitAll()
-//            .anyExchange().authenticated()
-            .and()
-            .cors().and()
-            .exceptionHandling()
-            .authenticationEntryPoint { serverWebExchange, _ ->
-                Mono.fromRunnable {
-                    serverWebExchange.response.statusCode = HttpStatus.UNAUTHORIZED
-                }
-            }
-            .accessDeniedHandler { serverWebExchange, _ ->
-                Mono.fromRunnable {
-                    serverWebExchange.response.statusCode = HttpStatus.FORBIDDEN
-                }
-            }
-            .and()
-            .csrf().disable()
-            .authenticationManager(authenticationManager)
-            .securityContextRepository(securityContextRepository)
-            .build()
+            http
+                    .authorizeExchange()
+                    .pathMatchers(
+                            "/api/ping",
+                            "/api/auth/login",
+                            "/api/chat",
+                            "/api/auth/signup",
+                            "/api/auth/reset",
+                            "/api/drive/upload",
+                            "/api/drive/upload/multi",
+                            "/api/drive/file",
+                            "/api/drive/path",
+                            "/api/drive/directory",
+                            "/api/drive/mkdir",
+                    )
+                    .permitAll()
+                    .anyExchange()
+                    .authenticated()
+//            .anyExchange().permitAll()
+                    .and()
+                    .cors().and()
+                    .exceptionHandling()
+                    .authenticationEntryPoint { serverWebExchange, _ ->
+                        Mono.fromRunnable {
+                            serverWebExchange.response.statusCode = HttpStatus.UNAUTHORIZED
+                        }
+                    }
+                    .accessDeniedHandler { serverWebExchange, _ ->
+                        Mono.fromRunnable {
+                            serverWebExchange.response.statusCode = HttpStatus.FORBIDDEN
+                        }
+                    }
+                    .and()
+                    .csrf().disable()
+                    .authenticationManager(authenticationManager)
+                    .securityContextRepository(securityContextRepository)
+                    .build()
 
     @Bean
     fun passwordEncoder(): BCryptPasswordEncoder =
-        BCryptPasswordEncoder()
+            BCryptPasswordEncoder()
 
 
     @Bean

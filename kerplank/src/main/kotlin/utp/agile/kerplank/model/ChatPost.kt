@@ -1,7 +1,6 @@
 package utp.agile.kerplank.model
 
 import org.bson.types.ObjectId
-import org.springframework.core.annotation.Order
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import utp.agile.kerplank.response.BaseResponse
@@ -10,14 +9,16 @@ import java.time.Instant
 @Document
 data class ChatPost(
     @Id val id: String = ObjectId().toHexString(),
-    val author: String,
+    val authorName: String,
+    val addresseeName:String?,
     val created: Instant,
-    val content: String
+    val content: String,
+    val chatName: String?,
 )
 
-data class ChatPostRequest(val author: String, val content: String) {
+data class ChatPostRequest(val authorName: String, val chatName: String?, val content: String, val addresseeName: String?) {
     fun createChatPost(): ChatPost {
-        return ChatPost(author = this.author, created = Instant.now(), content = this.content)
+        return ChatPost(authorName = authorName, created = Instant.now(), content = this.content, addresseeName = addresseeName , chatName = chatName )
     }
 }
 

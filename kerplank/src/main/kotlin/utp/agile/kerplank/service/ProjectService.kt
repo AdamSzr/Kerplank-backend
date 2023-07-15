@@ -166,6 +166,4 @@ class ProjectService(val projectRepository: ProjectRepository, val userRepositor
             .subscribe()
     }
 
-
-
 }
