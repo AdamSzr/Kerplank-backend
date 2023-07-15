@@ -11,10 +11,12 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
+import reactor.kotlin.core.publisher.switchIfEmpty
 import reactor.kotlin.core.publisher.toMono
 import utp.agile.kerplank.MODERATOR_ROLE
 import utp.agile.kerplank.model.*
 import utp.agile.kerplank.repository.ChatPostRepository
+import utp.agile.kerplank.repository.UserRepository
 import utp.agile.kerplank.response.BaseResponse
 import utp.agile.kerplank.service.ChatService
 import java.time.Duration
@@ -23,7 +25,7 @@ import java.time.Duration
 
 @RestController
 @RequestMapping("/api/chat")
-class ChatController(private val chatService: ChatService, private val repository: ChatPostRepository) {
+class ChatController(private val chatService: ChatService, private val repository: ChatPostRepository, private val userRepository: UserRepository) {
 
     //Working without tailable.
 //    @GetMapping(value = ["/{chatId}"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
@@ -45,10 +47,11 @@ class ChatController(private val chatService: ChatService, private val repositor
 
     @GetMapping( produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun getChatMessages(
-//        authenticatedUser: AuthenticatedUser
+            @RequestParam( required = true) userName:String,
             @RequestParam(required = false) chatName:String?,
             @RequestParam( required =  false) addresseeName: String?
     ): Flux<ChatPost> {
+
         if( chatName!= null && addresseeName!= null)
             return Flux.empty()
 
@@ -59,7 +62,7 @@ class ChatController(private val chatService: ChatService, private val repositor
         if(addresseeName != null)
             return repository.findAllByAddresseeName(addresseeName)
 
-        return  repository.findAllByAuthorName("adam")
+        return  repository.findAllByAuthorNameOrAddresseeName(userName, userName)
     }
 
     @PostMapping

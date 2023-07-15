@@ -1,5 +1,6 @@
 package utp.agile.kerplank.repository
 
+import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.data.mongodb.repository.Tailable
 import org.springframework.stereotype.Repository
@@ -12,7 +13,12 @@ interface ChatPostRepository : ReactiveMongoRepository<ChatPost, String>{
     @Tailable
     fun findAllByChatName(chatName: String): Flux<ChatPost>
     @Tailable
-    fun findAllByAuthorName(authorName: String): Flux<ChatPost>
+    fun findAllByAddresseeName(authorName: String): Flux<ChatPost>
     @Tailable
-    fun findAllByAddresseeName(addresseeName: String): Flux<ChatPost>
+//    @Query("{ '$or': [ {'authorName': {'$eq': ?0 }, {'addresseeName': {'$eq': ?0 } }  ]  }") //" {$or:[ {authorName:{$eq:?0}}, {addresseeName:{$eq:?0}} ]}"
+    fun findAllByAuthorNameOrAddresseeName(authorName: String, addresseName:String): Flux<ChatPost>
+
+
+
+
 }

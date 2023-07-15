@@ -104,7 +104,8 @@ class DriveController(val driveConfiguration: DriveConfiguration, val driveServi
     ): Mono<ResponseEntity<DirectoryItemsResponse>> {
 //        val file = if (directory != null && !directory.isNullOrBlank())
 //            driveService.createSubDirectory(directory) else null
-
+        // TODO: Update task with file.
+        // or put the event on serwer
         return files.flatMap { filePart ->
             val fullFilename = filePart.filename().replace(" ", "_")
 
