@@ -49,13 +49,20 @@ class SecurityConfiguration(
                             "/api/drive/path",
                             "/api/drive/directory",
                             "/api/drive/mkdir",
+                            "/v2/api-docs", // Swagger API JSON
+                            "/swagger-resources/**",
+                            "/swagger-ui.html",
+                            "/webjars/**",
+                            "/v3/api-docs/**", // <- Dodaj tę ścieżkę
+                            "/v3/api-docs/swagger-config/**" // <- Jeśli jest to potrzebne
                     )
                     .permitAll()
                     .anyExchange()
                     .authenticated()
 //            .anyExchange().permitAll()
                     .and()
-                    .cors().and()
+                    .cors()
+                    .and()
                     .exceptionHandling()
                     .authenticationEntryPoint { serverWebExchange, _ ->
                         Mono.fromRunnable {
