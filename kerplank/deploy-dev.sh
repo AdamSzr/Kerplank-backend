@@ -73,7 +73,7 @@ echo --------------------------------------------------------------
 echo --------------------------------------------------------------
 
 ssh aszreiber@dev.kanga.team <<- EOF "echo ####################### PULL-IMAGE ####################### &&
-docker pull localhost:5000/$image_name:$version &&
+docker pull registry.kanga.team/$image_name:$version &&
 echo ####################### DOCKER-COMPOSE ####################### &&
 docker-compose -p $image_name -f $docker_compose_file_name up -d &&
 exit"

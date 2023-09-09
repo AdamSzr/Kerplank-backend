@@ -2,7 +2,7 @@ version: '3.1'
 services:
   adam-kerplank:
     restart: 'always'
-    image: 'localhost:5000/adam-kerplank:dev'
+    image: 'registry.kanga.team/adam-kerplank:dev'
     ports:
       - "8907:8080"
     container_name: 'adam-kerplank'
