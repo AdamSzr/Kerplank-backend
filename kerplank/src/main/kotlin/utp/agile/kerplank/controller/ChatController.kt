@@ -1,7 +1,6 @@
 package utp.agile.kerplank.controller
 
 import com.fasterxml.jackson.databind.ser.Serializers.Base
-import io.swagger.annotations.ApiParam
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content

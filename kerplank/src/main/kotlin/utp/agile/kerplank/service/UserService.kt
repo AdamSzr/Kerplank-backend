@@ -7,6 +7,7 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import utp.agile.kerplank.model.User
 import utp.agile.kerplank.model.UserSignUpRequest
+import utp.agile.kerplank.model.UserUpdateRequest
 import utp.agile.kerplank.model.UserUtils
 import utp.agile.kerplank.repository.UserRepository
 
@@ -36,6 +37,12 @@ class UserService(private val userRepository: UserRepository, val passwordEncode
 
     fun deleteUser(nickname: String): Mono<Void> {
         return userRepository.deleteById(nickname)
+    }
+
+    fun updateUser( update:UserUpdateRequest): Mono<User> {
+        return userRepository.findByNickname( update.nickname)
+                .doOnNext{ it.updateUser(update) }
+                .flatMap{ userRepository.save(it)}
     }
 
 }

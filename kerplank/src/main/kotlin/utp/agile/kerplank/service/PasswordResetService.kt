@@ -39,10 +39,9 @@ class PasswordResetService(
                             userEmail,
                             "Kerplank Password Reset",
                             """
-                                <div style="text-align:center;"> 
-                                <h2>Zmiana hasła</h2> 
-                                <p>Aby zresetować swoje hasło, kliknij poniższy link i postępuj zgodnie z instrukcjami.</p> 
-                                <a href="http://localhost:3000/password/reset/${passwordResetEntry.uuid}" style="font-size:20px" >Resetuj hasło</a>
+                                Zmiana hasła
+                                Aby zresetować swoje hasło, kliknij poniższy link i postępuj zgodnie z instrukcjami.
+                                kliknij w  i nadaj nowe hasło -> http://dev.kanga.team:8914//password/reset/${passwordResetEntry.uuid}
                                 </div>
                             """.trimIndent()
                         )

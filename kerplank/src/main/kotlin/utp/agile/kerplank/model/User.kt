@@ -12,7 +12,7 @@ data class User(
     @JsonIgnore
     var password: String,
     var role: UserRole = UserRole.USER,
-    val email: String,
+    var email: String,
     val details: Map<String, String>,
     @DBRef val permissions: List<Permission> = listOf(),
     val created: Instant = Instant.now(),
@@ -23,7 +23,22 @@ data class User(
 
     fun changeActivated() =
         this.apply { activated = !activated }
+
+    fun updateUser(update: UserUpdateRequest){
+        this.apply {
+            role = update.role ?: role
+            activated = update.activated ?: activated
+            email = update.email ?: email
+        }
+    }
 }
+
+data class UserUpdateRequest(
+        var nickname: String,
+        var role: UserRole?,
+        val email: String?,
+        var activated: Boolean?,
+)
 
 enum class UserRole {
     ADMIN, USER, MODERATOR, PARTNER
